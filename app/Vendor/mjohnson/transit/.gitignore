@@ -1,0 +1,7 @@
+.idea
+examples/img/
+examples/tmp/
+tests/tmp/vertical-*.jpg
+tests/tmp/horizontal-*.jpg
+vendor/
+composer.lock

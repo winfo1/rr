@@ -1,0 +1,12 @@
+{
+    "name": "app",
+
+    "require": {
+        "cakedc/search": "dev-develop",
+	    "mjohnson/uploader": "dev-master",
+	    "mjohnson/utility": "dev-master"
+    },
+    "config": {
+        "vendor-dir": "Vendor/"
+    }
+}

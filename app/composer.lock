@@ -1,0 +1,338 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "d915eb927024319fe83f9c970c28f1e0",
+    "packages": [
+        {
+            "name": "cakedc/search",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CakeDC/search.git",
+                "reference": "ca416c363789da8c5e7ffbeb7d1675ca899f79b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CakeDC/search/zipball/ca416c363789da8c5e7ffbeb7d1675ca899f79b8",
+                "reference": "ca416c363789da8c5e7ffbeb7d1675ca899f79b8",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "cakephp-plugin",
+            "extra": {
+                "installer-name": "Search"
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cake Development Corporation",
+                    "email": "team@cakedc.com",
+                    "homepage": "http://cakedc.com"
+                }
+            ],
+            "description": "The Search plugin allows you to make any kind of data searchable, enabling you to implement a robust searching rapidly.",
+            "homepage": "http://github.com/CakeDC/search",
+            "time": "2014-03-10 14:39:12"
+        },
+        {
+            "name": "composer/installers",
+            "version": "v1.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/installers.git",
+                "reference": "4127333b03e8b4c08d081958548aae5419d1a2fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/installers/zipball/4127333b03e8b4c08d081958548aae5419d1a2fa",
+                "reference": "4127333b03e8b4c08d081958548aae5419d1a2fa",
+                "shasum": ""
+            },
+            "replace": {
+                "shama/baton": "*"
+            },
+            "require-dev": {
+                "composer/composer": "1.0.*@dev",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "composer-installer",
+            "extra": {
+                "class": "Composer\\Installers\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Composer\\Installers\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Robinson Young",
+                    "email": "kyle@dontkry.com",
+                    "homepage": "https://github.com/shama",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A multi-framework Composer library installer",
+            "homepage": "http://composer.github.com/installers/",
+            "keywords": [
+                "Craft",
+                "Hurad",
+                "MODX Evo",
+                "OXID",
+                "WolfCMS",
+                "agl",
+                "annotatecms",
+                "cakephp",
+                "codeigniter",
+                "concrete5",
+                "croogo",
+                "drupal",
+                "elgg",
+                "fuelphp",
+                "installer",
+                "joomla",
+                "kohana",
+                "laravel",
+                "lithium",
+                "magento",
+                "mako",
+                "mediawiki",
+                "modulework",
+                "phpbb",
+                "piwik",
+                "ppi",
+                "shopware",
+                "silverstripe",
+                "symfony",
+                "typo3",
+                "wordpress",
+                "zend",
+                "zikula"
+            ],
+            "time": "2014-02-24 04:21:34"
+        },
+        {
+            "name": "mjohnson/transit",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/milesj/transit.git",
+                "reference": "6dc9bc99869ffc054548b41cf5bbed96f4276d07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/milesj/transit/zipball/6dc9bc99869ffc054548b41cf5bbed96f4276d07",
+                "reference": "6dc9bc99869ffc054548b41cf5bbed96f4276d07",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-fileinfo": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "*",
+                "ext-exif": "*",
+                "rackspace/php-opencloud": "*"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Upload files to Amazon S3 and Glacier",
+                "ext-exif": "Extract exif data from images",
+                "ext-gd": "Enable the GD library for image transforming",
+                "rackspace/php-opencloud": "Upload files to RackSpace OpenCloud"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Transit": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miles Johnson",
+                    "homepage": "http://milesj.me"
+                }
+            ],
+            "description": "A file uploader with support for validation, image transformation and remote transportation.",
+            "homepage": "http://milesj.me/code/php/transit",
+            "keywords": [
+                "application",
+                "archive",
+                "audio",
+                "cloud",
+                "cloudfiles",
+                "exif",
+                "file",
+                "glacier",
+                "image",
+                "importer",
+                "opencloud",
+                "rackspace",
+                "s3",
+                "text",
+                "transformer",
+                "transit",
+                "transporter",
+                "uploader",
+                "validator",
+                "video"
+            ],
+            "time": "2014-02-16 21:18:52"
+        },
+        {
+            "name": "mjohnson/uploader",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/milesj/uploader.git",
+                "reference": "360ad48386d8ae7a115cc622c267608992051623"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/milesj/uploader/zipball/360ad48386d8ae7a115cc622c267608992051623",
+                "reference": "360ad48386d8ae7a115cc622c267608992051623",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*",
+                "ext-curl": "*",
+                "ext-fileinfo": "*",
+                "ext-mbstring": "*",
+                "mjohnson/transit": "~1.4",
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "~2.2",
+                "ext-exif": "Extract exif data from images",
+                "ext-gd": "Enable the GD library for image transforming"
+            },
+            "type": "cakephp-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miles Johnson",
+                    "homepage": "http://milesj.me"
+                }
+            ],
+            "description": "File uploader and validation plugin for CakePHP.",
+            "homepage": "http://milesj.me/code/cakephp/uploader",
+            "keywords": [
+                "attachment",
+                "cakephp",
+                "file",
+                "plugin",
+                "uploader",
+                "validation"
+            ],
+            "time": "2014-01-18 03:53:18"
+        },
+        {
+            "name": "mjohnson/utility",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/milesj/utility.git",
+                "reference": "df12af96e97578075746452153cfecd31ade3efc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/milesj/utility/zipball/df12af96e97578075746452153cfecd31ade3efc",
+                "reference": "df12af96e97578075746452153cfecd31ade3efc",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "mjohnson/decoda": "Enable Decoda for BBCode parsing in the DecodaHelper",
+                "titon/utility": "Enable Titon to parse feeds in FeedSource and process AJAX in the AjaxHandlerComponent"
+            },
+            "type": "cakephp-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Miles Johnson",
+                    "homepage": "http://milesj.me"
+                }
+            ],
+            "description": "A collection of CakePHP utility libraries.",
+            "homepage": "http://milesj.me/code/cakephp/utility",
+            "keywords": [
+                "Behavior",
+                "Sitemap",
+                "aggregator",
+                "ajax-handler",
+                "auto-login",
+                "bbcode",
+                "cache-kill",
+                "cacheable",
+                "cakephp",
+                "component",
+                "controller",
+                "convertable",
+                "datasource",
+                "decoda",
+                "enumerable",
+                "feed",
+                "filterable",
+                "helper",
+                "markup",
+                "model",
+                "open-graph",
+                "plugin",
+                "shell",
+                "sluggable",
+                "spam-blocker",
+                "utility",
+                "validateable"
+            ],
+            "time": "2014-02-04 06:39:10"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "cakedc/search": 20,
+        "mjohnson/uploader": 20,
+        "mjohnson/utility": 20
+    },
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
+}
