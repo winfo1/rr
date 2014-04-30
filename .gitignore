@@ -6,3 +6,5 @@ app/Config/email.php
 app/.idea
 
 app/tmp
+
+app/webroot/img/uploads
