@@ -195,26 +195,30 @@ class Sqlserver extends DboSource {
  * @throws CakeException
  */
 	public function describe($model) {
-		$table = $this->fullTableName($model, false);
-		$cache = parent::describe($table);
+		$table = $this->fullTableName($model, false, false);
+		$fulltable = $this->fullTableName($model, false, true);
+
+		$cache = parent::describe($fulltable);
 		if ($cache) {
 			return $cache;
 		}
+
 		$fields = array();
-		$table = $this->fullTableName($model, false, false);
 		$schema = $model->schemaName;
+
 		$cols = $this->_execute(
 			"SELECT
 				COLUMN_NAME as Field,
 				DATA_TYPE as Type,
-				COL_LENGTH('" . $table . "', COLUMN_NAME) as Length,
+				COL_LENGTH('" . ($schema ? $fulltable : $table) . "', COLUMN_NAME) as Length,
 				IS_NULLABLE As [Null],
 				COLUMN_DEFAULT as [Default],
-				COLUMNPROPERTY(OBJECT_ID('" . $table . "'), COLUMN_NAME, 'IsIdentity') as [Key],
+				COLUMNPROPERTY(OBJECT_ID('" . ($schema ? $fulltable : $table) . "'), COLUMN_NAME, 'IsIdentity') as [Key],
 				NUMERIC_SCALE as Size
 			FROM INFORMATION_SCHEMA.COLUMNS
 			WHERE TABLE_NAME = '" . $table . "'" . ($schema ? " AND TABLE_SCHEMA = '" . $schema . "'" : '')
 		);
+
 		if (!$cols) {
 			throw new CakeException(__d('cake_dev', 'Could not describe table for %s', $table));
 		}
@@ -677,7 +681,7 @@ class Sqlserver extends DboSource {
 			} else {
 				$result = str_replace('DEFAULT NULL', 'NULL', $result);
 			}
-		} elseif (array_keys($column) == array('type', 'name')) {
+		} elseif (array_keys($column) === array('type', 'name')) {
 			$result .= ' NULL';
 		} elseif (strpos($result, "DEFAULT N'")) {
 			$result = str_replace("DEFAULT N'", "DEFAULT '", $result);
@@ -756,6 +760,7 @@ class Sqlserver extends DboSource {
  */
 	protected function _execute($sql, $params = array(), $prepareOptions = array()) {
 		$this->_lastAffected = false;
+		$sql = trim($sql);
 		if (strncasecmp($sql, 'SELECT', 6) === 0 || preg_match('/^EXEC(?:UTE)?\s/mi', $sql) > 0) {
 			$prepareOptions += array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL);
 			return parent::_execute($sql, $params, $prepareOptions);

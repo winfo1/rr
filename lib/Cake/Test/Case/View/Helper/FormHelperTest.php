@@ -990,7 +990,7 @@ class FormHelperTest extends CakeTestCase {
 
 		$result = $this->Form->secure($this->Form->fields);
 
-		$hash = 'c9118120e680a7201b543f562e5301006ccfcbe2%3AAddresses.0.id%7CAddresses.1.id';
+		$hash = 'a3b9b2ba1cb688838f92818a5970e17dd7943a78%3AAddresses.0.id%7CAddresses.1.id';
 
 		$expected = array(
 			'div' => array('style' => 'display:none;'),
@@ -1055,7 +1055,7 @@ class FormHelperTest extends CakeTestCase {
 		$this->Form->input('Addresses.1.phone');
 
 		$result = $this->Form->secure($this->Form->fields);
-		$hash = '629b6536dcece48aa41a117045628ce602ccbbb2%3AAddresses.0.id%7CAddresses.1.id';
+		$hash = '5c9cadf9da008cc444d3960b481391a425a5d979%3AAddresses.0.id%7CAddresses.1.id';
 
 		$expected = array(
 			'div' => array('style' => 'display:none;'),
@@ -1105,7 +1105,7 @@ class FormHelperTest extends CakeTestCase {
 
 		$result = $this->Form->secure($expected);
 
-		$hash = '2981c38990f3f6ba935e6561dc77277966fabd6d%3AAddresses.id';
+		$hash = '40289bd07811587887ff56585a8526ff9da59d7a%3AAddresses.id';
 		$expected = array(
 			'div' => array('style' => 'display:none;'),
 			array('input' => array(
@@ -1228,7 +1228,7 @@ class FormHelperTest extends CakeTestCase {
 		);
 		$this->assertEquals($expected, $result);
 
-		$hash = 'bd7c4a654e5361f9a433a43f488ff9a1065d0aaf%3AUserForm.hidden%7CUserForm.stuff';
+		$hash = '6014b4e1c4f39eb62389712111dbe6435bec66cb%3AUserForm.hidden%7CUserForm.stuff';
 
 		$result = $this->Form->secure($this->Form->fields);
 		$expected = array(
@@ -7617,6 +7617,40 @@ class FormHelperTest extends CakeTestCase {
 	}
 
 /**
+ * Test that security hashes for postLink include the url.
+ *
+ * @return void
+ */
+	public function testPostLinkSecurityHash() {
+		$hash = Security::hash(
+			'/posts/delete/1' .
+			serialize(array()) .
+			'' .
+			Configure::read('Security.salt')
+		);
+		$hash .= '%3A';
+		$this->Form->request->params['_Token']['key'] = 'test';
+
+		$result = $this->Form->postLink('Delete', '/posts/delete/1');
+		$this->assertTags($result, array(
+			'form' => array(
+				'method' => 'post', 'action' => '/posts/delete/1',
+				'name', 'id', 'style' => 'display:none;'
+			),
+			array('input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'POST')),
+			array('input' => array('type' => 'hidden', 'name' => 'data[_Token][key]', 'value' => 'test', 'id')),
+			'div' => array('style' => 'display:none;'),
+			array('input' => array('type' => 'hidden', 'name' => 'data[_Token][fields]', 'value' => $hash, 'id')),
+			array('input' => array('type' => 'hidden', 'name' => 'data[_Token][unlocked]', 'value' => '', 'id')),
+			'/div',
+			'/form',
+			'a' => array('href' => '#', 'onclick' => 'preg:/document\.post_\w+\.submit\(\); event\.returnValue = false; return false;/'),
+			'Delete',
+			'/a'
+		));
+	}
+
+/**
  * Test using postLink with N dimensional data.
  *
  * @return void
@@ -8355,6 +8389,26 @@ class FormHelperTest extends CakeTestCase {
 			'input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'POST'),
 			'/div'
 		);
+		$this->assertTags($result, $expected);
+	}
+
+/**
+ * test that create() works without raising errors with a Mock Model
+ *
+ * @return void
+ */
+	public function testCreateNoErrorsWithMockModel() {
+		$encoding = strtolower(Configure::read('App.encoding'));
+		$ContactMock = $this->getMockBuilder('Contact')
+				->disableOriginalConstructor()
+				->getMock();
+		ClassRegistry::removeObject('Contact');
+		ClassRegistry::addObject('Contact', $ContactMock);
+		$result = $this->Form->create('Contact', array('type' => 'GET'));
+		$expected = array('form' => array(
+			'id' => 'ContactAddForm', 'method' => 'get', 'action' => '/contacts/add',
+			'accept-charset' => $encoding
+		));
 		$this->assertTags($result, $expected);
 	}
 
