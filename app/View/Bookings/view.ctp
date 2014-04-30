@@ -95,6 +95,37 @@
                 </div>
                 <input type="hidden" name="data[Booking][enddatetime]" id="BookingEndDateTime" value="<?php echo $this->request->data['Booking']['enddatetime']; ?>" />
             </div>
+            
+            <div class="form-group">
+                <label for="UserName"><?php echo __('Gebucht von'); ?></label>
+                <?php
+                echo $this->Form->input('data[User][username]', array(
+                        'class' => 'form-control',
+                        'label' => false,
+                        'disabled' => true,
+                        'value' => $this->request->data['User']['username']));
+                ?>
+                <div style="margin-top: 15px;" class="well col-md-6 col-md-offset-3">
+                	<table class="table">
+                		<thead>
+                			<tr>
+                				<th>Eigenschaft</th>
+                				<th>Wert</th>
+                			</tr>
+                		</thead>
+                		<tbody>
+                			<tr>
+                				<td><?php echo $this->Html->link('E-Mail', 'mailto:' . $this->request->data['User']['emailaddress']); ?></td>
+                				<td><?php echo $this->request->data['User']['emailaddress']; ?></td>
+                			</tr>
+                			<tr>
+                				<td><?php echo $this->Html->link('Telefonnummer', 'tel:' . $this->request->data['User']['phonenumber']); ?></td>
+                				<td><?php echo $this->request->data['User']['phonenumber']; ?></td>
+                			</tr>
+                		</tbody>
+                	</table>
+                </div>
+            </div>
         </fieldset>
     </div>
 </div>

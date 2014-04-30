@@ -187,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `rr_users` (
   `password` varchar(50) DEFAULT NULL,
   `role` varchar(20) DEFAULT NULL,
   `emailaddress` varchar(50) DEFAULT NULL,
+  `phonenumber` varchar(50) DEFAULT NULL,
   `admin_email_every_booking` tinyint(4) DEFAULT NULL,
   `admin_email_every_booking_plan` tinyint(4) DEFAULT '1',
   `user_email_if_active` tinyint(4) DEFAULT NULL,

@@ -22,6 +22,8 @@
         <?php echo $this->Form->input('role', array('label' => __('Rechte'), 'options' => array('user' => 'Benutzer', 'admin' => 'Admin', 'root' => 'Root'))); ?>
 
         <?php echo $this->Form->input('emailaddress', array('label' => __('E-Mail-Adresse'), 'placeholder' => __('E-Mail-Adresse'))); ?>
+        
+        <?php echo $this->Form->input('phonenumber', array('label' => __('Telefonnummer'), 'placeholder' => __('Telefonnummer'))); ?>
 
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Hinzufügen'), 'class' => 'btn btn-primary btn-lg')); ?>

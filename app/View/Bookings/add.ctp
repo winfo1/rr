@@ -64,7 +64,7 @@
 
                 </span>
                     <?php
-                    $options = array('15' => '15 Minuten', '30' => '30 Minuten', '60' => '1 Stunde', '120' => '2 Stunden', '180' => '3 Stunden');
+                    $options = array('15' => '15 Minuten', '30' => '30 Minuten', '60' => '1 Stunde', '120' => '2 Stunden', '180' => '3 Stunden', '240' => '4 Stunden', '300' => '5 Stunden', '360' => '6 Stunden');
 
                     echo $this->Form->input('duration', array(
                         'class' => 'form-control',

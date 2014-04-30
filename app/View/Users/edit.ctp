@@ -23,6 +23,8 @@
 
         <?php echo $this->Form->input('emailaddress', array('label' => __('E-Mail-Adresse'), 'placeholder' => __('E-Mail-Adresse'))); ?>
 
+		<?php echo $this->Form->input('phonenumber', array('label' => __('Telefonnummer'), 'placeholder' => __('Telefonnummer'))); ?>
+
         <legend>
             <?php echo __('E-Mail Optionen'); ?>
         </legend>
