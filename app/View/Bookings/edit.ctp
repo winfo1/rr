@@ -64,9 +64,9 @@
                         'value' => $val));
                     ?>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
-                <input type="hidden" name="data[Booking][startdatetime]" id="BookingStartDateTime" value="<?php echo $this->request->data['Booking']['startdatetime']; ?>" />
+                <?php echo $this->Form->hidden('startdatetime', array('value' => $this->request->data['Booking']['startdatetime'])); ?>
             </div>
 
             <div class="form-group">
@@ -85,10 +85,9 @@
                         'value' => $val));
                     ?>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
-                <input type="hidden" name="data[Booking][enddatetime]" id="BookingEndDateTime" value="<?php echo $this->request->data['Booking']['enddatetime']; ?>" />
-
+                <?php echo $this->Form->hidden('enddatetime', array('value' => $this->request->data['Booking']['enddatetime'])); ?>
             </div>
         </fieldset>
         <div class="submit">
@@ -277,7 +276,7 @@
         startView: 0,
         forceParse: 0,
         pickerPosition: 'bottom-left',
-        linkField: "BookingStartDateTime",
+        linkField: "BookingStartdatetime",
         linkFormat: "yyyy-mm-dd hh:ii:ss"
     });
 
@@ -290,7 +289,7 @@
         startView: 0,
         forceParse: 0,
         pickerPosition: 'bottom-left',
-        linkField: "BookingEndDateTime",
+        linkField: "BookingEnddatetime",
         linkFormat: "yyyy-mm-dd hh:ii:ss"
     });
 

@@ -69,14 +69,14 @@
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                         <?php echo $this->Form->hidden('day', array('value' => $day)); ?>
-                        <label for="BookingStartTime"><?php echo __('Startzeit'); ?></label>
+                        <label for="BookingStartHour"><?php echo __('Startzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
                             <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit', 'value' => $start_hour)); ?>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
                         </div>
-                        <label for="BookingEndTime"><?php echo __('Endzeit'); ?></label>
+                        <label for="BookingEndHour"><?php echo __('Endzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
                             <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende', 'value' => $end_hour)); ?>
                             <span class="input-group-addon">
@@ -273,8 +273,7 @@
         }
     }
 
-    function addImageToGallery(l, i)
-    {
+    function addImageToGallery(l, i) {
         var img = $('<img />').attr({
             'class': 'img-thumbnail img-responsive',
             'src': rr_base_url + i,
@@ -303,7 +302,7 @@
         }
     });
 
-    $(".form_date").datetimepicker({
+    $('.form_date').datetimepicker({
         language: 'de',
         weekStart: 1,
         todayBtn: 1,
@@ -315,6 +314,27 @@
         pickerPosition: 'bottom-left',
         linkField: "BookingDay",
         linkFormat: "yyyy-mm-dd"
+    });
+
+    $('#BookingStartHour').change(function() {
+        d = this.value.indexOf(':');
+        h1 = this.value.substr(0, d);
+        m1 = this.value.substr(d + 1);
+
+        var BookingEndHour = $('#BookingEndHour');
+        d = BookingEndHour.val().indexOf(':');
+        h2 = BookingEndHour.val().substr(0, d);
+        m2 = BookingEndHour.val().substr(d + 1);
+
+        if(h1 > h2) {
+            if(m1 > m2) {
+                BookingEndHour.val(h1 + ':' + m1);
+            } else {
+                BookingEndHour.val(h1 + ':' + m2);
+            }
+        } if((h1 == h2) && (m1 > m2)) {
+            BookingEndHour.val(h2 + ':' + m1);
+        }
     });
 
     $('.clockpicker').clockpicker();

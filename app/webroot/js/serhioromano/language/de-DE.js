@@ -18,7 +18,7 @@ window.calendar_languages['de-DE'] = {
 	week:        'Woche {0}',
 	all_day:     'Ganzen Tag',
 	time:        'Zeit',
-	events:      'Entwicklungen',
+	events:      'Ereignisse',
 	before_time: 'Zeit vor dem Ende Band',
 	after_time:  'Beenden Sie nach einer vorübergehenden Band',
 

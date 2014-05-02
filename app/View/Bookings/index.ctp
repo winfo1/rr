@@ -155,7 +155,7 @@
                     events_source: rr_base_url + 'ajax/calendar_events/' + '<?php echo implode('/', $this->params['pass']) ?>' ,
                     view: 'month',
                     tmpl_path: rr_base_url + 'tmpls/',
-                    tmpl_cache: false,
+                    tmpl_cache: true,
                     onAfterEventsLoad: function(events) {
                         if(!events) {
                             return;
