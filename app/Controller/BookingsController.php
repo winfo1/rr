@@ -123,39 +123,86 @@ class BookingsController extends AppController
         return $this->redirect(array('action' => 'index'));
     }
 
-    public function add($room_id = null)
+    /**
+     * @param null $room_id          i.e. 1
+     * @param null $str_day          i.e. 2014-05-01
+     * @param null $str_start_time   i.e. 19-14
+     * @param null $str_end_time     i.e. 20-14
+     */
+    public function add($room_id = null, $str_day = null, $str_start_time = null, $str_end_time = null)
     {
+        // set available rooms
         $rooms = $this->requestAction('/rooms/getRoomsAsRoomList');
+        $this->set(compact('rooms'));
 
-        if (!isset($room_id)) {
+        // set default room
+        $rooms_keys = array_keys($rooms);
+        if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
             if (count($rooms) > 0)
-                $room_id = array_values($rooms)[0];
+                $room_id = $rooms_keys[0];
             else
                 $room_id = 0;
         }
-
         $this->set(compact('room_id'));
 
-        $this->set(compact('rooms'));
+        // easy view
+        $view_tabs = 's';
+
+        // set default day
+        if (isset($str_day) ) {
+            try {
+                $day = (new DateTime($str_day))->format('Y-m-d');
+                $view_tabs = 'a';
+            } catch (\Exception $e) {
+                $day = (new DateTime())->format('Y-m-d');
+            }
+        } else {
+            $day = (new DateTime())->format('Y-m-d');
+        }
+        $this->set(compact('day'));
+
+        // set default start time
+        if (isset($str_start_time) && preg_match("/^[0-9]{1,2}-[0-9]{1,2}$/", $str_start_time)) {
+            $start_hour = str_replace('-', ':', $str_start_time);
+            $view_tabs = 'a';
+        } else {
+            $start_hour = (new DateTime())->format('H:i');
+        }
+        $this->set(compact('start_hour'));
+
+        // set default end time
+        if (isset($str_end_time) && preg_match("/^[0-9]{1,2}-[0-9]{1,2}$/", $str_end_time)) {
+            $end_hour = str_replace('-', ':', $str_end_time);
+            $view_tabs = 'a';
+        } else {
+            $end_hour = (new DateTime())->modify('+1 hour')->format('H:i');
+        }
+        $this->set(compact('end_hour'));
+
+        // set view
+        $this->set(compact('view_tabs'));
 
         if ($this->request->is('post')) {
 
             $room_id = $this->request->data['Booking']['room_id'];
-            $start = new DateTime($this->request->data['Booking']['startdatetime']);
-            $end = new DateTime($this->request->data['Booking']['startdatetime']);
-            $full_day = $this->request->data['Booking']['full_time'];
 
-            if ($full_day) {
-                $end->setTime(23, 59, 59);
+            if($this->request->data['Booking']['view_tabs'] == 's') {
+                // simple booking-time selection
+                $start = (new DateTime())->modify('+' . $this->request->data['Booking']['start_minutes'] . ' minutes');
+                $end = clone $start;
+                $end->modify('+' . $this->request->data['Booking']['duration'] . ' minutes');
             } else {
-                $duration = $this->request->data['Booking']['duration'];
-                $end->add(DateInterval::createFromDateString($duration . ' minutes'));
+                // advanced booking-time selection
+                $day = $this->request->data['Booking']['day'];
+                $start = $this->StrToDateTime($day, $this->request->data['Booking']['start_hour']);
+                $end = $this->StrToDateTime($day, $this->request->data['Booking']['end_hour']);
+                $diff = $start->diff($end);
+                $this->request->data['Booking']['duration'] = strval(($diff->h * 60) + ($diff->i));
             }
 
             $room = $this->requestAction('/rooms/getRooms/' . $room_id);
             $approval_horizon = $room[0]['Organizationalunit']['approval_horizon'];
-            $approval_horizon_max_date = new DateTime();
-            $approval_horizon_max_date->modify('+' . $approval_horizon . ' week');
+            $approval_horizon_max_date = (new DateTime())->modify('+' . $approval_horizon . ' week');
 
             $interval_booking = null;
             $interval_iteration = $this->request->data['Booking']['interval_iteration'];
@@ -172,8 +219,7 @@ class BookingsController extends AppController
                     case 'A': // after
                         $interval_count = $this->request->data['Booking']['interval_count'];
 
-                        $interval_end = new DateTime($end->format('Y-m-d H:i:s'));
-                        $interval_end->modify('+' . $interval_iteration * $interval_count . ' day');
+                        $interval_end = (new DateTime($end->format('Y-m-d H:i:s')))->modify('+' . $interval_iteration * $interval_count . ' day');
                         break;
                     case 'B': // date
                         $interval_end = new DateTime($this->request->data['Booking']['interval_end']);
@@ -221,11 +267,11 @@ class BookingsController extends AppController
 
                 for ($i = 1; $i <= $interval_count; $i++) {
 
-                    $interval_start_date = new DateTime($this->request->data['Booking']['startdatetime']);
+                    $interval_start_date = clone $start;
                     $interval_start_date->modify('+' . $interval_iteration * $i . ' day');
                     $interval_booking[$i]['start_date'] = $interval_start_date;
 
-                    $interval_end_date = new DateTime($end->format('Y-m-d H:i:s'));
+                    $interval_end_date = clone $end;
                     $interval_end_date->modify('+' . $interval_iteration * $i . ' day');
                     $interval_booking[$i]['end_date'] = $interval_end_date;
 
@@ -296,11 +342,16 @@ class BookingsController extends AppController
                 $this->request->data['Booking']['user_id'] = $this->Auth->user('id');
                 $this->request->data['Booking']['group_id'] = $group_id;
                 $this->request->data['Booking']['status'] = $this->getStatusFromDate($approval_horizon, $end, $approval_horizon_max_date);
+                $this->request->data['Booking']['startdatetime'] = $start->format('Y-m-d H:i:s');
+                $val = strftime('%d %B %Y - %H:%M', $start->getTimestamp());
+                if(WIN)
+                    $val = utf8_encode($val);
+                $this->request->data['Booking']['start'] = $val;
+                $this->request->data['Booking']['enddatetime'] = $end->format('Y-m-d H:i:s');
                 $val = strftime('%d %B %Y - %H:%M', $end->getTimestamp());
                 if(WIN)
                     $val = utf8_encode($val);
                 $this->request->data['Booking']['end'] = $val;
-                $this->request->data['Booking']['enddatetime'] = $end->format('Y-m-d H:i:s');
 
                 $this->Booking->create();
                 if ($this->Booking->save($this->request->data)) {
@@ -621,6 +672,16 @@ class BookingsController extends AppController
      */
 
     //<editor-fold defaultstate="collapsed" desc="helper functions">
+
+    /**
+     * @param $str_day
+     * @param $str_hour
+     * @return DateTime
+     */
+    private function StrToDateTime($str_day, $str_hour) {
+        preg_match('/(\d+)\:(\d+)/', $str_hour, $match);
+        return (new DateTime($str_day))->setTime($match[1], $match[2]);
+    }
 
     private function add_silent($room_id, $user_id, $group_id, $name, $status, $startdatetime, $enddatetime, &$id)
     {

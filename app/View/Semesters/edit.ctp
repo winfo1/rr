@@ -30,9 +30,9 @@
                     'value' => $val));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <input type="hidden" name="data[Semester][start]" id="SemesterStart" value="<?php echo $this->request->data['Semester']['start']; ?>"/>
+            <?php echo $this->Form->hidden('start', array('value' => $this->request->data['Semester']['start'])); ?>
         </div>
         <div class="form-group">
             <label for="SemesterEnddate"><?php echo __('Ende'); ?></label>
@@ -50,9 +50,9 @@
                     'value' => $val));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <input type="hidden" name="data[Semester][end]" id="SemesterEnd" value="<?php echo $this->request->data['Semester']['end']; ?>"/>
+            <?php echo $this->Form->hidden('end', array('value' => $this->request->data['Semester']['end'])); ?>
         </div>
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Ändern'), 'class' => 'btn btn-primary btn-lg')); ?>

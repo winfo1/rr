@@ -41,6 +41,7 @@ $action = $this->params['action'];
 		echo "\t".$this->Html->css('bootstrap.min') . "\r\n";
         echo "\t".$this->Html->css('bootstrap.min.user') . "\r\n";
         echo "\t".$this->Html->css('bootstrap-calendar.min') . "\r\n";
+        echo "\t".$this->Html->css('bootstrap-clockpicker.min') . "\r\n";
         echo "\t".$this->Html->css('bootstrap-datetimepicker.min') . "\r\n";
         echo "\t".$this->Html->css('bootstrap-lightbox.min') . "\r\n";
 
@@ -60,6 +61,8 @@ $action = $this->params['action'];
         echo "\t". $this->Html->script('typeahead.bundle.min') . "\r\n";
 
         echo "\t". $this->Html->script('bootstrap.min') . "\r\n";
+
+        echo "\t". $this->Html->script('bootstrap-clockpicker.min') . "\r\n";
 
         echo "\t". $this->Html->script('bootstrap-lightbox.min') . "\r\n";
 

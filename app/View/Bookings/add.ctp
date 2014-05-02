@@ -1,168 +1,182 @@
 <?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
 <div class="container">
-    <div class="bookings form">
-        <?php echo $this->Form->create('Booking'); ?>
-        <h1><?php echo __('Raum buchen'); ?></h1>
-        <fieldset>
-            <legend><?php echo __('Geben Sie hier die Daten der neuen Buchung an'); ?></legend>
+<?php echo $this->Form->create('Booking', array(
+    'class' => 'well',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'wrapInput' => false,
+        'class' => 'form-control',
+    )
+)); ?>
+    <h1><?php echo __('Raum buchen'); ?></h1>
+    <fieldset>
+        <legend><?php echo __('Geben Sie hier die Daten der neuen Buchung an'); ?></legend>
 
-            <div class="twitter-typeahead" style="position: relative; display: inline-block; direction: ltr;">
-                <div class="form-group">
-                    <label for="BookingName"><?php echo __('Bezeichnung'); ?></label>
-                    <?php
-                    echo $this->Form->input('name', array(
-                        'type'  => 'text',
-                        'class' => 'form-control typeahead input-block-level',
-                        'label' => false,
-                        'placeholder' => 'Bezeichnung'));
-                    ?>
+        <?php echo $this->Form->input('name', array(
+            'class' => 'form-control typeahead input-block-level',
+            'label' => __('Bezeichnung'),
+            'placeholder' => 'Bezeichnung'));
+        ?>
+
+        <?php echo $this->Form->hidden('view_tabs', array('value' => $view_tabs)); ?>
+
+        <ul class="nav nav-tabs">
+            <li class="<?php echo (($view_tabs == 's') ? 'active' : '')?>"><a href="#simple_time_settings" data-toggle="tab"><?php echo __('Einfach'); ?></a></li>
+            <li class="<?php echo (($view_tabs == 'a') ? 'active' : '')?>"><a href="#advanced_time_settings" data-toggle="tab"><?php echo __('Erweitert'); ?></a></li>
+        </ul>
+
+        <div class="tab-content well well-sm">
+            <div class="tab-pane fade<?php echo (($view_tabs == 's') ? ' in active' : '')?>" id="simple_time_settings">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label><?php echo __('Startzeit'); ?></label>
+                        <div class="btn-group" data-toggle="buttons" style="margin: 5px">
+                            <label class="btn btn-default active"><input type="radio" name="data[Booking][start_minutes]" value="0" checked><?php echo __('jetzt'); ?></label>
+                            <label class="btn btn-default"><input type="radio" name="data[Booking][start_minutes]" value="15"><?php echo __('in 15 Min.'); ?></label>
+                            <label class="btn btn-default"><input type="radio" name="data[Booking][start_minutes]" value="30"><?php echo __('in 30 Min.'); ?></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><?php echo __('Dauer'); ?></label>
+                        <div class="btn-group" data-toggle="buttons" style="margin: 5px">
+                            <label class="btn btn-default active"><input type="radio" name="data[Booking][duration]" value="30" checked><?php echo __('für 30 Min.'); ?></label>
+                            <label class="btn btn-default"><input type="radio" name="data[Booking][duration]" value="60"><?php echo __('für 1 Std.'); ?></label>
+                            <label class="btn btn-default"><input type="radio" name="data[Booking][duration]" value="120"><?php echo __('für 2 Std.'); ?></label>
+                            <label class="btn btn-default"><input type="radio" name="data[Booking][duration]" value="1440"><?php echo __('ganztägig'); ?></label>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group" id="Room">
-                <label for="BookingRoomId" class="control-label"><?php echo __('Raum'); ?></label>
+            <div class="tab-pane fade<?php echo (($view_tabs == 'a') ? ' in active' : '')?>" id="advanced_time_settings">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="BookingDayView"><?php echo __('Tag'); ?></label>
+                        <div class="input-group date form_date col-md-2" data-date-format="dd MM yyyy" data-link-field="data[Booking][day_view]">
+                            <?php
+                            $val = strftime('%d %B %Y', strtotime($day));
+                            if(WIN)
+                                $val = utf8_encode($val);
+                            echo $this->Form->input('day_view', array(
+                                'type' => 'text',
+                                'div' => false,
+                                'class' => 'form-control',
+                                'style' => 'width: 100%',
+                                'label' => false,
+                                'size' => '16',
+                                'readonly' => true,
+                                'value' => $val));
+                            ?>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        <?php echo $this->Form->hidden('day', array('value' => $day)); ?>
+                        <label for="BookingStartTime"><?php echo __('Startzeit'); ?></label>
+                        <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
+                            <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit', 'value' => $start_hour)); ?>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                        </div>
+                        <label for="BookingEndTime"><?php echo __('Endzeit'); ?></label>
+                        <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
+                            <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende', 'value' => $end_hour)); ?>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                        </div>
 
-                <?php
-                echo $this->Form->input('room_id', array(
-                    'class' => 'form-control',
-                    'label' => false,
-                    'selected' => $room_id,
-                    'options' => $rooms));
-                ?>
-            </div>
-
-            <div class="form-group">
-                <label for="BookingStart" class="control-label"><?php echo __('Startzeit'); ?></label>
-
-                <div class="input-group date form_datetime" data-date-format="dd MM yyyy - HH:ii" data-link-field="data[Booking][start]">
-                    <?php
-                    $val = strftime('%d %B %Y - %H:%M');
-                    if(WIN)
-                        $val = utf8_encode($val);
-                    echo $this->Form->input('start', array(
-                        'type' => 'text',
-                        'class' => 'form-control',
-                        'label' => false,
-                        'readonly' => true,
-                        'value' => $val));
-                    ?>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
                 </div>
-                <input type="hidden" name="data[Booking][startdatetime]" id="BookingStartDateTime" value="<?php echo date('Y-m-d H:i:s'); ?>" />
             </div>
+        </div>
+
+        <?php echo $this->Form->input('room_id', array(
+            'div' => array('div' => 'form-group', 'id' => 'Room'),
+            'label' => __('Raum'),
+            'selected' => $room_id,
+            'options' => $rooms));
+        ?>
+
+        <?php
+        $options = array('0' => 'ohne', '1' => 'täglich', '7' => 'wöchenlich', '14' => 'alle 2 Wochen', '28' => 'jeden Monat', '56' => 'jeden 2ten Monat');
+
+        echo $this->Form->input('interval_iteration', array(
+            'label' => __('Wiederholung'),
+            'selected' => array_keys($options)[0],
+            'options' => $options));
+        ?>
+
+        <div class="form-group" id="BookingIntervalGroup" style="display: none">
+            <label class="control-label"><?php echo __('Ende'); ?></label>
 
             <div class="form-group">
-                <label for="BookingDuration" class=" control-label"><?php echo __('Dauer'); ?></label>
-
                 <div class="input-group">
-                <span class="input-group-addon">
-
-                    <label style="text-align: left; width: 80px">
-                        <input type="hidden" name="data[Booking][full_time]" id="BookingFullTime_" value="0"/>
-                        <input type="checkbox" name="data[Booking][full_time]" id="BookingFullTime" value="1" onclick="$(BookingDuration).toggleDisabled();"> ganztägig
-                    </label>
-
-                </span>
+                    <span class="input-group-addon">
+                        <label style="text-align: left; width: 80px">
+                            <input type="radio" name="data[Booking][interval_type]" value="A" checked=""> Nach
+                        </label>
+                    </span>
                     <?php
-                    $options = array('15' => '15 Minuten', '30' => '30 Minuten', '60' => '1 Stunde', '120' => '2 Stunden', '180' => '3 Stunden', '240' => '4 Stunden', '300' => '5 Stunden', '360' => '6 Stunden');
+                    $options = array('1' => '1 Wiederholung');
+                    for ($i = 2; $i < 10; $i++) {
+                        $options[$i] = $i . ' Wiederholungen';
+                    }
 
-                    echo $this->Form->input('duration', array(
-                        'class' => 'form-control',
+                    echo $this->Form->input('interval_count', array(
+                        'div' => false,
                         'label' => false,
+                        'selected' => '3',
+                        'options' => $options));
+                    ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+
+                    <span class="input-group-addon">
+                        <label style="text-align: left; width: 80px">
+                            <input type="radio" name="data[Booking][interval_type]" value="B"> Datum
+                        </label>
+                    </span>
+
+                    <div class="input-group date form_end_date" style="width: 100%" data-date-format="dd MM yyyy" data-link-field="data[Booking][interval_date]">
+                        <?php
+                        $val = strftime('%d %B %Y', strtotime("+2 weeks"));
+                        if(WIN)
+                            $val = utf8_encode($val);
+                        echo $this->Form->input('interval_date', array(
+                            'type' => 'text',
+                            'label' => false,
+                            'disabled' => true,
+                            'readonly' => true,
+                            'value' => $val));
+                        ?>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <?php echo $this->Form->hidden('interval_end', array('value' => date('Y-m-d', strtotime("+2 weeks")))); ?>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <label style="text-align: left; width: 80px">
+                            <input type="radio" name="data[Booking][interval_type]" value="C"> Dieses
+                        </label>
+                    </span>
+                    <?php
+                    $options = array('1' => 'Semester', '2' => 'anfang nächstes Semester', '3' => 'nächstes Semester', '4' => 'Jahr');
+
+                    echo $this->Form->input('interval_range', array(
+                        'div' => false,
+                        'label' => false,
+                        'disabled' => true,
                         'options' => $options));
                     ?>
                 </div>
             </div>
 
-
-            <div class="form-group">
-                <label for="BookingIntervalIteration" class="control-label"><?php echo __('Wiederholung'); ?></label>
-                <?php
-                $options = array('0' => 'ohne', '1' => 'täglich', '7' => 'wöchenlich', '14' => 'alle 2 Wochen', '28' => 'jeden Monat', '56' => 'jeden 2ten Monat');
-
-                echo $this->Form->input('interval_iteration', array(
-                    'class' => 'form-control',
-                    'label' => false,
-                    'selected' => '0',
-                    'options' => $options));
-                ?>
-            </div>
-
-            <div class="form-group" id="BookingIntervalGroup" style="display: none">
-                <label class=" control-label"><?php echo __('Ende'); ?></label>
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <label style="text-align: left; width: 80px">
-                                <input type="radio" name="data[Booking][interval_type]" value="A" checked=""> Nach
-                            </label>
-                        </span>
-                        <?php
-                        $options = array('1' => '1 Wiederholung');
-                        for ($i = 2; $i < 10; $i++) {
-                            $options[$i] = $i . ' Wiederholungen';
-                        }
-
-                        echo $this->Form->input('interval_count', array(
-                            'class' => 'form-control',
-                            'label' => false,
-                            'selected' => '3',
-                            'options' => $options));
-                        ?>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-
-                        <span class="input-group-addon">
-                            <label style="text-align: left; width: 80px">
-                                <input type="radio" name="data[Booking][interval_type]" value="B"> Datum
-                            </label>
-                        </span>
-
-                        <div class="input-group date form_end_date" style="width: 100%" data-date-format="dd MM yyyy" data-link-field="data[Booking][interval_date]">
-                            <?php
-                            $val = strftime('%d %B %Y', strtotime("+2 weeks"));
-                            if(WIN)
-                                $val = utf8_encode($val);
-                            echo $this->Form->input('interval_date', array(
-                                'type' => 'text',
-                                'class' => 'form-control',
-                                'label' => false,
-                                'disabled' => true,
-                                'readonly' => true,
-                                'value' => $val));
-                            ?>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                        </div>
-                    </div>
-                    <input type="hidden" name="data[Booking][interval_end]" id="BookingIntervalEnd" value="<?php echo date('Y-m-d', strtotime("+2 weeks")); ?>"/>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <label style="text-align: left; width: 80px">
-                                <input type="radio" name="data[Booking][interval_type]" value="C"> Dieses
-                            </label>
-                        </span>
-                        <?php
-                        $options = array('1' => 'Semester', '2' => 'anfang nächstes Semester', '3' => 'nächstes Semester', '4' => 'Jahr');
-
-                        echo $this->Form->input('interval_range', array(
-                            'class' => 'form-control',
-                            'label' => false,
-                            'disabled' => true,
-                            'options' => $options));
-                        ?>
-                    </div>
-                </div>
-
-            </div>
-        </fieldset>
-        <?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-default btn-lg')); ?>
-    </div>
+        </div>
+    </fieldset>
+    <?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-primary btn-lg')); ?>
 </div>
 
 <script type="text/javascript">
@@ -289,18 +303,21 @@
         }
     });
 
-    $(".form_datetime").datetimepicker({
+    $(".form_date").datetimepicker({
         language: 'de',
         weekStart: 1,
         todayBtn: 1,
         autoclose: 1,
         todayHighlight: 1,
         startView: 2,
+        minView: 2,
         forceParse: 0,
         pickerPosition: 'bottom-left',
-        linkField: "BookingStartDateTime",
-        linkFormat: "yyyy-mm-dd hh:ii:ss"
+        linkField: "BookingDay",
+        linkFormat: "yyyy-mm-dd"
     });
+
+    $('.clockpicker').clockpicker();
 
     $('.form_end_date').datetimepicker({
         language: 'de',
@@ -317,6 +334,12 @@
     });
 
     $(document).ready(function () {
+
+        var BookingViewTabs = $('#BookingViewTabs');
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+            BookingViewTabs.val($(e.target).attr('href').charAt(1));
+        });
 
         var BookingRoomId = $('#BookingRoomId');
 

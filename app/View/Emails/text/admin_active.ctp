@@ -9,17 +9,11 @@ Raum: <?php echo $room['Room']['name']; ?>
 
 Benutzer: <?php echo $this->Session->read('Auth.User.username'); ?>
 
-<?php if ($data['Booking']['full_time']) : ?>
-Ganztägig: ja
-
-<?php else : ?>
 Startzeit: <?php echo $data['Booking']['start']; ?> 
 
 Dauer: <?php echo $data['Booking']['duration']; ?> Minuten
 
-Endzeit: <?php echo $data['Booking']['end']; ?> 
-
-<?php endif; ?>
+Endzeit: <?php echo $data['Booking']['end']; ?>
 
 
 Ansicht: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $id)); ?>

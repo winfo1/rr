@@ -59,7 +59,7 @@
 
                 <div class="input-group date form_datetime" data-date-format="dd MM yyyy - HH:ii" data-link-field="data[Booking][start]">
                     <?php
-                    $val = strftime('%d %B %Y - %H:%M', $this->Time->gmt($this->request->data['Booking']['startdatetime']));
+                    $val = strftime('%d %B %Y - %H:%M', (new DateTime($this->request->data['Booking']['startdatetime']))->getTimestamp());
                     if(WIN)
                         $val = utf8_encode($val);
                     echo $this->Form->input('start', array(
@@ -80,7 +80,7 @@
 
                 <div class="input-group date form_end_date col-md-12" data-date-format="dd MM yyyy - HH:ii" data-link-field="data[Booking][BookingEnd]">
                     <?php
-                    $val = strftime('%d %B %Y - %H:%M', $this->Time->gmt($this->request->data['Booking']['enddatetime']));
+                    $val = strftime('%d %B %Y - %H:%M', (new DateTime($this->request->data['Booking']['enddatetime']))->getTimestamp());
                     if(WIN)
                         $val = utf8_encode($val);
                     echo $this->Form->input('end', array(
