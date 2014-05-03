@@ -337,6 +337,27 @@
         }
     });
 
+    $('#BookingEndHour').change(function() {
+        d = this.value.indexOf(':');
+        h2 = this.value.substr(0, d);
+        m2 = this.value.substr(d + 1);
+
+        var BookingStartHour = $('#BookingStartHour');
+        d = BookingStartHour.val().indexOf(':');
+        h1 = BookingStartHour.val().substr(0, d);
+        m1 = BookingStartHour.val().substr(d + 1);
+
+        if(h1 > h2) {
+            if(m1 > m2) {
+                this.value = h1 + ':' + m1;
+            } else {
+                this.value = h1 + ':' + m2;
+            }
+        } if((h1 == h2) && (m1 > m2)) {
+            this.value = h2 + ':' + m1;
+        }
+    });
+
     $('.clockpicker').clockpicker();
 
     $('.form_end_date').datetimepicker({

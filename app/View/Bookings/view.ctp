@@ -1,5 +1,12 @@
+<?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
+
 <div class="container">
-<?php echo $this->Form->create('Booking', array()); ?>
+<?php
+echo $this->Form->create('Booking', array());
+
+$start = new DateTime($this->request->data['Booking']['startdatetime']);
+$end = new DateTime($this->request->data['Booking']['enddatetime']);
+?>
     <fieldset>
         <div class="page-header">
             <h1>
@@ -11,11 +18,27 @@
                     <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> ' . __('Bearbeiten'), array('action'=> 'edit', $this->params['pass'][0]), array('class' => 'btn btn-default ', 'escape' => false)); ?>
                 <?php endif; ?>
             </h1>
+            <h4>
+                <?php
+                $val = strftime('%d %B %Y', $start->getTimestamp());
+                if(WIN)
+                    $val = utf8_encode($val);
+
+                echo $val . ' ' . $start->format('H:i') . '-' . $end->format('H:i'); ?>
+            </h4>
             <h3>
                 <span class="label label-<?php echo $this->status->toBootstrap($this->request->data['Booking']['status']); ?>" style=""><?php echo $this->request->data['Booking']['status']; ?></span>
-                <span class="label label-default btn-lg"><?php echo $rooms[$this->request->data['Booking']['room_id']]; ?></span>
+                <span class="label label-default">
+                    <a class="btn-link" data-toggle="modal" data-target="#ModalRoom" style="font-weight:bold; color:white;">
+                        <?php echo $rooms[$this->request->data['Booking']['room_id']]; ?>
+                    </a>
+                </span>
                 <span class="pull-right">
-                    <span class="label label-default"><?php echo $this->request->data['User']['username']; ?></span>
+                    <span class="label label-default">
+                        <a class="btn-link" data-toggle="modal" data-target="#ModalUser" style="font-weight:bold; color:white;">
+                            <?php echo $this->request->data['User']['username']; ?>
+                        </a>
+                    </span>
                 </span>
             </h3>
         </div>
@@ -42,6 +65,74 @@
         <?php endif; ?>
         <div class="push"></div>
     </fieldset>
+</div>
+
+<div class="modal fade" id="ModalRoom" tabindex="-1" role="dialog" aria-labelledby="ModalRoomLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="label"><?php echo __('Rauminformationen'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <div class="well">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Eigenschaft</th>
+                            <th>Wert</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Sitze</td>
+                            <td><?php echo $this->request->data['Room']['seats']; ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo __('Schließen'); ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="ModalUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="label"><?php echo __('Benutzerinformationen'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <div class="well">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Eigenschaft</th>
+                            <th>Wert</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><?php echo $this->Html->link('E-Mail', 'mailto:' . $this->request->data['User']['emailaddress']); ?></td>
+                            <td><?php echo $this->request->data['User']['emailaddress']; ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $this->Html->link('Telefonnummer', 'tel:' . $this->request->data['User']['phonenumber']); ?></td>
+                            <td><?php echo $this->request->data['User']['phonenumber']; ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo __('Schließen'); ?></button>
+            </div>
+        </div>
+    </div>
 </div>
 
     <script type="text/javascript">

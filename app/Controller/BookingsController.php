@@ -175,7 +175,10 @@ class BookingsController extends AppController
             $end_hour = str_replace('-', ':', $str_end_time);
             $view_tabs = 'a';
         } else {
-            $end_hour = (new DateTime())->modify('+1 hour')->format('H:i');
+            $now = new DateTime();
+            $diff = $now->diff(new DateTime('tomorrow'));
+            $minutes_to_add = min( ($diff->h * 60) + ($diff->i), 60);
+            $end_hour = (new DateTime())->modify('+' . $minutes_to_add . 'minutes')->format('H:i');
         }
         $this->set(compact('end_hour'));
 
