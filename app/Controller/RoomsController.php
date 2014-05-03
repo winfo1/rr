@@ -80,7 +80,9 @@ class RoomsController extends AppController {
 
         $this->set(compact('organizationalunits'));
 
-        $resources = $this->requestAction('/resources/getResourcesAsList');
+        $resources_all = $this->requestAction('/resources/getResources');
+        $this->set(compact('resources_all'));
+        $resources = $this->requestAction('/resources/getResourcesAsList', array('pass' => array($resources_all)));
         $this->set(compact('resources'));
     }
 

@@ -84,14 +84,10 @@ class ResourcesController extends AppController {
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    function getResources($id = null)
-    {
-        if(isset($id) && is_numeric($id))
-        {
+    function getResources($id = null) {
+        if(isset($id) && is_numeric($id)) {
             $condition = array('Resource.id =' => $id);
-        }
-        else
-        {
+        } else {
             $condition = array();
         }
 
@@ -103,14 +99,14 @@ class ResourcesController extends AppController {
         return $list;
     }
 
-    function getResourcesAsList()
-    {
-        $all = $this->getResources();
+    function getResourcesAsList($data = null) {
+        if(!isset($data)) {
+            $data = $this->getResources();
+        }
 
         $result = array();
 
-        foreach ($all as $value)
-        {
+        foreach ($data as $value) {
             $result[$value['Resource']['id']] = $value['Resource']['name'];
         }
 
