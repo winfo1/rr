@@ -72,7 +72,7 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="label"><?php echo __('Rauminformationen'); ?></h4>
+                <h4 class="modal-title" id="ModalRoomLabel"><?php echo __('Rauminformationen'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="well">
@@ -104,7 +104,7 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="label"><?php echo __('Benutzerinformationen'); ?></h4>
+                <h4 class="modal-title" id="ModalUserLabel"><?php echo __('Benutzerinformationen'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="well">
