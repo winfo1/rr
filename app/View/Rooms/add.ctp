@@ -88,7 +88,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="addResourceLabel"><?php echo __('Ressource hinzufügen'); ?></h4>
+                    <h4 class="modal-title" id="addResourceLabel"><?php echo __('Ressource diesem Raum  hinzufügen'); ?></h4>
                 </div>
                 <div class="modal-body">
                     <?php
@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-footer">
                     <?php
-                    echo $this->Form->button(__('Hinzufügen'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return addResource($(\'#ResourceNewResourceId\').val(),$(\'#ResourceNewValue\').val());'));
+                    echo $this->Form->button(__('Hinzufügen'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return addResource($(\'#ResourceNewResourceId\').val(),$(\'#ResourceNewValue\').val())'));
                     echo $this->Form->button(__('Abbrechen'), array('type' => 'button', 'class' => 'btn btn-default', 'escape' => false, 'data-dismiss' => 'modal'));
                     ?>
                 </div>
@@ -108,7 +108,7 @@
 </div>
 
     <script type="text/javascript">
-        var room_resource_index = 0;
+        var room_resource_index = 1;
         var room_resources = <?php echo json_encode($resources_all); ?>;
         var room_resource_types = <?php echo json_encode($type); ?>;
 
@@ -130,11 +130,28 @@
 
             var res = getResource(id);
 
-            var new_room_resource = '<tr id="new"><td></td><td>' + res.name + '</td><td class="text-center">' + getResourceTypeName(res.type) + '</td><td class="text-center">' + value +  '</td><td></td></tr>';
+            var new_room_resource = '<tr id="ResourceIdNew' + room_resource_index + '">' +
+                '<input type="hidden" name="data[Resource][resource_id][new][' + room_resource_index + ']" value="' + id + '"/>' +
+                '<input type="hidden" name="data[Resource][value][new][' + room_resource_index + ']" value="' + value + '"/>' +
+                '<td></td>' +
+                '<td>' + res.name + '</td>' +
+                '<td class="text-center">' + getResourceTypeName(res.type) + '</td>' +
+                '<td class="text-center">' + value +  '</td>' +
+                '<td>&nbsp;<?php echo $this->Form->button(__('Löschen'), array('type' => 'button', 'class' => 'btn btn-danger btn-sm', 'escape' => false, 'onclick' => 'return delResource(\\\'ResourceIdNew\' + room_resource_index + \'\\\')')); ?></td></tr>';
 
             $(new_room_resource).appendTo('#RoomResources');
 
+            room_resource_index++;
+
             $('#addResource').modal('hide');
+        }
+
+        function editResource(id) {
+
+        }
+
+        function delResource(id) {
+            $('#' + id).remove();
         }
 
         $('#RoomOrganizationalunitId').focus();
