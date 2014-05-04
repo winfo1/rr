@@ -107,8 +107,8 @@ class RoomsController extends AppController {
     public function add() {
         $this->beforeDetailDisplay();
         if ($this->request->is('post')) {
-            $this->Room->create();
             $this->CleanupImages($this->request->data['Roomimage']);
+            $this->Room->create();
             if ($this->Room->saveAssociated($this->request->data)) {
                 $this->Session->setFlash(__('Der Raum wurde hinzugefügt'), 'alert', array(
                     'plugin' => 'BoostCake',
@@ -116,9 +116,10 @@ class RoomsController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The room could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Der Raum konnte nicht hinzugefügt werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         }
     }
 
@@ -126,10 +127,18 @@ class RoomsController extends AppController {
         $this->beforeDetailDisplay();
         $this->Room->id = $id;
         if (!$this->Room->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Raum nicht gefunden'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->CleanupImages($this->request->data['Roomimage']);
+
+            if(array_key_exists('Resource', $this->request->data)) {
+                foreach($this->request->data['Resource'] as $key => $value) {
+                    if(array_key_exists('delete', $value['ResourcesRoom'])) {
+                        unset($this->request->data['Resource'][$key]);
+                    }
+                }
+            }
 
             foreach($this->request->data['Roomimage'] as $key => $value) {
 
@@ -163,12 +172,32 @@ class RoomsController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The room could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Der Raum konnte nicht geändert werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         } else {
             $this->request->data = $this->Room->read(null, $id);
         }
+    }
+
+    public function delete($id = null) {
+        $this->Room->id = $id;
+        if (!$this->Room->exists()) {
+            throw new NotFoundException(__('Raum nicht gefunden'));
+        }
+        if ($this->Room->delete()) {
+            $this->Session->setFlash(__('Der Raum wurde gelöscht'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-success'
+            ));
+            return $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('Der Raum konnte nicht gelöscht werden'), 'alert', array(
+            'plugin' => 'BoostCake',
+            'class' => 'alert-danger'
+        ));
+        return $this->redirect(array('action' => 'index'));
     }
 
     public function find() {

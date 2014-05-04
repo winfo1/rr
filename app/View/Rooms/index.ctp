@@ -40,6 +40,10 @@
 
                     echo $this->Html->link("Bearbeiten", array('action' => 'edit', $room['Room']['id']));
 
+                    echo ' | ';
+
+                    echo $this->Html->link("Löschen", array('action' => 'delete', $room['Room']['id']));
+
                     ?></td>
             </tr>
         <?php endforeach; ?>

@@ -86,7 +86,7 @@ class UsersController extends AppController {
     public function view($id = null) {
         $this->User->id = $id;
         if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Benutzer nicht gefunden'));
         }
         $this->set('user', $this->User->read(null, $id));
     }
@@ -153,7 +153,7 @@ class UsersController extends AppController {
         $id = ($my ? $this->Session->read('Auth.User.id') : $id);
         $this->User->id = $id;
         if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Benutzer nicht gefunden'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->User->save($this->request->data)) {
@@ -180,7 +180,7 @@ class UsersController extends AppController {
     public function delete($id = null) {
         $this->User->id = $id;
         if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Benutzer nicht gefunden'));
         }
         if ($this->User->delete()) {
             $this->Session->setFlash(__('Der Benutzer wurde gelöscht'), 'alert', array(
@@ -199,7 +199,7 @@ class UsersController extends AppController {
     public function upgrade() {
         $this->User->id = $this->Session->read('Auth.User.id');
         if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Benutzer nicht gefunden'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['User']['organizationalunit_fixed'] = '1';
@@ -258,7 +258,7 @@ class UsersController extends AppController {
 
         $this->User->id = $id;
         if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Benutzer nicht gefunden'));
         }
         $this->User->set('organizationalunit_verified', '1');
         $this->User->set('role', User::admin);
