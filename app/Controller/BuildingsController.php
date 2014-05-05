@@ -44,16 +44,17 @@ class BuildingsController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The user could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Das Gebäude konnte nicht hinzugefügt werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         }
     }
 
     public function edit($id = null) {
         $this->Building->id = $id;
         if (!$this->Building->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Gebäude nicht gefunden'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->Building->save($this->request->data)) {
@@ -63,12 +64,32 @@ class BuildingsController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The user could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Das Gebäude konnte nicht geändert werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         } else {
             $this->request->data = $this->Building->read(null, $id);
         }
+    }
+
+    public function delete($id = null) {
+        $this->Building->id = $id;
+        if (!$this->Building->exists()) {
+            throw new NotFoundException(__('Gebäude nicht gefunden'));
+        }
+        if ($this->Building->delete()) {
+            $this->Session->setFlash(__('Das Gebäude wurde gelöscht'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-success'
+            ));
+            return $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('Das Gebäude konnte nicht gelöscht werden'), 'alert', array(
+            'plugin' => 'BoostCake',
+            'class' => 'alert-danger'
+        ));
+        return $this->redirect(array('action' => 'index'));
     }
 
     //</editor-fold>

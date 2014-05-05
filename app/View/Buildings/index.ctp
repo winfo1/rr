@@ -9,7 +9,7 @@
             <th><?php echo $this->Paginator->sort('name', 'Name'); ?></th>
             <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
             <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -22,7 +22,15 @@
                 <td class="text-center"><?php echo $building['Building']['name']; ?></td>
                 <td class="text-center"><?php echo $this->Time->niceShort($building['Building']['created']); ?></td>
                 <td class="text-center"><?php echo $this->Time->niceShort($building['Building']['modified']); ?></td>
-                <td><?php echo $this->Html->link("Bearbeiten", array('action' => 'edit', $building['Building']['id'])); ?></td>
+                <td><?php
+
+                    echo $this->Html->link(__('Bearbeiten'), array('action' => 'edit', $building['Building']['id']));
+
+                    echo ' | ';
+
+                    echo $this->Html->link(__('Löschen'), array('action' => 'delete', $building['Building']['id']));
+
+                    ?></td>
             </tr>
         <?php endforeach; ?>
         <?php unset($building); ?>

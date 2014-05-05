@@ -23,7 +23,7 @@
                 <th><?php echo $this->Paginator->sort('enddatetime', 'Endzeit'); ?></th>
                 <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
                 <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-                <th>Aktionen</th>
+                <th><?php echo __('Aktionen'); ?></th>
             </tr>
             </thead>
             <tbody>

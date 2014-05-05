@@ -10,7 +10,7 @@
             <th><?php echo $this->Paginator->sort('emailaddress', 'E-Mail-Adresse'); ?></th>
             <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
             <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -33,11 +33,11 @@
                         echo ' | ';
                     }
 
-                    echo $this->Html->link("Bearbeiten", array('action' => 'edit', $user['User']['id']));
+                    echo $this->Html->link(__('Bearbeiten'), array('action' => 'edit', $user['User']['id']));
 
                     echo ' | ';
 
-                    echo $this->Html->link("Löschen", array('action' => 'delete', $user['User']['id']));
+                    echo $this->Html->link(__('Löschen'), array('action' => 'delete', $user['User']['id']));
 
                     ?></td>
             </tr>

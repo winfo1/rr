@@ -76,6 +76,25 @@ class SemestersController extends AppController {
         }
     }
 
+    public function delete($id = null) {
+        $this->Semester->id = $id;
+        if (!$this->Semester->exists()) {
+            throw new NotFoundException(__('Semester nicht gefunden'));
+        }
+        if ($this->Semester->delete()) {
+            $this->Session->setFlash(__('Das Semester wurde gelöscht'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-success'
+            ));
+            return $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('Das Semester konnte nicht gelöscht werden'), 'alert', array(
+            'plugin' => 'BoostCake',
+            'class' => 'alert-danger'
+        ));
+        return $this->redirect(array('action' => 'index'));
+    }
+
     public function getActiveSemester() {
 
         $semester = $this->Semester->find('first', array(

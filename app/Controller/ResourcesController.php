@@ -53,31 +53,52 @@ class ResourcesController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The resource could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Die Ressource konnte nicht hinzugefügt werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         }
     }
 
     public function edit($id = null) {
         $this->Resource->id = $id;
         if (!$this->Resource->exists()) {
-            throw new NotFoundException(__('Invalid resource'));
+            throw new NotFoundException(__('Ressource nicht gefunden'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->Building->save($this->request->data)) {
+            if ($this->Resource->save($this->request->data)) {
                 $this->Session->setFlash(__('Die Ressource wurde geändert'), 'alert', array(
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The resource could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Die Ressource konnte nicht geändert werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         } else {
             $this->request->data = $this->Resource->read(null, $id);
         }
+    }
+
+    public function delete($id = null) {
+        $this->Resource->id = $id;
+        if (!$this->Resource->exists()) {
+            throw new NotFoundException(__('Ressource nicht gefunden'));
+        }
+        if ($this->Resource->delete()) {
+            $this->Session->setFlash(__('Die Ressource wurde gelöscht'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-success'
+            ));
+            return $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('Die Ressource konnte nicht gelöscht werden'), 'alert', array(
+            'plugin' => 'BoostCake',
+            'class' => 'alert-danger'
+        ));
+        return $this->redirect(array('action' => 'index'));
     }
 
     //</editor-fold>

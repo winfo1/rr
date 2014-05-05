@@ -42,7 +42,7 @@
             <th><?php echo $this->Paginator->sort('number', 'Nummer'); ?></th>
             <th><?php echo $this->Paginator->sort('barrier_free', 'Barrierefrei'); ?></th>
             <th><?php echo $this->Paginator->sort('seats', 'Sitze'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>

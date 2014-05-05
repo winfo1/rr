@@ -9,7 +9,7 @@
             <th><?php echo $this->Paginator->sort('type', 'Typ'); ?></th>
             <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
             <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -22,7 +22,15 @@
                 <td class="text-center"><?php echo $type[$resource['Resource']['type']]; ?></td>
                 <td class="text-center"><?php echo $this->Time->niceShort($resource['Resource']['created']); ?></td>
                 <td class="text-center"><?php echo $this->Time->niceShort($resource['Resource']['modified']); ?></td>
-                <td><?php echo $this->Html->link("Bearbeiten", array('action' => 'edit', $resource['Resource']['id'])); ?></td>
+                <td><?php
+
+                    echo $this->Html->link(__('Bearbeiten'), array('action' => 'edit', $resource['Resource']['id']));
+
+                    echo ' | ';
+
+                    echo $this->Html->link(__('Löschen'), array('action' => 'delete', $resource['Resource']['id']));
+
+                    ?></td>
             </tr>
         <?php endforeach; ?>
         <?php unset($resource); ?>

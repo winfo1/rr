@@ -36,16 +36,17 @@ class OrganizationalunitsController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The user could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Die Organisationseinheit konnte nicht hinzugefügt werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         }
     }
 
     public function edit($id = null) {
         $this->Organizationalunit->id = $id;
         if (!$this->Organizationalunit->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Organisationseinheit nicht gefunden'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->Organizationalunit->save($this->request->data)) {
@@ -55,12 +56,32 @@ class OrganizationalunitsController extends AppController {
                 ));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(
-                __('The user could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Die Organisationseinheit konnte nicht geändert werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
         } else {
             $this->request->data = $this->Organizationalunit->read(null, $id);
         }
+    }
+
+    public function delete($id = null) {
+        $this->Organizationalunit->id = $id;
+        if (!$this->Organizationalunit->exists()) {
+            throw new NotFoundException(__('Organisationseinheit nicht gefunden'));
+        }
+        if ($this->Organizationalunit->delete()) {
+            $this->Session->setFlash(__('Die Organisationseinheit wurde gelöscht'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-success'
+            ));
+            return $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('Die Organisationseinheit konnte nicht gelöscht werden'), 'alert', array(
+            'plugin' => 'BoostCake',
+            'class' => 'alert-danger'
+        ));
+        return $this->redirect(array('action' => 'index'));
     }
 
     function getOrganizationalunits($id = null)

@@ -9,7 +9,7 @@
             <th><?php echo $this->Paginator->sort('name', 'Name'); ?></th>
             <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
             <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -28,7 +28,11 @@
 
                     echo ' | ';
 
-                    echo $this->Html->link("Bearbeiten", array('action' => 'edit', $organizationalunit['Organizationalunit']['id']));
+                    echo $this->Html->link(__('Bearbeiten'), array('action' => 'edit', $organizationalunit['Organizationalunit']['id']));
+
+                    echo ' | ';
+
+                    echo $this->Html->link(__('Löschen'), array('action' => 'delete', $organizationalunit['Organizationalunit']['id']));
 
                     ?></td>
             </tr>

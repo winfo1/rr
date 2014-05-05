@@ -76,7 +76,7 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
             </div>
             <div class="modal-body">
                 <div class="well">
-                    <table class="table">
+                    <table class="table" style="table-layout: fixed; word-wrap: break-word;">
                         <thead>
                         <tr>
                             <th>Eigenschaft</th>

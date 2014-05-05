@@ -14,7 +14,7 @@
             <th><?php echo $this->Paginator->sort('seats', 'Sitze'); ?></th>
             <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
             <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>

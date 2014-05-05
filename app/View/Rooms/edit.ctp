@@ -180,7 +180,7 @@
 </div>
 
     <script type="text/javascript">
-        var room_resource_index = <?php echo json_encode($count); ?>;
+        var room_resource_index = <?php echo $count; ?>;
         var room_resources = <?php echo json_encode($resources_all); ?>;
         var room_resource_types = <?php echo json_encode($type); ?>;
         var room_resource_used = [<?php foreach ($this->request->data['Resource'] as $resource) { echo '"' . $resource['id'] . '"'; if($resource !== end($this->request->data['Resource'])) { echo ','; } } unset($resource); ?>];

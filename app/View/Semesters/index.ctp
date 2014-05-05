@@ -10,7 +10,7 @@
             <th><?php echo $this->Paginator->sort('end', 'Ende'); ?></th>
             <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
             <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th>Aktionen</th>
+            <th><?php echo __('Aktionen'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -24,7 +24,15 @@
                 <td class="text-center"><?php echo $this->Time->niceShort($semester['Semester']['end']); ?></td>
                 <td class="text-center"><?php echo $this->Time->niceShort($semester['Semester']['created']); ?></td>
                 <td class="text-center"><?php echo $this->Time->niceShort($semester['Semester']['modified']); ?></td>
-                <td><?php echo $this->Html->link("Bearbeiten", array('action' => 'edit', $semester['Semester']['id'])); ?></td>
+                <td><?php
+
+                    echo $this->Html->link(__('Bearbeiten'), array('action' => 'edit', $semester['Semester']['id']));
+
+                    echo ' | ';
+
+                    echo $this->Html->link(__('Löschen'), array('action' => 'delete', $semester['Semester']['id']));
+
+                    ?></td>
             </tr>
         <?php endforeach; ?>
         <?php unset($semester); ?>
