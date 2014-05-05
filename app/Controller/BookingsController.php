@@ -192,6 +192,9 @@ class BookingsController extends AppController
             if($this->request->data['Booking']['view_tabs'] == 's') {
                 // simple booking-time selection
                 $start = (new DateTime())->modify('+' . $this->request->data['Booking']['start_minutes'] . ' minutes');
+                $diff = $start->diff(new DateTime('tomorrow'));
+                $minutes_to_add = min( ($diff->h * 60) + ($diff->i), $this->request->data['Booking']['duration']);
+                $this->request->data['Booking']['duration'] = $minutes_to_add;
                 $end = clone $start;
                 $end->modify('+' . $this->request->data['Booking']['duration'] . ' minutes');
             } else {
