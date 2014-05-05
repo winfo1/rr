@@ -230,6 +230,11 @@
                 return false;
             }
 
+            if(!valResource(getResourceTypeName(res.type), value)) {
+                alert('Diese Ressource "' + res.name + '" kann keinen Wert in dem Format "' + value + '" speichern!');
+                return false;
+            }
+
             room_resource_used.push(id);
 
             var new_room_resource = '<tr id="Resource' + room_resource_c + '">' +
@@ -261,6 +266,13 @@
 
         function editResource(c, id, value) {
 
+            var res = getResource(id);
+
+            if(!valResource(getResourceTypeName(res.type), value)) {
+                alert('Diese Ressource "' + res.name + '" kann keinen Wert in dem Format "' + value + '" speichern!');
+                return false;
+            }
+
             $('#Resource' + c + 'ResourcesRoomValue').val(value);
             $('#Resource' + c + 'Display').text(value);
 
@@ -271,6 +283,17 @@
 
         function delResource(id) {
             $('#Resource' + id).remove();
+        }
+
+        function valResource(type, value) {
+
+            switch(type) {
+                case 'bool':
+                    return value.match(/^(0|1)$/i);
+                case 'int':
+                    return $.isNumeric(value);
+            }
+            return false;
         }
 
         $(document).on('click', 'button[data-c]', function () {
