@@ -130,10 +130,10 @@
                             <td><input type="checkbox" /></td>
                             <td><?php echo $resource['name']; ?></td>
                             <td class="text-center"><?php echo $type[$resource['type']]; ?></td>
-                            <td class="text-center"><?php echo $resource['ResourcesRoom']['value']; ?></td>
+                            <td id="Resource<?php echo $count; ?>Display" class="text-center"><?php echo $resource['ResourcesRoom']['value']; ?></td>
                             <td><?php
 
-                                echo $this->Form->button(__('Bearbeiten'), array('type' => 'button', 'class' => 'btn btn-default btn-sm', 'escape' => false, 'data-id' => $resource['ResourcesRoom']['id'], 'data-toggle' => 'modal', 'data-target' => '#editRessource'));
+                                echo $this->Form->button(__('Bearbeiten'), array('type' => 'button', 'class' => 'btn btn-default btn-sm', 'escape' => false, 'data-c' => $count, 'data-toggle' => 'modal', 'data-target' => '#editResource'));
 
                                 echo '&nbsp;';
 
@@ -147,9 +147,7 @@
                     <?php unset($resource); ?>
                     </tbody>
                 </table>
-                <?php
-                echo $this->Form->button(__('Hinzufügen'), array('type' => 'button', 'class' => 'btn btn-primary btn-sm', 'escape' => false, 'data-toggle' => 'modal', 'data-target' => '#addResource'));
-                ?>
+                <?php echo $this->Form->button(__('Hinzufügen'), array('type' => 'button', 'class' => 'btn btn-primary btn-sm', 'style' => 'margin-top: 20px;', 'escape' => false, 'data-toggle' => 'modal', 'data-target' => '#addResource')); ?>
             </div>
         </div>
     </fieldset>
@@ -177,10 +175,34 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="editResource" tabindex="-1" role="dialog" aria-labelledby="editResourceLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="editResourceLabel"><?php echo __('Ressource für diesem Raum bearbeiten'); ?></h4>
+                </div>
+                <div class="modal-body">
+                    <?php
+                    echo $this->Form->hidden('Resource.edit.c');
+                    echo $this->Form->input('Resource.edit.resource_id', array('label' => __('Name'), 'disabled' => true, 'options' => $resources));
+                    echo $this->Form->input('Resource.edit.value', array('label' => __('Wert')));
+                    ?>
+                </div>
+                <div class="modal-footer">
+                    <?php
+                    echo $this->Form->button(__('Ändern'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return editResource($(\'#ResourceEditC\').val(),$(\'#ResourceEditResourceId\').val(),$(\'#ResourceEditValue\').val())'));
+                    echo $this->Form->button(__('Abbrechen'), array('type' => 'button', 'class' => 'btn btn-default', 'escape' => false, 'data-dismiss' => 'modal'));
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
     <script type="text/javascript">
-        var room_resource_index = <?php echo $count; ?>;
+        var room_resource_c = <?php echo $count; ?>;
         var room_resources = <?php echo json_encode($resources_all); ?>;
         var room_resource_types = <?php echo json_encode($type); ?>;
         var room_resource_used = [<?php foreach ($this->request->data['Resource'] as $resource) { echo '"' . $resource['id'] . '"'; if($resource !== end($this->request->data['Resource'])) { echo ','; } } unset($resource); ?>];
@@ -210,42 +232,56 @@
 
             room_resource_used.push(id);
 
-            var new_room_resource = '<tr id="Resource' + room_resource_index + '">' +
-                '<input type="hidden" name="data[Resource][' + room_resource_index + '][id]" value="' + id + '"/>' +
-                '<input type="hidden" name="data[Resource][' + room_resource_index + '][ResourcesRoom][resource_id]" value="' + id + '"/>' +
-                '<input type="hidden" name="data[Resource][' + room_resource_index + '][ResourcesRoom][value]" value="' + value + '"/>' +
+            var new_room_resource = '<tr id="Resource' + room_resource_c + '">' +
+                '<input type="hidden" name="data[Resource][' + room_resource_c + '][id]" value="' + id + '" id="Resource' + room_resource_c + 'Id"/>' +
+                '<input type="hidden" name="data[Resource][' + room_resource_c + '][ResourcesRoom][resource_id]" value="' + id + '" id="Resource' + room_resource_c + 'ResourcesRoomResourceId"/>' +
+                '<input type="hidden" name="data[Resource][' + room_resource_c + '][ResourcesRoom][value]" value="' + value + '" id="Resource' + room_resource_c + 'ResourcesRoomValue"/>' +
                 '<td><input type="checkbox" /></td>' +
                 '<td>' + res.name + '</td>' +
                 '<td class="text-center">' + getResourceTypeName(res.type) + '</td>' +
-                '<td class="text-center">' + value +  '</td>' +
+                '<td id="Resource' + room_resource_c + 'Display" class="text-center">' + value +  '</td>' +
                 '<td><?php
 
-                echo $this->Form->button(__('Bearbeiten'), array('type' => 'button', 'class' => 'btn btn-default btn-sm', 'escape' => false, 'data-toggle' => 'modal', 'data-target' => '#editRessource'));
+                echo $this->Form->button(__('Bearbeiten'), array('type' => 'button', 'class' => 'btn btn-default btn-sm', 'escape' => false, 'data-c' => '\' + room_resource_c + \'', 'data-toggle' => 'modal', 'data-target' => '#editResource'));
 
                 echo '&nbsp;';
 
-                echo $this->Form->button(__('Löschen'), array('type' => 'button', 'class' => 'btn btn-danger btn-sm', 'escape' => false, 'onclick' => 'return delResource(\' + room_resource_index + \')'));
+                echo $this->Form->button(__('Löschen'), array('type' => 'button', 'class' => 'btn btn-danger btn-sm', 'escape' => false, 'onclick' => 'return delResource(\' + room_resource_c + \')'));
 
                 ?></td></tr>';
 
             $(new_room_resource).appendTo('#RoomResources');
 
-            room_resource_index++;
+            room_resource_c++;
 
             $('#addResource').modal('hide');
 
             return true;
         }
 
-        function editResource(id) {
+        function editResource(c, id, value) {
 
-            alert('Diese Funktion muss noch implementiert werden!');
+            $('#Resource' + c + 'ResourcesRoomValue').val(value);
+            $('#Resource' + c + 'Display').text(value);
 
+            $('#editResource').modal('hide');
+
+            return true;
         }
 
         function delResource(id) {
             $('#Resource' + id).remove();
         }
+
+        $(document).on('click', 'button[data-c]', function () {
+            var c = $(this).data('c');
+            var id = $('#Resource' + c + 'Id').val();
+            var value = $('#Resource' + c + 'ResourcesRoomValue').val();
+
+            $('.modal-body #ResourceEditC').val(c);
+            $('.modal-body #ResourceEditResourceId').val(id);
+            $('.modal-body #ResourceEditValue').val(value);
+        });
 
         $('#RoomOrganizationalunitId').focus();
     </script>
