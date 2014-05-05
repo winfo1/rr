@@ -48,9 +48,11 @@
 
     <ul class="pagination pull-left">
         <?php
-        echo $this->Paginator->prev('«', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->first('《', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->prev('〈', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
         echo $this->Paginator->numbers(array('tag' => 'li', 'separator' => '', 'currentClass' => 'active', 'currentTag' => 'a'));
-        echo $this->Paginator->next('»', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->next('〉', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->last('》', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
         ?>
     </ul>
 

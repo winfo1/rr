@@ -117,15 +117,15 @@
         <div class="page-header">
             <div class="pull-right form-inline">
                 <div class="btn-group">
-                    <button class="btn btn-primary" data-calendar-nav="prev">«</button>
+                    <button class="btn btn-primary" data-calendar-nav="prev">《</button>
                     <button class="btn btn-default" data-calendar-nav="today">Heute</button>
-                    <button class="btn btn-primary" data-calendar-nav="next">»</button>
+                    <button class="btn btn-primary" data-calendar-nav="next">》</button>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-warning" data-calendar-view="year">Jahr</button>
-                    <button class="btn btn-warning active" data-calendar-view="month">Monat</button>
-                    <button class="btn btn-warning" data-calendar-view="week">Woche</button>
-                    <button class="btn btn-warning" data-calendar-view="day">Tag</button>
+                    <button class="btn btn-info" data-calendar-view="year">Jahr</button>
+                    <button class="btn btn-info active" data-calendar-view="month">Monat</button>
+                    <button class="btn btn-info" data-calendar-view="week">Woche</button>
+                    <button class="btn btn-info" data-calendar-view="day">Tag</button>
                 </div>
                 <div class="btn-group">
                     <?php echo $this->Html->link(__('<span class="glyphicon glyphicon glyphicon-transfer"></span> Tabellenansicht'), array('action' => 'index', 'table'), array('class' => 'btn btn-default', 'escape' => false)); ?>
