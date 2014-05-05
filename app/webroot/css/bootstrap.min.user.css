@@ -33,6 +33,12 @@ fieldset {
 }
 /*! remove after bootstrap 3.2 released! */
 
+/* remove the space when inside a well */
+.well>table {
+     margin-bottom: 0px;
+ }
+/* */
+
 dd {
     margin-bottom: 15px;
     text-align: justify;
