@@ -25,11 +25,6 @@ fieldset {
     display: inline-table;
     vertical-align: middle;
 }
-.input-group .input-group-addon,
-.input-group .input-group-btn,
-.input-group .form-control {
-    width: auto !important;
-}
 /* end-bugfix: remove with bootstrap 3.2 */
 
 .well>table {

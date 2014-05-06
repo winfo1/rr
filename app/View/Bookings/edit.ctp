@@ -58,6 +58,7 @@
                         $val = utf8_encode($val);
                     echo $this->Form->input('start', array(
                         'type' => 'text',
+                        'div' => false,
                         'class' => 'form-control',
                         'label' => false,
                         'readonly' => true,
@@ -79,6 +80,7 @@
                         $val = utf8_encode($val);
                     echo $this->Form->input('end', array(
                         'type'  => 'text',
+                        'div' => false,
                         'class' => 'form-control',
                         'label' => false,
                         'readonly' => true,

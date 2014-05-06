@@ -59,7 +59,6 @@
                             echo $this->Form->input('day_view', array(
                                 'type' => 'text',
                                 'div' => false,
-                                'class' => 'form-control',
                                 'style' => 'width: 100%',
                                 'label' => false,
                                 'size' => '16',

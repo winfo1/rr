@@ -24,7 +24,7 @@
                     $val = utf8_encode($val);
                 echo $this->Form->input('startdate', array(
                     'type' => 'text',
-                    'class' => 'form-control',
+                    'div' => false,
                     'label' => false,
                     'readonly' => true,
                     'value' => $val));
@@ -44,7 +44,7 @@
                     $val = utf8_encode($val);
                 echo $this->Form->input('enddate', array(
                     'type' => 'text',
-                    'class' => 'form-control',
+                    'div' => false,
                     'label' => false,
                     'readonly' => true,
                     'value' => $val));
