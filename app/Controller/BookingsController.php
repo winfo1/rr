@@ -476,6 +476,7 @@ class BookingsController extends AppController
                     'plugin' => 'BoostCake',
                     'class' => 'alert-danger'
                 ));
+                break;
 
             case 'group':
 
@@ -496,8 +497,10 @@ class BookingsController extends AppController
                     'plugin' => 'BoostCake',
                     'class' => 'alert-danger'
                 ));
+                break;
 
         }
+        return false;
     }
 
     public function reject($id = null) {

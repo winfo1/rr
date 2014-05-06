@@ -26,6 +26,8 @@
 
         <?php echo $this->Form->input('seats', array('label' => __('Sitze'), 'placeholder' => __('Sitze'))); ?>
 
+        <?php // echo $this->Form->input('Resource.0.id', array('label' => __('Ressourcen'), 'options' => $resources, 'empty' => __('(Bitte auswählen)'))); ?>
+
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Suchen'), 'class' => 'btn btn-primary btn-lg')); ?>
 
@@ -67,9 +69,11 @@
 
     <ul class="pagination pull-left">
         <?php
-        echo $this->Paginator->prev('«', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->first('《', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->prev('〈', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
         echo $this->Paginator->numbers(array('tag' => 'li', 'separator' => '', 'currentClass' => 'active', 'currentTag' => 'a'));
-        echo $this->Paginator->next('»', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->next('〉', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
+        echo $this->Paginator->last('》', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
         ?>
     </ul>
 </div>

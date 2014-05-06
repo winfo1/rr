@@ -1,4 +1,4 @@
-/*! normalize.css v3.0.0 | MIT License | git.io/normalize */
+/*! bootstrap.user customisation file v1.0.8 | MIT License */
 
 .container-sm {
     margin: 15px;
@@ -20,22 +20,21 @@ fieldset {
     border-bottom: 1px solid #e5e5e5;
 }
 
-/*! bugfix: http://stackoverflow.com/questions/21029129/create-an-inline-form-with-input-groups-bootstrap */
+/* start-bugfix: http://stackoverflow.com/questions/21029129/create-an-inline-form-with-input-groups-bootstrap */
 .input-group {
     display: inline-table;
     vertical-align: middle;
-
-.input-group-addon,
-.input-group-btn,
-.form-control {
+}
+.input-group .input-group-addon,
+.input-group .input-group-btn,
+.input-group .form-control {
     width: auto !important;
 }
-}
-/*! remove after bootstrap 3.2 released! */
+/* end-bugfix: remove with bootstrap 3.2 */
 
-/* remove the space when inside a well */
 .well>table {
-     margin-bottom: 0px;
+    /* remove the space when inside a well */
+     margin-bottom: 0;
  }
 /* */
 
@@ -113,7 +112,7 @@ footer a:hover {
 }
 
 .pagination {
-	margin: 0px !important;
+	margin: 0 !important;
 }
 
 .push {

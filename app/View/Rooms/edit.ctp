@@ -168,7 +168,7 @@
                 </div>
                 <div class="modal-footer">
                     <?php
-                    echo $this->Form->button(__('Hinzufügen'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return addResource($(\'#ResourceNewResourceId\').val(),$(\'#ResourceNewValue\').val())'));
+                    echo $this->Form->button(__('Hinzufügen'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return addResource($(\'#ResourceNewResourceId\').val(),$(\'#ResourceNewValue\').val(),r)'));
                     echo $this->Form->button(__('Abbrechen'), array('type' => 'button', 'class' => 'btn btn-default', 'escape' => false, 'data-dismiss' => 'modal'));
                     ?>
                 </div>
@@ -192,7 +192,7 @@
                 </div>
                 <div class="modal-footer">
                     <?php
-                    echo $this->Form->button(__('Ändern'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return editResource($(\'#ResourceEditC\').val(),$(\'#ResourceEditResourceId\').val(),$(\'#ResourceEditValue\').val())'));
+                    echo $this->Form->button(__('Ändern'), array('type' => 'button', 'class' => 'btn btn-primary', 'escape' => false, 'onclick' => 'return editResource($(\'#ResourceEditC\').val(),$(\'#ResourceEditResourceId\').val(),$(\'#ResourceEditValue\').val(),r)'));
                     echo $this->Form->button(__('Abbrechen'), array('type' => 'button', 'class' => 'btn btn-default', 'escape' => false, 'data-dismiss' => 'modal'));
                     ?>
                 </div>
@@ -202,73 +202,60 @@
 </div>
 
     <script type="text/javascript">
-        var room_resource_c = <?php echo $count; ?>;
-        var room_resources = <?php echo json_encode($resources_all); ?>;
-        var room_resource_types = <?php echo json_encode($type); ?>;
-        var room_resource_used = [<?php foreach ($this->request->data['Resource'] as $resource) { echo '"' . $resource['id'] . '"'; if($resource !== end($this->request->data['Resource'])) { echo ','; } } unset($resource); ?>];
+        var r = {
+            a:<?php echo json_encode($resources_all); ?>,
+            c:<?php echo $count; ?>,
+            t:<?php echo json_encode($type); ?>,
+            u:[<?php foreach ($this->request->data['Resource'] as $resource) { echo '"' . $resource['id'] . '"'; if($resource !== end($this->request->data['Resource'])) { echo ','; } } unset($resource); ?>]
+        };
 
-        function getResource(id) {
-            var r = null;
-            $.each(room_resources, function(index, value) {
+        function getResource(id, all) {
+            var res = null;
+            $.each(all, function(index, value) {
                 if(id == value.Resource.id) {
-                    r = value.Resource;
+                    res = value.Resource;
                 }
             });
-            return r;
+            return res;
         }
 
-        function getResourceTypeName(typeid) {
-            return room_resource_types[typeid];
-        }
+        function addResource(id, value, r) {
+            var res = getResource(id, r.a);
 
-        function addResource(id, value) {
-
-            var res = getResource(id);
-
-            if($.inArray(id, room_resource_used) != -1) {
+            if($.inArray(id, r.u) != -1) {
                 alert('Diese Ressource "' + res.name + '" wurde schon verwendet und kann somit nicht erneut hinzugefügt werden!');
                 return false;
             }
 
-            if(!valResource(getResourceTypeName(res.type), value)) {
+            if(!valResource(r.t[res.type], value)) {
                 alert('Diese Ressource "' + res.name + '" kann keinen Wert in dem Format "' + value + '" speichern!');
                 return false;
             }
 
-            room_resource_used.push(id);
+            r.u.push(id);
 
-            var new_room_resource = '<tr id="Resource' + room_resource_c + '">' +
-                '<input type="hidden" name="data[Resource][' + room_resource_c + '][id]" value="' + id + '" id="Resource' + room_resource_c + 'Id"/>' +
-                '<input type="hidden" name="data[Resource][' + room_resource_c + '][ResourcesRoom][resource_id]" value="' + id + '" id="Resource' + room_resource_c + 'ResourcesRoomResourceId"/>' +
-                '<input type="hidden" name="data[Resource][' + room_resource_c + '][ResourcesRoom][value]" value="' + value + '" id="Resource' + room_resource_c + 'ResourcesRoomValue"/>' +
+            $('#RoomResources').append('<tr id="Resource' + r.c + '">' +
+                '<input type="hidden" name="data[Resource][' + r.c + '][id]" value="' + id + '" id="Resource' + r.c + 'Id"/>' +
+                '<input type="hidden" name="data[Resource][' + r.c + '][ResourcesRoom][resource_id]" value="' + id + '" id="Resource' + r.c + 'ResourcesRoomResourceId"/>' +
+                '<input type="hidden" name="data[Resource][' + r.c + '][ResourcesRoom][value]" value="' + value + '" id="Resource' + r.c + 'ResourcesRoomValue"/>' +
                 '<td><input type="checkbox" /></td>' +
                 '<td>' + res.name + '</td>' +
-                '<td class="text-center">' + getResourceTypeName(res.type) + '</td>' +
-                '<td id="Resource' + room_resource_c + 'Display" class="text-center">' + value +  '</td>' +
-                '<td><?php
+                '<td class="text-center">' + r.t[res.type] + '</td>' +
+                '<td id="Resource' + r.c + 'Display" class="text-center">' + value +  '</td>' +
+                '<td><button type="button" class="btn btn-default btn-sm" data-c="' + r.c + '" data-toggle="modal" data-target="#editResource">Bearbeiten</button>' +
+                '&nbsp;<button type="button" class="btn btn-danger btn-sm" onclick="return delResource(' + r.c + ', r)">Löschen</button></td></tr>');
 
-                echo $this->Form->button(__('Bearbeiten'), array('type' => 'button', 'class' => 'btn btn-default btn-sm', 'escape' => false, 'data-c' => '\' + room_resource_c + \'', 'data-toggle' => 'modal', 'data-target' => '#editResource'));
-
-                echo '&nbsp;';
-
-                echo $this->Form->button(__('Löschen'), array('type' => 'button', 'class' => 'btn btn-danger btn-sm', 'escape' => false, 'onclick' => 'return delResource(\' + room_resource_c + \')'));
-
-                ?></td></tr>';
-
-            $(new_room_resource).appendTo('#RoomResources');
-
-            room_resource_c++;
+            r.c++;
 
             $('#addResource').modal('hide');
 
             return true;
         }
 
-        function editResource(c, id, value) {
+        function editResource(c, id, value, r) {
+            var res = getResource(id, r.a);
 
-            var res = getResource(id);
-
-            if(!valResource(getResourceTypeName(res.type), value)) {
+            if(!valResource(r.t[res.type], value)) {
                 alert('Diese Ressource "' + res.name + '" kann keinen Wert in dem Format "' + value + '" speichern!');
                 return false;
             }
@@ -281,12 +268,14 @@
             return true;
         }
 
-        function delResource(id) {
+        function delResource(id, r) {
             $('#Resource' + id).remove();
+            r.u.splice($.inArray(id, r.u), 1);
+
+            return true;
         }
 
         function valResource(type, value) {
-
             switch(type) {
                 case 'bool':
                     return value.match(/^(0|1)$/i);

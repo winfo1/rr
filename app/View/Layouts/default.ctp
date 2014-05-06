@@ -39,7 +39,7 @@ $action = $this->params['action'];
 		echo $this->Html->meta('icon') . "\r\n";
 
 		echo "\t".$this->Html->css('bootstrap.min') . "\r\n";
-        echo "\t".$this->Html->css('bootstrap.min.user') . "\r\n";
+        echo "\t".$this->Html->css('bootstrap.user.min') . "\r\n";
         echo "\t".$this->Html->css('bootstrap-calendar.min') . "\r\n";
         echo "\t".$this->Html->css('bootstrap-clockpicker.min') . "\r\n";
         echo "\t".$this->Html->css('bootstrap-datetimepicker.min') . "\r\n";
