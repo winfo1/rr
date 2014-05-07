@@ -36,44 +36,48 @@ $action = $this->params['action'];
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
-		echo $this->Html->meta('icon') . "\r\n";
+    $this->Html->meta('favicon.ico', '/favicon.ico', array('type' => 'icon', 'inline' => false));
+	//$this->Html->meta('favicon');
 
-		echo "\t".$this->Html->css('bootstrap.min') . "\r\n";
-        echo "\t".$this->Html->css('bootstrap.user.min') . "\r\n";
-        echo "\t".$this->Html->css('bootstrap-calendar.min') . "\r\n";
-        echo "\t".$this->Html->css('bootstrap-clockpicker.min') . "\r\n";
-        echo "\t".$this->Html->css('bootstrap-datetimepicker.min') . "\r\n";
-        echo "\t".$this->Html->css('bootstrap-lightbox.min') . "\r\n";
+    $this->AssetCompress->addCss('bootstrap.css');
+    $this->AssetCompress->addCss('bootstrap.user.css');
+    $this->AssetCompress->addCss('bootstrap-calendar.css');
+    $this->AssetCompress->addCss('bootstrap-clockpicker.css');
+    $this->AssetCompress->addCss('bootstrap-datetimepicker.css');
+    $this->AssetCompress->addCss('bootstrap-lightbox.css');
 
-		echo $this->fetch('meta') . "\r\n";
-		echo $this->fetch('css') . "\r\n";
-        echo $this->fetch('script') . "\r\n";
+    $this->AssetCompress->addScript('jquery.js');
+    $this->AssetCompress->addScript('jquery.user.js');
+    $this->AssetCompress->addScript('typeahead.bundle.js');
+    $this->AssetCompress->addScript('bootstrap.js');
+    $this->AssetCompress->addScript('bootstrap-clockpicker.js');
+    $this->AssetCompress->addScript('bootstrap-lightbox.js');
+    $this->AssetCompress->addScript('underscore.js');
+    $this->AssetCompress->addScript('serhioromano/calendar.js');
+    $this->AssetCompress->addScript('serhioromano/language/de-DE.js');
+    $this->AssetCompress->addScript('smalot/bootstrap-datetimepicker.js');
+    $this->AssetCompress->addScript('smalot/locales/bootstrap-datetimepicker.de.js');
+
+    echo $this->fetch('meta') . "\r\n";
+
+    if (Configure::read('debug') > 0) {
+        echo "\t" . $this->AssetCompress->includeCss(array('raw' => true)) . "\r\n";
+    } else {
+        echo "\t" . $this->AssetCompress->includeCss() . "\r\n";
+    }
+
+
+    if (Configure::read('debug') > 0) {
+        echo "\t" . $this->AssetCompress->includeJs(array('raw' => true)) . "\r\n";
+    } else {
+        echo "\t" . $this->AssetCompress->includeJs() . "\r\n";
+    }
 	?>
 </head>
 <body>
     <script type="text/javascript">
         var rr_base_url = '<?php echo Router::url('/', true); ?>';
     </script>
-    <?php
-        echo "\t". $this->Html->script('jquery-2.1.0.min') . "\r\n";
-        echo "\t". $this->Html->script('jquery-2.1.0.min.user') . "\r\n";
-
-        echo "\t". $this->Html->script('typeahead.bundle.min') . "\r\n";
-
-        echo "\t". $this->Html->script('bootstrap.min') . "\r\n";
-
-        echo "\t". $this->Html->script('bootstrap-clockpicker.min') . "\r\n";
-
-        echo "\t". $this->Html->script('bootstrap-lightbox.min') . "\r\n";
-
-        echo "\t". $this->Html->script('underscore-min') . "\r\n";
-
-        echo "\t". $this->Html->script('serhioromano/calendar.min') . "\r\n";
-        echo "\t". $this->Html->script('serhioromano/language/de-DE') . "\r\n";
-
-        echo "\t". $this->Html->script('smalot/bootstrap-datetimepicker.min') . "\r\n";
-        echo "\t". $this->Html->script('smalot/locales/bootstrap-datetimepicker.de') . "\r\n";
-    ?>
     <div class="wrapper">
         <div id="container">
             <div id="header">
@@ -162,12 +166,15 @@ $action = $this->params['action'];
     <?php echo $this->element('footer', array(), array('cache' => true)); ?>
 
     <script type="text/javascript">
-
         $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
             event.preventDefault();
             $(this).ekkoLightbox();
         });
-
     </script>
+
+    <?php
+
+    echo $this->Js->writeBuffer();
+    ?>
 </body>
 </html>

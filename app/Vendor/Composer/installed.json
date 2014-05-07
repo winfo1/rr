@@ -1,17 +1,17 @@
 [
     {
         "name": "composer/installers",
-        "version": "v1.0.12",
-        "version_normalized": "1.0.12.0",
+        "version": "v1.0.13",
+        "version_normalized": "1.0.13.0",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "4127333b03e8b4c08d081958548aae5419d1a2fa"
+            "reference": "26d37e307f9aa6e2e81806a6525666f8ab5ba0ff"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/4127333b03e8b4c08d081958548aae5419d1a2fa",
-            "reference": "4127333b03e8b4c08d081958548aae5419d1a2fa",
+            "url": "https://api.github.com/repos/composer/installers/zipball/26d37e307f9aa6e2e81806a6525666f8ab5ba0ff",
+            "reference": "26d37e307f9aa6e2e81806a6525666f8ab5ba0ff",
             "shasum": ""
         },
         "replace": {
@@ -21,7 +21,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "3.7.*"
         },
-        "time": "2014-02-24 04:21:34",
+        "time": "2014-04-09 16:12:43",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -43,7 +43,7 @@
             {
                 "name": "Kyle Robinson Young",
                 "email": "kyle@dontkry.com",
-                "homepage": "https://github.com/shama",
+                "homepage": "http://dontkry.com",
                 "role": "Developer"
             }
         ],
@@ -87,17 +87,17 @@
     },
     {
         "name": "mjohnson/transit",
-        "version": "1.5.0",
-        "version_normalized": "1.5.0.0",
+        "version": "1.5.1",
+        "version_normalized": "1.5.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/milesj/transit.git",
-            "reference": "6dc9bc99869ffc054548b41cf5bbed96f4276d07"
+            "reference": "01fb3d8300fb4be58370979083404e37eee75afc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/milesj/transit/zipball/6dc9bc99869ffc054548b41cf5bbed96f4276d07",
-            "reference": "6dc9bc99869ffc054548b41cf5bbed96f4276d07",
+            "url": "https://api.github.com/repos/milesj/transit/zipball/01fb3d8300fb4be58370979083404e37eee75afc",
+            "reference": "01fb3d8300fb4be58370979083404e37eee75afc",
             "shasum": ""
         },
         "require": {
@@ -117,7 +117,7 @@
             "ext-gd": "Enable the GD library for image transforming",
             "rackspace/php-opencloud": "Upload files to RackSpace OpenCloud"
         },
-        "time": "2014-02-16 21:18:52",
+        "time": "2014-03-31 01:15:36",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -167,12 +167,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/milesj/uploader.git",
-            "reference": "360ad48386d8ae7a115cc622c267608992051623"
+            "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/milesj/uploader/zipball/360ad48386d8ae7a115cc622c267608992051623",
-            "reference": "360ad48386d8ae7a115cc622c267608992051623",
+            "url": "https://api.github.com/repos/milesj/uploader/zipball/9b6c0bac6c4c87708f0d1787664de73e89f900d2",
+            "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2",
             "shasum": ""
         },
         "require": {
@@ -180,7 +180,7 @@
             "ext-curl": "*",
             "ext-fileinfo": "*",
             "ext-mbstring": "*",
-            "mjohnson/transit": "~1.4",
+            "mjohnson/transit": "~1.5",
             "php": ">=5.3.3"
         },
         "suggest": {
@@ -188,9 +188,9 @@
             "ext-exif": "Extract exif data from images",
             "ext-gd": "Enable the GD library for image transforming"
         },
-        "time": "2014-01-18 03:53:18",
+        "time": "2014-03-31 01:28:48",
         "type": "cakephp-plugin",
-        "installation-source": "dist",
+        "installation-source": "source",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
@@ -219,12 +219,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/milesj/utility.git",
-            "reference": "df12af96e97578075746452153cfecd31ade3efc"
+            "reference": "3e97eceb802df26c718e70770ac3d0083ded9a9f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/milesj/utility/zipball/df12af96e97578075746452153cfecd31ade3efc",
-            "reference": "df12af96e97578075746452153cfecd31ade3efc",
+            "url": "https://api.github.com/repos/milesj/utility/zipball/3e97eceb802df26c718e70770ac3d0083ded9a9f",
+            "reference": "3e97eceb802df26c718e70770ac3d0083ded9a9f",
             "shasum": ""
         },
         "require": {
@@ -236,9 +236,9 @@
             "mjohnson/decoda": "Enable Decoda for BBCode parsing in the DecodaHelper",
             "titon/utility": "Enable Titon to parse feeds in FeedSource and process AJAX in the AjaxHandlerComponent"
         },
-        "time": "2014-02-04 06:39:10",
+        "time": "2014-04-23 03:25:56",
         "type": "cakephp-plugin",
-        "installation-source": "dist",
+        "installation-source": "source",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
@@ -288,24 +288,24 @@
         "source": {
             "type": "git",
             "url": "https://github.com/CakeDC/search.git",
-            "reference": "ca416c363789da8c5e7ffbeb7d1675ca899f79b8"
+            "reference": "dee81faa3fed1c364d0e164c8b2851afadd6fdd7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/CakeDC/search/zipball/ca416c363789da8c5e7ffbeb7d1675ca899f79b8",
-            "reference": "ca416c363789da8c5e7ffbeb7d1675ca899f79b8",
+            "url": "https://api.github.com/repos/CakeDC/search/zipball/dee81faa3fed1c364d0e164c8b2851afadd6fdd7",
+            "reference": "dee81faa3fed1c364d0e164c8b2851afadd6fdd7",
             "shasum": ""
         },
         "require": {
             "composer/installers": "*",
             "php": ">=5.3.0"
         },
-        "time": "2014-03-10 14:39:12",
+        "time": "2014-04-28 09:15:14",
         "type": "cakephp-plugin",
         "extra": {
             "installer-name": "Search"
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
@@ -319,5 +319,78 @@
         ],
         "description": "The Search plugin allows you to make any kind of data searchable, enabling you to implement a robust searching rapidly.",
         "homepage": "http://github.com/CakeDC/search"
+    },
+    {
+        "name": "markstory/asset_compress",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/markstory/asset_compress.git",
+            "reference": "3d6548a7ff26367e00a3247f93cf06e83e0988ea"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/markstory/asset_compress/zipball/3d6548a7ff26367e00a3247f93cf06e83e0988ea",
+            "reference": "3d6548a7ff26367e00a3247f93cf06e83e0988ea",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "php": ">=5.3.0"
+        },
+        "time": "2014-05-04 02:22:57",
+        "type": "cakephp-plugin",
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mark Story",
+                "homepage": "http://mark-story.com",
+                "role": "Author"
+            }
+        ],
+        "description": "An asset compression plugin for CakePHP. Provides file concatenation and a flexible filter system for preprocessing and minification.",
+        "homepage": "https://github.com/markstory/asset_compress",
+        "keywords": [
+            "assets",
+            "cakephp",
+            "coffee-script",
+            "less",
+            "minifier",
+            "sass"
+        ]
+    },
+    {
+        "name": "nervo/yuicompressor",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nervo/yuicompressor.git",
+            "reference": "e6e3b215c3998cf6092613c002ae533ae75d7ada"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nervo/yuicompressor/zipball/e6e3b215c3998cf6092613c002ae533ae75d7ada",
+            "reference": "e6e3b215c3998cf6092613c002ae533ae75d7ada",
+            "shasum": ""
+        },
+        "time": "2013-09-13 10:26:14",
+        "type": "library",
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "description": "YUI Compressor is an open source tool that supports the compression of both JavaScript and CSS files. The JavaScript compression removes comments and white-spaces as well as obfuscates local variables using the smallest possible variable name. CSS compression is done using a regular-expression-based CSS minifier.",
+        "homepage": "https://github.com/yui/yuicompressor",
+        "keywords": [
+            "java",
+            "yui"
+        ]
     }
 ]

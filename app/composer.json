@@ -3,8 +3,10 @@
 
     "require": {
         "cakedc/search": "dev-develop",
-	    "mjohnson/uploader": "dev-master",
-	    "mjohnson/utility": "dev-master"
+	"markstory/asset_compress": "dev-master",
+	"mjohnson/uploader": "dev-master",
+	"mjohnson/utility": "dev-master",
+	"nervo/yuicompressor": "dev-master"
     },
     "config": {
         "vendor-dir": "Vendor/"

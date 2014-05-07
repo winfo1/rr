@@ -1,0 +1,1 @@
+cake AssetCompress.asset_compress build
