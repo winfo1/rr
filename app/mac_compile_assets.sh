@@ -1,0 +1,1 @@
+cake -app "/Library/WebServer/Documents/app" AssetCompress.asset_compress build
