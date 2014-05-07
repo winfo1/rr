@@ -9,4 +9,8 @@ app/.idea
 
 app/tmp
 
+app/webroot/cache_css
+
+app/webroot/cache_js
+
 app/webroot/img/uploads

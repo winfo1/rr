@@ -37,7 +37,6 @@ $action = $this->params['action'];
 	</title>
 	<?php
     $this->Html->meta('favicon.ico', '/favicon.ico', array('type' => 'icon', 'inline' => false));
-	//$this->Html->meta('favicon');
 
     $this->AssetCompress->addCss('bootstrap.css');
     $this->AssetCompress->addCss('bootstrap.user.css');
@@ -72,6 +71,7 @@ $action = $this->params['action'];
     } else {
         echo "\t" . $this->AssetCompress->includeJs() . "\r\n";
     }
+
 	?>
 </head>
 <body>
