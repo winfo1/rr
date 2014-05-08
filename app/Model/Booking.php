@@ -61,4 +61,35 @@ class Booking extends AppModel {
         return count($this->find('first', array('conditions' => array('Booking.id' => $booking_id, 'Room.organizationalunit_id' => $organizationalunit_id)))) != 0;
     }
 
+    public function inUse($start_time, $end_time, $room_id = 0, $ignore_booking_id = 0, $only_active = true, &$blocked) {
+        $conditions = array(
+            'OR' => array(
+                array('Booking.startdatetime <=' => $start_time,
+                    'Booking.enddatetime >=' => $end_time
+                ),
+                array('Booking.startdatetime <=' => $end_time,
+                    'Booking.enddatetime >=' => $start_time
+                )
+            )
+        );
+
+        if($room_id > 0)
+            $conditions['Booking.room_id'] = $room_id;
+
+        if($ignore_booking_id > 0)
+            $conditions['Booking.id !='] = $ignore_booking_id;
+
+        if($only_active)
+            $conditions['Booking.status'] = Booking::active;
+        else
+            $conditions['Booking.status'] = array(Booking::active, Booking::planned);
+
+        $blocked = $this->find('all', array(
+            'conditions' => $conditions,
+            'contain' => array('Room', 'User')
+        ));
+
+        return (count($blocked) != 0);
+    }
+
 }

@@ -21,6 +21,7 @@
         <?php echo $this->Form->hidden('view_tabs', array('value' => $view_tabs)); ?>
 
         <ul class="nav nav-tabs">
+            <li style="padding: 10px 15px 10px 0px;"><strong><?php echo __('Zeitpunkt'); ?></strong></li>
             <li class="<?php echo (($view_tabs == 's') ? 'active' : '')?>"><a href="#simple_time_settings" data-toggle="tab"><?php echo __('Einfach'); ?></a></li>
             <li class="<?php echo (($view_tabs == 'a') ? 'active' : '')?>"><a href="#advanced_time_settings" data-toggle="tab"><?php echo __('Erweitert'); ?></a></li>
         </ul>
@@ -51,9 +52,9 @@
                 <div class="form-inline">
                     <div class="form-group">
                         <label for="BookingDayView"><?php echo __('Tag'); ?></label>
-                        <div class="input-group date form_date col-md-2" data-date-format="dd MM yyyy" data-link-field="data[Booking][day_view]">
+                        <div class="input-group date form_date col-md-2" data-date-format="d M yyyy" data-link-field="data[Booking][day_view]">
                             <?php
-                            $val = strftime('%d %B %Y', strtotime($day));
+                            $val = strftime((WIN ? '%#d' : '%e') . ' %b %Y', strtotime($day));
                             if(WIN)
                                 $val = utf8_encode($val);
                             echo $this->Form->input('day_view', array(

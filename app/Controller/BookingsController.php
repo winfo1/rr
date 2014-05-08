@@ -23,7 +23,7 @@ class BookingsController extends AppController
     {
         parent::beforeFilter();
 
-        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'getBookingsNames', 'view',                       'cleanUp', 'inUse', 'isBefore', 'edit_silent_status');
+        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'getBookingsNames', 'view',                       'cleanUp', 'isBefore', 'edit_silent_status');
     }
 
     public function isAuthorized($user) {
@@ -95,7 +95,7 @@ class BookingsController extends AppController
 
         $blocked = array();
 
-        if (!$this->inUse($this->request->data['Booking']['room_id'], $this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], 0, true, $blocked)) {
+        if (!$this->Booking->inUse($this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], 0, true, $blocked)) {
             $this->Booking->set('status', Booking::active);
 
             if ($this->Booking->save()) {
@@ -284,7 +284,7 @@ class BookingsController extends AppController
 
                     $interval_booking[$i]['status'] = $this->getStatusFromDate($approval_horizon, $interval_end_date, $approval_horizon_max_date);
 
-                    if ($this->inUse($room_id, $interval_start_date->format('Y-m-d H:i:s'), $interval_end_date->format('Y-m-d H:i:s'), 0, true, $blocked)) {
+                    if ($this->Booking->inUse($interval_start_date->format('Y-m-d H:i:s'), $interval_end_date->format('Y-m-d H:i:s'), $room_id, 0, true, $blocked)) {
                         $hasErrorInIntervalLoop = true;
                         break;
                     }
@@ -345,7 +345,7 @@ class BookingsController extends AppController
 
             $blocked = array();
 
-            if (!$this->inUse($room_id, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'), 0, true, $blocked)) {
+            if (!$this->Booking->inUse($start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'), $room_id, 0, true, $blocked)) {
                 $this->request->data['Booking']['user_id'] = $this->Auth->user('id');
                 $this->request->data['Booking']['group_id'] = $group_id;
                 $this->request->data['Booking']['status'] = $this->getStatusFromDate($approval_horizon, $end, $approval_horizon_max_date);
@@ -406,6 +406,7 @@ class BookingsController extends AppController
             		$this->set(compact('groups'));
         		}
 
+                $blocked = array();
                 foreach ($groups as $group) {
                     if ($group['Booking']['id'] != $id) {
                         // what to do when not first !!
@@ -416,7 +417,7 @@ class BookingsController extends AppController
 
                         // $group['Booking']['startdatetime']
 
-                        if ($this->inUse($this->request->data['Booking']['room_id'], $group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $group['Booking']['id'], true, $blocked))
+                        if ($this->Booking->inUse($group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $group['Booking']['id'], true, $blocked))
                         {
                             // TODO: group edit
                         }
@@ -425,7 +426,7 @@ class BookingsController extends AppController
             }
 
             $blocked = array();
-            if ($this->inUse($this->request->data['Booking']['room_id'], $this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], $id, true, $blocked))
+            if ($this->Booking->inUse($this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $id, true, $blocked))
             {
                 return $this->Session->setFlash(__('Diese Buchung kann nicht in dem neuen Zeitraum stattfinden, da dort bereits andere Buchungen sind.'), 'alert', array(
                     'plugin' => 'BoostCake',
@@ -649,7 +650,7 @@ class BookingsController extends AppController
             else if($approval_automatic && ($status == Booking::planned) && $this->isBefore($start, $approval_horizon_max_date) && !$inConcurredList($booking['Booking']['id'], $concurred))
             {
                 $blocked = array();
-                if ($this->inUse($booking['Booking']['room_id'], $booking['Booking']['startdatetime'], $booking['Booking']['enddatetime'], $booking['Booking']['id'], false, $blocked))
+                if ($this->Booking->inUse($booking['Booking']['startdatetime'], $booking['Booking']['enddatetime'], $booking['Booking']['room_id'], $booking['Booking']['id'], false, $blocked))
                 {
                     $blocked_block = array($booking);
                     foreach ($blocked as $value) {
@@ -852,36 +853,6 @@ class BookingsController extends AppController
     private function isBefore(DateTime $before, DateTime $after)
     {
         return date($before->format('Y-m-d')) < date($after->format('Y-m-d'));
-    }
-
-    private function inUse($room_id, $start_time, $end_time, $ignore_booking_id = 0, $only_active = true, &$blocked)
-    {
-        $conditions = array(
-            'Booking.room_id' => $room_id,
-            'OR' => array(
-                array('Booking.startdatetime <=' => $start_time,
-                    'Booking.enddatetime >=' => $end_time
-                ),
-                array('Booking.startdatetime <=' => $end_time,
-                    'Booking.enddatetime >=' => $start_time
-                )
-            )
-        );
-
-        if($ignore_booking_id > 0)
-            $conditions['Booking.id !='] = $ignore_booking_id;
-
-        if($only_active)
-            $conditions['Booking.status'] = Booking::active;
-        else
-            $conditions['Booking.status'] = array(Booking::active, Booking::planned);
-
-        $blocked = $this->Booking->find('all', array(
-            'conditions' => $conditions,
-            'contain' => array('Room', 'User')
-        ));
-
-        return (count($blocked) != 0);
     }
     //</editor-fold>
 

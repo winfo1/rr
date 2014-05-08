@@ -201,11 +201,35 @@ class RoomsController extends AppController {
     }
 
     public function find() {
+
         $this->Room->validate = array();
         $this->beforeDetailDisplay();
         $this->Prg->commonProcess();
         $this->Paginator->settings['conditions'] = $this->Room->parseCriteria($this->Prg->parsedParams());
         $this->set('rooms', $this->Paginator->paginate());
+
+        // set view
+        if (!isset($this->request->data['Room']['view_tabs']) ) {
+            $this->request->data['Room']['view_tabs'] = 'o';
+        }
+
+        // set default day
+        if (!isset($this->request->data['Room']['day']) ) {
+            $this->request->data['Room']['day'] = (new DateTime())->format('Y-m-d');
+        }
+
+        // set default start time
+        if (!isset($this->request->data['Room']['start_hour']) ) {
+            $this->request->data['Room']['start_hour'] = (new DateTime())->format('H:i');
+        }
+
+        // set default end time
+        if (!isset($this->request->data['Room']['end_hour']) ) {
+            $now = new DateTime();
+            $diff = $now->diff(new DateTime('tomorrow'));
+            $minutes_to_add = min( ($diff->h * 60) + ($diff->i), 60);
+            $this->request->data['Room']['end_hour'] = (new DateTime())->modify('+' . $minutes_to_add . 'minutes')->format('H:i');
+        }
     }
 
     //</editor-fold>
