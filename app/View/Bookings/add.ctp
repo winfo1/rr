@@ -8,7 +8,7 @@
         'class' => 'form-control',
     )
 )); ?>
-    <h1><?php echo __('Raum buchen'); ?></h1>
+    <h1><?php echo __('Buchung hinzufügen'); ?></h1>
     <fieldset>
         <legend><?php echo __('Geben Sie hier die Daten der neuen Buchung an'); ?></legend>
 
