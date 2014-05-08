@@ -60,10 +60,11 @@ class BookingsController extends AppController
     }
     
     public function beforeDetailDisplay() {
-        
-        $rooms = $this->requestAction('/rooms/getRoomsAsRoomList');
+
+        $rooms_all = $this->requestAction('/rooms/getRooms');
+        $this->set(compact('rooms_all'));
+        $rooms = $this->requestAction('/rooms/getRoomsAsRoomList', array('pass' => array($rooms_all)));
         $this->set(compact('rooms'));
-        
     }
 
     //</editor-fold>
@@ -528,7 +529,7 @@ class BookingsController extends AppController
         if (!$this->Booking->exists()) {
             throw new NotFoundException(__('Buchung nicht gefunden'));
         }
-        
+
         $this->beforeDetailDisplay();
 
         $this->request->data = $this->Booking->find('first', array(

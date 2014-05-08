@@ -236,15 +236,15 @@ class RoomsController extends AppController {
         return $list;
     }
 
-    function getRoomsAsRoomList()
-    {
-        $all = $this->getRooms();
+    function getRoomsAsRoomList($data = null) {
+        if(!isset($data)) {
+            $data = $this->getRooms();
+        }
 
         $result = array();
 
-        foreach ($all as $room)
-        {
-            $result[$room['Room']['id']] = $room['Room']['name'];
+        foreach ($data as $value) {
+            $result[$value['Room']['id']] = $value['Room']['name'];
         }
 
         return $result;
