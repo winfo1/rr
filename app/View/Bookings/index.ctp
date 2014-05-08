@@ -10,7 +10,7 @@
                 </div>
             </div>
 
-            <h3>Alle Buchungen</h3>
+            <h3><?php echo __('Alle Buchungen'); ?></h3>
         </div>
         <table class="table table-hover">
             <thead>
@@ -118,29 +118,32 @@
             <div class="pull-right form-inline">
                 <div class="btn-group">
                     <button class="btn btn-primary" data-calendar-nav="prev">《</button>
-                    <button class="btn btn-default" data-calendar-nav="today">Heute</button>
+                    <button class="btn btn-default" data-calendar-nav="today"><?php echo __('Heute'); ?></button>
                     <button class="btn btn-primary" data-calendar-nav="next">》</button>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-info" data-calendar-view="year">Jahr</button>
-                    <button class="btn btn-info active" data-calendar-view="month">Monat</button>
-                    <button class="btn btn-info" data-calendar-view="week">Woche</button>
-                    <button class="btn btn-info" data-calendar-view="day">Tag</button>
+                    <button class="btn btn-info" data-calendar-view="year"><?php echo __('Jahr'); ?></button>
+                    <button class="btn btn-info active" data-calendar-view="month"><?php echo __('Monat'); ?></button>
+                    <button class="btn btn-info" data-calendar-view="week"><?php echo __('Woche'); ?></button>
+                    <button class="btn btn-info" data-calendar-view="day"><?php echo __('Tag'); ?></button>
                 </div>
                 <div class="btn-group">
-                    <?php echo $this->Html->link(__('<span class="glyphicon glyphicon glyphicon-transfer"></span> Tabellenansicht'), array('action' => 'index', 'table'), array('class' => 'btn btn-default', 'escape' => false)); ?>
-                    <?php echo $this->Html->link(__('<span class="glyphicon glyphicon-calendar"></span> Abonnieren'), array('controller' => 'ical', 'action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicon glyphicon glyphicon-transfer"></span>' . __('Tabellenansicht'), array('action' => 'index', 'table'), array('class' => 'btn btn-default', 'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicon glyphicon-calendar"></span>' . __('Abonnieren'), array('controller' => 'ical', 'action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
                 </div>
             </div>
 
-            <h3></h3>
+            <h3>&nbsp;</h3>
         </div>
         <div class="row">
             <div class="col-md-9">
                 <div id="calendar"></div>
+
+                <div class="push"></div>
+                <?php echo $this->Html->link(__('Hinzufügen'), array('action' => 'add'), array('class' => 'btn btn-default btn-lg')); ?>
             </div>
             <div class="col-md-3">
-                <h4>Buchungen</h4>
+                <h4><?php echo __('Buchungen'); ?></h4>
                 <ul id="eventlist" class="nav nav-list"></ul>
             </div>
         </div>
@@ -199,8 +202,5 @@
 
             }(jQuery));
         </script>
-        <div class="push"></div>
-
-        <?php echo $this->Html->link(__('Hinzufügen'), array('action' => 'add'), array('class' => 'btn btn-default btn-lg')); ?>
     <?php endif; ?>
 </div>

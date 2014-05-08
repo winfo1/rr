@@ -210,7 +210,7 @@ class RoomsController extends AppController {
 
         // set view
         if (!isset($this->request->data['Room']['view_tabs']) ) {
-            $this->request->data['Room']['view_tabs'] = 'o';
+            $this->request->data['Room']['view_tabs'] = 'w';
         }
 
         // set default day
