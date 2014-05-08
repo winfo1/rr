@@ -5,8 +5,8 @@
         <div class="page-header">
             <div class="pull-right form-inline">
                 <div class="btn-group">
-                    <?php echo $this->Html->link(__('<span class="glyphicon glyphicon glyphicon-transfer"></span> Kalenderansicht'), array('action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
-                    <?php echo $this->Html->link(__('<span class="glyphicon glyphicon-calendar"></span> Abonnieren'), array('controller' => 'ical', 'action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicon glyphicon glyphicon-transfer"></span> ' . __('Kalenderansicht'), array('action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicon glyphicon-calendar"></span> ' . __('Abonnieren'), array('controller' => 'ical', 'action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
                 </div>
             </div>
 
@@ -128,8 +128,8 @@
                     <button class="btn btn-info" data-calendar-view="day"><?php echo __('Tag'); ?></button>
                 </div>
                 <div class="btn-group">
-                    <?php echo $this->Html->link('<span class="glyphicon glyphicon glyphicon-transfer"></span>' . __('Tabellenansicht'), array('action' => 'index', 'table'), array('class' => 'btn btn-default', 'escape' => false)); ?>
-                    <?php echo $this->Html->link('<span class="glyphicon glyphicon-calendar"></span>' . __('Abonnieren'), array('controller' => 'ical', 'action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicon glyphicon glyphicon-transfer"></span> ' . __('Tabellenansicht'), array('action' => 'index', 'table'), array('class' => 'btn btn-default', 'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicon glyphicon-calendar"></span> ' . __('Abonnieren'), array('controller' => 'ical', 'action' => 'index'), array('class' => 'btn btn-default', 'escape' => false)); ?>
                 </div>
             </div>
 

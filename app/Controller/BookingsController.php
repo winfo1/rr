@@ -75,10 +75,11 @@ class BookingsController extends AppController
 
     //<editor-fold defaultstate="collapsed" desc="view functions">
 
-    public function index()
-    {
-        $bookings = $this->Paginator->paginate('Booking');
-        $this->set(compact('bookings'));
+    public function index($view = null) {
+        if(isset($view) && ($view == 'table')) {
+            $bookings = $this->Paginator->paginate('Booking');
+            $this->set(compact('bookings'));
+        }
     }
 
     public function accept($id = null)
