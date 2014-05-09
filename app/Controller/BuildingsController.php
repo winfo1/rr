@@ -1,6 +1,7 @@
 <?php
 
 class BuildingsController extends AppController {
+
     /*
      * basic functions
      */
@@ -15,10 +16,7 @@ class BuildingsController extends AppController {
     );
 
     public function beforeFilter() {
-
         parent::beforeFilter();
-
-        $this->Auth->allow('getBuildingsAsAll', 'getBuildingsAsList');
     }
 
     //</editor-fold>
@@ -30,8 +28,8 @@ class BuildingsController extends AppController {
     //<editor-fold defaultstate="collapsed" desc="view functions">
 
     public function index() {
-        $buildings = $this->Paginator->paginate('Building');
-        $this->set(compact('buildings'));
+        $data = $this->Paginator->paginate('Building');
+        $this->set(compact('data'));
     }
 
     public function add() {
@@ -42,13 +40,16 @@ class BuildingsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Das Gebäude konnte nicht hinzugefügt werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -62,14 +63,17 @@ class BuildingsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Das Gebäude konnte nicht geändert werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         } else {
             $this->request->data = $this->Building->read(null, $id);
+            return true;
         }
     }
 
@@ -83,13 +87,15 @@ class BuildingsController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Das Gebäude konnte nicht gelöscht werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        $this->redirect(array('action' => 'index'));
+        return false;
     }
 
     //</editor-fold>
@@ -99,40 +105,6 @@ class BuildingsController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
-
-    function getBuildings()
-    {
-        return $this->Building->find( 'list', array(
-            'fields' => array('id', 'short'),
-            'order' => array('Building.short' => 'asc' )
-        ));
-    }
-
-    function getBuildingsAsAll()
-    {
-        return $this->Building->find('all', array(
-            'order' => array('Building.short' => 'asc')
-        ));
-    }
-
-    function getBuildingsAsList($short = true)
-    {
-        $all = $this->getBuildingsAsAll();
-
-        $result = array();
-
-        foreach ($all as $building)
-        {
-            if($short)
-                $value = $building['Building']['short'];
-            else
-                $value = $building['Building']['name'];
-
-            $result[$building['Building']['id']] = $value;
-        }
-
-        return $result;
-    }
 
     //</editor-fold>
 }

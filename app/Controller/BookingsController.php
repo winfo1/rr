@@ -4,6 +4,8 @@ App::uses('Booking', 'Model');
 App::uses('CakeEmail', 'Network/Email');
 App::uses('Validation', 'Utility');
 
+App::import('Lib', 'Utils');
+
 class BookingsController extends AppController
 {
     /*
@@ -177,10 +179,7 @@ class BookingsController extends AppController
             $end_hour = str_replace('-', ':', $str_end_time);
             $view_tabs = 'a';
         } else {
-            $now = new DateTime();
-            $diff = $now->diff(new DateTime('tomorrow'));
-            $minutes_to_add = min( ($diff->h * 60) + ($diff->i), 60);
-            $end_hour = (new DateTime())->modify('+' . $minutes_to_add . 'minutes')->format('H:i');
+            $end_hour = Utils::toEndDateTime(new DateTime(), 60)->format('H:i');
         }
         $this->set(compact('end_hour'));
 
@@ -194,18 +193,13 @@ class BookingsController extends AppController
             if($this->request->data['Booking']['view_tabs'] == 's') {
                 // simple booking-time selection
                 $start = (new DateTime())->modify('+' . $this->request->data['Booking']['start_minutes'] . ' minutes');
-                $diff = $start->diff(new DateTime('tomorrow'));
-                $minutes_to_add = min( ($diff->h * 60) + ($diff->i), $this->request->data['Booking']['duration']);
-                $this->request->data['Booking']['duration'] = $minutes_to_add;
-                $end = clone $start;
-                $end->modify('+' . $this->request->data['Booking']['duration'] . ' minutes');
+                $end = Utils::toEndDateTime($start, $this->request->data['Booking']['duration'], $this->request->data['Booking']['duration']);
             } else {
                 // advanced booking-time selection
                 $day = $this->request->data['Booking']['day'];
-                $start = $this->StrToDateTime($day, $this->request->data['Booking']['start_hour']);
-                $end = $this->StrToDateTime($day, $this->request->data['Booking']['end_hour']);
-                $diff = $start->diff($end);
-                $this->request->data['Booking']['duration'] = strval(($diff->h * 60) + ($diff->i));
+                $start = Utils::toDateTime($day, $this->request->data['Booking']['start_hour']);
+                $end = Utils::toDateTime($day, $this->request->data['Booking']['end_hour']);
+                $this->request->data['Booking']['duration'] = strval(Utils::getDiffInMin($start, $end));
             }
 
             $room = $this->requestAction('/rooms/getRooms/' . $room_id);
@@ -684,16 +678,6 @@ class BookingsController extends AppController
      */
 
     //<editor-fold defaultstate="collapsed" desc="helper functions">
-
-    /**
-     * @param $str_day
-     * @param $str_hour
-     * @return DateTime
-     */
-    private function StrToDateTime($str_day, $str_hour) {
-        preg_match('/(\d+)\:(\d+)/', $str_hour, $match);
-        return (new DateTime($str_day))->setTime($match[1], $match[2]);
-    }
 
     private function add_silent($room_id, $user_id, $group_id, $name, $status, $startdatetime, $enddatetime, &$id)
     {

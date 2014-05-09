@@ -2,6 +2,8 @@
 
 App::uses('AppModel', 'Model');
 
+App::import('Lib', 'Utils');
+
 class Room extends AppModel {
     public $belongsTo = array('Building', 'Organizationalunit');
 
@@ -60,13 +62,12 @@ class Room extends AppModel {
 
         'search' => array('type' => 'like', 'field' => 'Room.name'),
 
-        'view_tabs' => array('type' => 'subquery', 'method' => 'findByDateTime'),
-        'start_minutes' => array('type' => 'expression'),
-        'duration' => array('type' => 'expression'),
-        'day' => array('type' => 'expression'),
-        'start_hour' => array('type' => 'expression'),
-        'end_hour' => array('type' => 'expression'),
-
+        'view_tabs' => array('type' => 'query', 'method' => 'findByDateTime'),
+        'start_minutes' => array('type' => 'expression', 'method' => null),
+        'duration' => array('type' => 'expression', 'method' => null),
+        'day' => array('type' => 'expression', 'method' => null),
+        'start_hour' => array('type' => 'expression', 'method' => null),
+        'end_hour' => array('type' => 'expression', 'method' => null),
 
         'filter' => array('type' => 'query', 'method' => 'orConditions')
     );
@@ -110,56 +111,45 @@ class Room extends AppModel {
         if($data['view_tabs'] == 's') {
             // simple booking-time selection
             $start = (new DateTime())->modify('+' . $data['start_minutes'] . ' minutes');
-            $diff = $start->diff(new DateTime('tomorrow'));
-            $minutes_to_add = min( ($diff->h * 60) + ($diff->i), $data['duration']);
-            $end = clone $start;
-            $end->modify('+' . $minutes_to_add . ' minutes');
+            $end = Utils::toEndDateTime($start, $data['duration']);
         } else {
             // advanced booking-time selection
             $day = $data['day'];
-            $start = $this->StrToDateTime($day, $data['start_hour']);
-            $end = $this->StrToDateTime($day, $data['end_hour']);
+            $start = Utils::toDateTime($day, $data['start_hour']);
+            $end = Utils::toDateTime($day, $data['end_hour']);
         }
+
+        $room_ids = array();
 
         App::import('Model','Booking');
         $booking = new Booking();
         $blocked = array();
         if ($booking->inUse($start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'), $room_id, 0, true, $blocked)) {
 
-            // TODO: remove blocked from search list
+            // store blocked in array
 
             foreach($blocked as $booked) {
-                // $booked['Room']
+
+                $room_ids[] = $booked['Room']['id'];
+
             }
         }
 
-        return ;
+        $condition = array('NOT' => array('Room.id' => $room_ids));
+        return $condition;
     }
 
     public function orConditions($data = array()) {
         $filter = $data['filter'];
-        $cond = array(
+        $condition = array(
             'OR' => array(
                 $this->alias . '.title LIKE' => '%' . $filter . '%',
                 $this->alias . '.body LIKE' => '%' . $filter . '%',
             ));
-        return $cond;
+        return $condition;
     }
 
     public function isOwnedThroughOrganizationalUnitBy($room_id, $organizationalunit_id) {
         return $this->field('id', array('id' => $room_id, 'organizationalunit_id' => $organizationalunit_id)) === $room_id;
-    }
-
-
-
-
-    /**
-     * @param $str_day
-     * @param $str_hour
-     * @return DateTime
-     */
-    private function StrToDateTime($str_day, $str_hour) {
-        preg_match('/(\d+)\:(\d+)/', $str_hour, $match);
-        return (new DateTime($str_day))->setTime($match[1], $match[2]);
     }
 }

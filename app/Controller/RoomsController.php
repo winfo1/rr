@@ -61,7 +61,7 @@ class RoomsController extends AppController {
     }
 
     public function beforeDetailDisplay() {
-        $buildings = $this->requestAction('/buildings/getBuildingsAsList/0');
+        $buildings = $this->Room->Building->getBuildingsAsList(null, 0);
         $this->set(compact('buildings'));
 
         $organizationalunits = $this->requestAction('/organizationalunits/getOrganizationalunitsAsList/0');
@@ -240,24 +240,18 @@ class RoomsController extends AppController {
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    function getRooms($id = null)
-    {
-        if(isset($id) && is_numeric($id))
-        {
-            $condition = array('Room.id =' => $id);
-        }
-        else
-        {
+    function getRooms($id = null) {
+        if(isset($id) && is_numeric($id)) {
+            $condition = array('Room.id' => $id);
+        } else {
             $condition = array();
         }
 
-        $list = $this->Room->find('all', array(
+        return $this->Room->find('all', array(
             'conditions' => $condition,
             'contain' => array('Building', 'Organizationalunit'),
             'order' => array('Room.name' => 'asc' )
         ));
-
-        return $list;
     }
 
     function getRoomsAsRoomList($data = null) {

@@ -109,7 +109,7 @@
 
 
     <h1><?php echo __('Suchergebnis'); ?></h1>
-    <?php if(isset($rooms) && (count($rooms) > 1)) : ?>
+    <?php if(isset($rooms) && (count($rooms) > 0)) : ?>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -154,7 +154,7 @@
         ?>
     </ul>
     <?php else : ?>
-        <?php echo __('keine Räume nach den entsprechenden Kriterien gefunden'); ?>
+        <?php echo __('Keine Räume nach den entsprechenden Kriterien gefunden'); ?>
     <?php endif; ?>
 </div>
 
