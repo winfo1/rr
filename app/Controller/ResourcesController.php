@@ -1,29 +1,26 @@
 <?php
 
+App::uses('Resource', 'Model');
+
 class ResourcesController extends AppController {
+
     /*
-     * basic functions
+     * basic definitions
      */
 
-    //<editor-fold defaultstate="collapsed" desc="basic functions">
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $components = array('Paginator');
 
     public $paginate = array(
-        'limit' => 25,
-        'order' => array('Resource.name' => 'asc' )
+        'limit' => 15,
     );
 
     public function beforeFilter() {
-
         parent::beforeFilter();
-
-        $this->Auth->allow('getResources', 'getResourcesAsList');
-
     }
 
     public function beforeRender() {
-
         parent::beforeRender();
 
         $type = $this->Resource->enum('type');
@@ -39,6 +36,7 @@ class ResourcesController extends AppController {
     //<editor-fold defaultstate="collapsed" desc="view functions">
 
     public function index() {
+        $this->Paginator->settings = $this->paginate;
         $resources = $this->Paginator->paginate('Resource');
         $this->set(compact('resources'));
     }
@@ -51,13 +49,16 @@ class ResourcesController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Die Ressource konnte nicht hinzugefügt werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -71,14 +72,17 @@ class ResourcesController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Die Ressource konnte nicht geändert werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         } else {
             $this->request->data = $this->Resource->read(null, $id);
+            return true;
         }
     }
 
@@ -92,47 +96,24 @@ class ResourcesController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Die Ressource konnte nicht gelöscht werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
     //</editor-fold>
+
+    /*
+     * backend functions
+     */
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    function getResources($id = null) {
-        if(isset($id) && is_numeric($id)) {
-            $condition = array('Resource.id =' => $id);
-        } else {
-            $condition = array();
-        }
-
-        $list = $this->Resource->find('all', array(
-            'conditions' => $condition,
-            'order' => array('Resource.name' => 'asc' )
-        ));
-
-        return $list;
-    }
-
-    function getResourcesAsList($data = null) {
-        if(!isset($data)) {
-            $data = $this->getResources();
-        }
-
-        $result = array();
-
-        foreach ($data as $value) {
-            $result[$value['Resource']['id']] = $value['Resource']['name'];
-        }
-
-        return $result;
-    }
-
     //</editor-fold>
+
 }

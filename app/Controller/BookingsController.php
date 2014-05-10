@@ -6,13 +6,13 @@ App::uses('Validation', 'Utility');
 
 App::import('Lib', 'Utils');
 
-class BookingsController extends AppController
-{
+class BookingsController extends AppController {
+
     /*
-     * basic functions
+     * basic definitions
      */
 
-    //<editor-fold defaultstate="collapsed" desc="basic functions">
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $components = array('Paginator');
 
@@ -25,8 +25,16 @@ class BookingsController extends AppController
     {
         parent::beforeFilter();
 
-        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'getBookingsNames', 'view',                       'cleanUp', 'isBefore', 'edit_silent_status');
+        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'view',                       'cleanUp', 'isBefore', 'edit_silent_status');
     }
+
+    //</editor-fold>
+
+    /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
 
     public function isAuthorized($user) {
 
@@ -62,10 +70,9 @@ class BookingsController extends AppController
     }
     
     public function beforeDetailDisplay() {
-
-        $rooms_all = $this->requestAction('/rooms/getRooms');
+        $rooms_all = $this->Booking->Room->getAll();
         $this->set(compact('rooms_all'));
-        $rooms = $this->requestAction('/rooms/getRoomsAsRoomList', array('pass' => array($rooms_all)));
+        $rooms = $this->Booking->Room->getRoomsAsList($rooms_all);
         $this->set(compact('rooms'));
     }
 
@@ -79,13 +86,13 @@ class BookingsController extends AppController
 
     public function index($view = null) {
         if(isset($view) && ($view == 'table')) {
+            $this->Paginator->settings = $this->paginate;
             $bookings = $this->Paginator->paginate('Booking');
             $this->set(compact('bookings'));
         }
     }
 
-    public function accept($id = null)
-    {
+    public function accept($id = null) {
         $this->Booking->id = $id;
         if (!$this->Booking->exists()) {
             throw new NotFoundException(__('Buchung nicht gefunden'));
@@ -133,10 +140,9 @@ class BookingsController extends AppController
      * @param null $str_start_time   i.e. 19-14
      * @param null $str_end_time     i.e. 20-14
      */
-    public function add($room_id = null, $str_day = null, $str_start_time = null, $str_end_time = null)
-    {
+    public function add($room_id = null, $str_day = null, $str_start_time = null, $str_end_time = null) {
         // set available rooms
-        $rooms = $this->requestAction('/rooms/getRoomsAsRoomList');
+        $rooms = $this->Booking->Room->getRoomsFromList();
         $this->set(compact('rooms'));
 
         // set default room
@@ -202,7 +208,7 @@ class BookingsController extends AppController
                 $this->request->data['Booking']['duration'] = strval(Utils::getDiffInMin($start, $end));
             }
 
-            $room = $this->requestAction('/rooms/getRooms/' . $room_id);
+            $room = $this->Booking->Room->getRooms($room_id);
             $approval_horizon = $room[0]['Organizationalunit']['approval_horizon'];
             $approval_horizon_max_date = (new DateTime())->modify('+' . $approval_horizon . ' week');
 
@@ -230,14 +236,15 @@ class BookingsController extends AppController
                     case 'C': // semester/year
                         $interval_range = $this->request->data['Booking']['interval_range'];
                         $interval_end = null;
+                        $this->loadModel('Semester');
 
                         switch ($interval_range) {
 
                             case '1': // semester end
-                                $semester = $this->requestAction('/semesters/getActiveSemester');
+                                $semester = $this->Semester->getActiveSemester();
 
                                 if (!$semester) {
-                                    $semester = $this->requestAction('/semesters/getNextSemester');
+                                    $semester = $this->Semester->getNextSemester();
                                     $interval_end = new DateTime($semester['Semester']['start'] . ' 23:59:59');
                                 } else {
                                     $interval_end = new DateTime($semester['Semester']['end'] . ' 23:59:59');
@@ -245,13 +252,13 @@ class BookingsController extends AppController
 
                                 break;
                             case '2': // next semester start
-                                $semester = $this->requestAction('/semesters/getNextSemester');
+                                $semester = $this->Semester->getNextSemester();
 
                                 $interval_end = new DateTime($semester['Semester']['start'] . ' 23:59:59');
                                 $interval_end->modify('-1 day');
                                 break;
                             case '3': // next semester end
-                                $semester = $this->requestAction('/semesters/getNextSemester');
+                                $semester = $this->Semester->getNextSemester();
 
                                 $interval_end = new DateTime($semester['Semester']['end'] . ' 23:59:59');
                                 break;
@@ -568,17 +575,7 @@ class BookingsController extends AppController
         ));
     }
 
-    public function getBookingsNames()
-    {
-        $list = $this->Booking->find('list', array(
-            'fields' => array('Booking.Name')
-        ));
-
-        return array_unique(array_merge($this->Booking->default_names, $list));
-    }
-
-    public function getBookingsGroupNames($group_id)
-    {
+    public function getBookingsGroupNames($group_id) {
         $tree = $this->Booking->find('threaded', array(
             'conditions' => array('Booking.group_id' => $group_id),
             'fields' => array('Booking.id', 'Booking.room_id', 'Booking.name', 'Booking.startdatetime', 'Booking.enddatetime'),
@@ -590,7 +587,7 @@ class BookingsController extends AppController
 
     public function cleanUp()
     {
-        $organizationalunits = $this->requestAction('/organizationalunits/getOrganizationalunits');
+        $organizationalunits = $this->Booking->Room->Organizationalunit->getAll();
 
         $bookings = $this->Booking->find('all', array(
             'conditions' => array('Booking.status !=' => Booking::archived)
@@ -740,9 +737,8 @@ class BookingsController extends AppController
     * $this->emailAdmin($this->Booking->id, $this->request->data, $room[0], $interval_booking);
     */
 
-    private function emailAdmin($id, $data, $room, $interval_booking)
-    {
-        $admins = $this->requestAction('/users/getUsersConfig/' . $room['Room']['organizationalunit_id']);
+    private function emailAdmin($id, $data, $room, $interval_booking) {
+        $admins = $this->Booking->User->getUsersFromOrganizationalUnitId($room['Room']['organizationalunit_id']);
 
         foreach ($admins as $admin) {
 

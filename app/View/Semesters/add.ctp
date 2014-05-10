@@ -32,7 +32,12 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <?php echo $this->Form->hidden('start', array('value' => date('Y-m-d'))); ?>
+            <?php
+            if ($this->Form->isFieldError('start')) {
+                echo $this->Form->error('start');
+            }
+            echo $this->Form->hidden('start', array('value' => date('Y-m-d')));
+            ?>
         </div>
         <div class="form-group">
             <label for="SemesterEnddate"><?php echo __('Ende'); ?></label>
@@ -52,7 +57,12 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <?php echo $this->Form->hidden('end', array('value' => date('Y-m-d', strtotime("+3 months")))); ?>
+            <?php
+            if ($this->Form->isFieldError('end')) {
+                echo $this->Form->error('end');
+            }
+            echo $this->Form->hidden('end', array('value' => date('Y-m-d', strtotime('+3 months'))));
+            ?>
         </div>
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Hinzufügen'), 'class' => 'btn btn-primary btn-lg')); ?>

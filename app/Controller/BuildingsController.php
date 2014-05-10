@@ -1,18 +1,19 @@
 <?php
 
+App::uses('Building', 'Model');
+
 class BuildingsController extends AppController {
 
     /*
-     * basic functions
+     * basic definitions
      */
 
-    //<editor-fold defaultstate="collapsed" desc="basic functions">
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $components = array('Paginator');
 
     public $paginate = array(
-        'limit' => 25,
-        'order' => array('Building.short' => 'asc' )
+        'limit' => 15,
     );
 
     public function beforeFilter() {
@@ -28,6 +29,7 @@ class BuildingsController extends AppController {
     //<editor-fold defaultstate="collapsed" desc="view functions">
 
     public function index() {
+        $this->Paginator->settings = $this->paginate;
         $data = $this->Paginator->paginate('Building');
         $this->set(compact('data'));
     }
@@ -94,7 +96,6 @@ class BuildingsController extends AppController {
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        $this->redirect(array('action' => 'index'));
         return false;
     }
 
@@ -107,4 +108,5 @@ class BuildingsController extends AppController {
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
     //</editor-fold>
+
 }

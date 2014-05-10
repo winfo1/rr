@@ -1,1 +1,1 @@
-<?php echo $this->element('buildings'.DS.'index', compact('data'), array('cache' => false)); ?>
+<?php echo $this->element('buildings'.DS.'index', compact('data')); ?>

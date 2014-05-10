@@ -1,7 +1,14 @@
 <?php
 
+App::uses('AppModel', 'Model');
+
 class Roomimage extends AppModel {
-    var $belongsTo = array('Room');
+
+    /*
+     * basic definitions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $actsAs = array(
         'Uploader.Attachment' => array(
@@ -25,6 +32,16 @@ class Roomimage extends AppModel {
         )
     );
 
+    public $belongsTo = array('Room');
+
+    //</editor-fold>
+
+    /*
+     * uploader functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="uploader functions">
+
     public function beforeUpload($options) {
 
         $options['finalPath'] = '/img/uploads/';
@@ -44,4 +61,7 @@ class Roomimage extends AppModel {
     public function transformNameCallback($name, $file) {
         return $this->getUploadedFile()->name();
     }
+
+    //</editor-fold>
+
 }

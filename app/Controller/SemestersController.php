@@ -1,5 +1,7 @@
 <?php
 
+App::uses('Semester', 'Model');
+
 class SemestersController extends AppController {
     /*
      * basic functions
@@ -10,13 +12,19 @@ class SemestersController extends AppController {
     public $components = array('Paginator');
 
     public $paginate = array(
-        'limit' => 25,
-        'order' => array('Semester.short' => 'asc' )
+        'limit' => 15,
     );
 
     //</editor-fold>
 
+    /*
+     * view functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="view functions">
+
     public function index() {
+        $this->Paginator->settings = $this->paginate;
         $semesters = $this->Paginator->paginate('Semester');
         $this->set(compact('semesters'));
     }
@@ -29,21 +37,16 @@ class SemestersController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
-
-            foreach ($this->Semester->validationErrors as $field => $error) {
-                if($field == 'start')
-                    $this->Semester->validationErrors["startdate"] = $error;
-                elseif($field == 'end')
-                    $this->Semester->validationErrors["enddate"] = $error;
-            }
-
             $this->Session->setFlash(__('Das Semester konnte nicht hinzugefügt werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -57,22 +60,17 @@ class SemestersController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
-
-            foreach ($this->Semester->validationErrors as $field => $error) {
-                if($field == 'start')
-                    $this->Semester->validationErrors["startdate"] = $error;
-                elseif($field == 'end')
-                    $this->Semester->validationErrors["enddate"] = $error;
-            }
-
             $this->Session->setFlash(__('Das Semester konnte nicht geändert werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         } else {
             $this->request->data = $this->Semester->read(null, $id);
+            return true;
         }
     }
 
@@ -86,45 +84,24 @@ class SemestersController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Das Semester konnte nicht gelöscht werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
-    public function getActiveSemester() {
+    //</editor-fold>
 
-        $semester = $this->Semester->find('first', array(
-            'conditions' => array(
-                    array(
-                        'Semester.start <=' => date('Y-m-d'),
-                        'Semester.end >=' => date('Y-m-d')
-                ),
-            )
-        ));
+    /*
+     * backend functions
+     */
 
-        return $semester;
-    }
+    //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    public function getNextSemester() {
-
-        $now = date('Y-m-d');
-
-        $this->Semester->virtualFields['closestdate'] = "ABS(DATEDIFF(Semester.end, $now))";
-
-        $semester = $this->Semester->find('first', array(
-            'conditions' => array(
-                    array(
-                        'Semester.end >=' => date('Y-m-d')
-                )
-            ),
-            'order' => array('Semester.closestdate' => 'ASC')
-        ));
-
-        return $semester;
-    }
+    //</editor-fold>
 
 }

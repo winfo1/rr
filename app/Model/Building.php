@@ -4,22 +4,21 @@ App::uses('AppModel', 'Model');
 
 class Building extends AppModel {
 
-    /**
-     * @param null $id
-     * @return array
+    /*
+     * basic definitions
      */
-    public function getBuildings($id = null) {
-        if(isset($id) && is_numeric($id)) {
-            $condition = array('Building.id' => $id);
-        } else {
-            $condition = array();
-        }
 
-        return $this->find('all', array(
-            'conditions' => $condition,
-            'order' => array('Building.short' => 'asc')
-        ));
-    }
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
+
+    public $order = 'short';
+
+    //</editor-fold>
+
+    /*
+     * database functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="database functions">
 
     /**
      * @param null $data
@@ -28,7 +27,7 @@ class Building extends AppModel {
      */
     public function getBuildingsAsList($data = null, $short = true) {
         if(!isset($data)) {
-            $data = $this->getBuildings();
+            $data = $this->getAll();
         }
 
         $result = array();
@@ -44,5 +43,27 @@ class Building extends AppModel {
 
         return $result;
     }
+
+    /**
+     * @param bool $short
+     * @return array
+     *
+     * faster than getBuildingsAsList but, when having
+     * getBuildings data anyway use getBuildingsAsList
+     * instead
+     */
+    public function getBuildingsFromList($short = true) {
+        $fields = array('id');
+        if($short)
+            $fields[] = 'short';
+        else
+            $fields[] = 'name';
+
+        $result = $this->find('list', array('fields' => $fields));
+
+        return $result;
+    }
+
+    //</editor-fold>
 
 }

@@ -1,45 +1,50 @@
 <?php
+App::uses('Room', 'Model');
+
 class RoomsController extends AppController {
+
     /*
-     * basic functions
+     * basic definitions
      */
 
-    //<editor-fold defaultstate="collapsed" desc="basic functions">
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $components = array('Paginator', 'Search.Prg');
 
     public $presetVars = true; // using the model configuration
 
     public $paginate = array(
-        'limit' => 25,
-        'order' => array('Room.name' => 'asc')
+        'limit' => 15,
     );
 
     public $condition;
 
     public function beforeFilter() {
-
         parent::beforeFilter();
 
-        $this->Auth->allow('beforeDetailDisplay', 'getRooms', 'getRoomsAsRoomList', 'find');
+        $this->Auth->allow('beforeDetailDisplay', 'find');
 
-        if($this->Session->read('Auth.User.role') == 'admin')
-        {
+        if($this->Session->read('Auth.User.role') == 'admin') {
             $this->condition = array('Room.organizationalunit_id =' => $this->Session->read('Auth.User.organizationalunit_id'));
-        }
-        else
-        {
+        } else {
             $this->condition = array();
         }
     }
 
     public function beforeRender() {
-
         parent::beforeRender();
 
         $type = $this->Room->Resource->enum('type');
         $this->set(compact('type'));
     }
+
+    //</editor-fold>
+
+    /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
 
     public function isAuthorized($user) {
 
@@ -61,11 +66,10 @@ class RoomsController extends AppController {
     }
 
     public function beforeDetailDisplay() {
-        $buildings = $this->Room->Building->getBuildingsAsList(null, 0);
+        $buildings = $this->Room->Building->getBuildingsFromList(false);
         $this->set(compact('buildings'));
 
-        $organizationalunits = $this->requestAction('/organizationalunits/getOrganizationalunitsAsList/0');
-
+        $organizationalunits = $this->Room->Organizationalunit->getOrganizationalunitsFromList(false);
         if($this->Session->read('Auth.User.role') == 'admin')
             array_filter($organizationalunits, function ($var) { return ($var == $this->Session->read('Auth.User.organizationalunit_id')); });
 
@@ -80,9 +84,9 @@ class RoomsController extends AppController {
 
         $this->set(compact('organizationalunits'));
 
-        $resources_all = $this->requestAction('/resources/getResources');
+        $resources_all = $this->Room->Resource->getAll();
         $this->set(compact('resources_all'));
-        $resources = $this->requestAction('/resources/getResourcesAsList', array('pass' => array($resources_all)));
+        $resources = $this->Room->Resource->getResourcesAsList($resources_all);
         $this->set(compact('resources'));
     }
 
@@ -95,11 +99,7 @@ class RoomsController extends AppController {
     //<editor-fold defaultstate="collapsed" desc="view functions">
 
     public function index() {
-        $this->paginate = array(
-            'conditions' => $this->condition,
-            'limit' => 6,
-            'order' => array('Room.name' => 'asc' )
-        );
+        $this->Paginator->settings = $this->paginate;
         $rooms = $this->Paginator->paginate('Room');
         $this->set(compact('rooms'));
     }
@@ -114,13 +114,16 @@ class RoomsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Der Raum konnte nicht hinzugefügt werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -170,14 +173,17 @@ class RoomsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Der Raum konnte nicht geändert werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         } else {
             $this->request->data = $this->Room->read(null, $id);
+            return true;
         }
     }
 
@@ -191,13 +197,14 @@ class RoomsController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Der Raum konnte nicht gelöscht werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
     public function find() {
@@ -240,34 +247,6 @@ class RoomsController extends AppController {
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    function getRooms($id = null) {
-        if(isset($id) && is_numeric($id)) {
-            $condition = array('Room.id' => $id);
-        } else {
-            $condition = array();
-        }
-
-        return $this->Room->find('all', array(
-            'conditions' => $condition,
-            'contain' => array('Building', 'Organizationalunit'),
-            'order' => array('Room.name' => 'asc' )
-        ));
-    }
-
-    function getRoomsAsRoomList($data = null) {
-        if(!isset($data)) {
-            $data = $this->getRooms();
-        }
-
-        $result = array();
-
-        foreach ($data as $value) {
-            $result[$value['Room']['id']] = $value['Room']['name'];
-        }
-
-        return $result;
-    }
-
     //</editor-fold>
 
     /*
@@ -290,4 +269,5 @@ class RoomsController extends AppController {
     }
 
     //</editor-fold>
+
 }

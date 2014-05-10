@@ -1,24 +1,33 @@
 <?php
+
 App::uses('User', 'Model');
 
 class UsersController extends AppController {
+
+    /*
+     * basic definitions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
+
+    public $components = array('Paginator');
+
+    public $paginate = array(
+        'limit' => 15,
+    );
+
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('beforeDetailDisplay', 'register', 'login', 'logout');
+    }
+
+    //</editor-fold>
+
     /*
      * basic functions
      */
 
     //<editor-fold defaultstate="collapsed" desc="basic functions">
-
-    public $components = array('Paginator');
-
-    public $paginate = array(
-        'limit' => 25,
-        'order' => array('User.username' => 'asc')
-    );
-
-    public function beforeFilter() {
-        parent::beforeFilter();
-        $this->Auth->allow('beforeDetailDisplay', 'register', 'login', 'logout', 'getUsersConfig');
-    }
 
     public function isAuthorized($user) {
 
@@ -38,49 +47,52 @@ class UsersController extends AppController {
 
         return parent::isAuthorized($user);
     }
-    
+
     public function beforeDetailDisplay() {
-        
-        $organizationalunits = $this->requestAction('/organizationalunits/getOrganizationalunitsAsList/0');
+        $organizationalunits = $this->User->Organizationalunit->getOrganizationalunitsFromList(false);
         $this->set(compact('organizationalunits'));
-        
     }
 
     //</editor-fold>
 
+    /*
+     * view functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="view functions">
+
+    public function index() {
+        $this->Paginator->settings = $this->paginate;
+        $users = $this->Paginator->paginate('User');
+        $this->set(compact('users'));
+    }
+
     public function login() {
         if ($this->Session->check('Auth.User.id')) {
-
             $this->Session->setFlash(__('Sie sind bereits angemeldet'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-warning'
             ));
             $this->redirect($this->referer());
-
-        } else if ($this->request->is('post')) {
-
+            return true;
+        } elseif ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                return $this->redirect($this->Auth->redirect());
+                $this->redirect($this->Auth->redirect());
+                return true;
             }
             $this->Session->setFlash(__('Der Benutzername oder das Passwort ist falsch. Versuchen Sie es erneut'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return false;
     }
 
     public function logout() {
         $this->Session->destroy();
-        return $this->redirect($this->Auth->logout());
-    }
-
-    public function index() {
-        $this->paginate = array(
-            'limit' => 6,
-            'order' => array('User.username' => 'asc' )
-        );
-        $users = $this->Paginator->paginate('User');
-        $this->set(compact('users'));
+        $this->redirect($this->Auth->logout());
+        return true;
     }
 
     public function view($id = null) {
@@ -92,16 +104,14 @@ class UsersController extends AppController {
     }
 
     public function add() {
-        
         if ($this->request->is('post')) {
-        
 			if(($this->request->data['User']['role'] == User::admin) && ($this->request->data['User']['organizationalunit_id'] == 0)) {
-				return $this->Session->setFlash(__('Der Benutzer konnte nicht hinzugefügt werden, da Benutzer mit der Rolle Admin einer Org.Einheit angehören müssen'), 'alert', array(
+                $this->Session->setFlash(__('Der Benutzer konnte nicht hinzugefügt werden, da Benutzer mit der Rolle Admin einer Org.Einheit angehören müssen'), 'alert', array(
 					'plugin' => 'BoostCake',
 					'class' => 'alert-danger'
 				));
+                return false;
 			}
-        
             $this->User->create();
             $this->request->data['User']['group_id'] = 0;
             if($this->request->data['User']['role'] == User::admin) {
@@ -113,15 +123,17 @@ class UsersController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Der Benutzer konnte nicht hinzugefügt werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
-        
         $this->beforeDetailDisplay();
+        return true;
     }
 
     public function register() {
@@ -135,13 +147,16 @@ class UsersController extends AppController {
                     'class' => 'alert-success'
                 ));
                 $this->Auth->login();
-                return $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                return true;
             }
             $this->Session->setFlash(__('Die Registrierung konnte nicht abgeschlossen werden. Versuchen Sie es erneut'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -162,7 +177,8 @@ class UsersController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                return true;
             }
             $this->request->data['User']['organizationalunit_verified'] = $this->User->field('organizationalunit_verified');
 
@@ -171,9 +187,11 @@ class UsersController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         } else {
             $this->request->data = $this->User->read(null, $id);
             unset($this->request->data['User']['password']);
+            return true;
         }
     }
 
@@ -187,13 +205,14 @@ class UsersController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Der Benutzer konnte nicht gelöscht werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
     public function upgrade() {
@@ -208,11 +227,14 @@ class UsersController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                return true;
             }
-            $this->Session->setFlash(
-                __('Der Verwaltungsstatus konnte nicht beantragt werden.')
-            );
+            $this->Session->setFlash(__('Der Verwaltungsstatus konnte nicht beantragt werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
+            return false;
         } else {
             $this->request->data = $this->User->read(null, $this->User->id);
             unset($this->request->data['User']['password']);
@@ -251,11 +273,11 @@ class UsersController extends AppController {
                 ), 'info');
             }
             $this->set(compact('error'));
+            return true;
         }
     }
 
     public function do_upgrade($id = null) {
-
         $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Benutzer nicht gefunden'));
@@ -268,39 +290,23 @@ class UsersController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Der Benutzer konnte nicht freigegeben werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
+
+    //</editor-fold>
 
     /*
      * backend functions
      */
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
-
-    public function getUsers()
-    {
-        return $this->User->find('all');
-    }
-
-    public function getUsersConfig($organizationalunit_id)
-    {
-        $list = $this->User->find('all', array(
-            'conditions' => array(
-                'AND' => array(
-                    'User.organizationalunit_id' => $organizationalunit_id,
-                    'User.organizationalunit_verified' => 1
-                )
-            )
-        ));
-
-        return $list;
-    }
 
     //</editor-fold>
 }

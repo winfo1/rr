@@ -1,27 +1,35 @@
 <?php
 
+App::uses('Organizationalunit', 'Model');
+
 class OrganizationalunitsController extends AppController {
+
     /*
-     * basic functions
+     * basic definitions
      */
 
-    //<editor-fold defaultstate="collapsed" desc="basic functions">
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $components = array('Paginator');
 
     public $paginate = array(
-        'limit' => 25,
-        'order' => array('Organizationalunit.short' => 'asc' )
+        'limit' => 15,
     );
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow('getOrganizationalunits', 'getOrganizationalunitsAsList');
     }
 
     //</editor-fold>
 
+    /*
+     * view functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="view functions">
+
     public function index() {
+        $this->Paginator->settings = $this->paginate;
         $organizationalunits = $this->Paginator->paginate('Organizationalunit');
         $this->set(compact('organizationalunits'));
     }
@@ -34,13 +42,16 @@ class OrganizationalunitsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Die Organisationseinheit konnte nicht hinzugefügt werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -54,14 +65,17 @@ class OrganizationalunitsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
             $this->Session->setFlash(__('Die Organisationseinheit konnte nicht geändert werden'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
+            return false;
         } else {
             $this->request->data = $this->Organizationalunit->read(null, $id);
+            return true;
         }
     }
 
@@ -75,50 +89,24 @@ class OrganizationalunitsController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Die Organisationseinheit konnte nicht gelöscht werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
-    function getOrganizationalunits($id = null)
-    {
-        if(isset($id) && is_numeric($id))
-        {
-            $condition = array('Organizationalunit.id =' => $id);
-        }
-        else
-        {
-            $condition = array();
-        }
+    //</editor-fold>
 
-        $list = $this->Organizationalunit->find('all', array(
-            'conditions' => $condition,
-            'order' => array('Organizationalunit.short' => 'asc')
-        ));
+    /*
+     * backend functions
+     */
 
-        return $list;
-    }
+    //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    function getOrganizationalunitsAsList($short = true)
-    {
-        $all = $this->getOrganizationalunits();
+    //</editor-fold>
 
-        $result = array();
-
-        foreach ($all as $organizationalunit)
-        {
-            if($short)
-                $value = $organizationalunit['Organizationalunit']['short'];
-            else
-                $value = $organizationalunit['Organizationalunit']['name'];
-
-            $result[$organizationalunit['Organizationalunit']['id']] = $value;
-        }
-
-        return $result;
-    }
 }

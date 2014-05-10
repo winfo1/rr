@@ -5,28 +5,12 @@ App::uses('AppModel', 'Model');
 App::import('Lib', 'Utils');
 
 class Room extends AppModel {
-    public $belongsTo = array('Building', 'Organizationalunit');
 
-    public $hasMany = array('Roomimage');
+    /*
+     * basic definitions
+     */
 
-    public $hasAndBelongsToMany = array('Resource');
-
-    public $virtualFields = array(
-        'name' => 'CONCAT(Building.short, Room.floor, ".", Room.number)'
-    );
-
-    public $validate = array(
-        'seats' => array(
-            'min' => array(
-                'rule'    => array('hasMin'),
-                'message' => 'Dieser Raum muss mindestens 4 Sitze haben'
-            )
-        )
-    );
-
-    function hasMin($check) {
-        return $check['seats'] >= 4;
-    }
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
 
     public $actsAs = array(
         'Search.Searchable',
@@ -51,6 +35,12 @@ class Room extends AppModel {
         )
     );
 
+    public $belongsTo = array('Building', 'Organizationalunit');
+
+    public $hasMany = array('Roomimage');
+
+    public $hasAndBelongsToMany = array('Resource');
+
     public $filterArgs = array(
         'name' => array('type' => 'like'),
         'organizationalunit_id' => array('type' => 'value'),
@@ -72,6 +62,40 @@ class Room extends AppModel {
         'filter' => array('type' => 'query', 'method' => 'orConditions')
     );
 
+    public $order = 'name';
+
+    public $virtualFields = array(
+        'name' => 'CONCAT(Building.short, Room.floor, ".", Room.number)'
+    );
+
+    public $validate = array(
+        'seats' => array(
+            'min' => array(
+                'rule'    => array('hasMin'),
+                'message' => 'Dieser Raum muss mindestens 4 Sitze haben'
+            )
+        )
+    );
+
+    //</editor-fold>
+
+    /*
+     * validation functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="validation functions">
+
+    public function hasMin($check) {
+        return $check['seats'] >= 4;
+    }
+
+    //</editor-fold>
+
+    /*
+     * uploader functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="uploader functions">
 
     public function beforeUpload($options) {
 
@@ -93,6 +117,14 @@ class Room extends AppModel {
         return $this->getUploadedFile()->name();
     }
 
+    //</editor-fold>
+
+    /*
+     * filter functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="filter functions">
+
     public function findBySeats($data = array()) {
         $query = array(
             'Room.seats >='  => $data['seats'],
@@ -103,7 +135,7 @@ class Room extends AppModel {
     public function findByDateTime($data = array()) {
         if($data['view_tabs'] == 'w') {
             // ignore this
-            return ;
+            return null;
         }
 
         $room_id = 0;
@@ -149,7 +181,54 @@ class Room extends AppModel {
         return $condition;
     }
 
+    //</editor-fold>
+
+    /*
+     * database functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="database functions">
+
+    /**
+     * @param null $data
+     * @return array
+     */
+    function getRoomsAsList($data = null) {
+        if(!isset($data)) {
+            $data = $this->getAll();
+        }
+
+        $result = array();
+
+        foreach ($data as $value) {
+            $result[$value['Room']['id']] = $value['Room']['name'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     *
+     * faster than getRoomsAsList but, when having
+     * getAll data anyway use getRoomsAsList
+     * instead
+     */
+    public function getRoomsFromList() {
+        $fields = array('id', 'name');
+
+        $result = $this->find('list', array(
+            'fields' => $fields,
+            'recursive' => 1, //! important
+            'contain' => array('Building')
+        ));
+
+        return $result;
+    }
+
     public function isOwnedThroughOrganizationalUnitBy($room_id, $organizationalunit_id) {
         return $this->field('id', array('id' => $room_id, 'organizationalunit_id' => $organizationalunit_id)) === $room_id;
     }
+
+    //</editor-fold>
 }

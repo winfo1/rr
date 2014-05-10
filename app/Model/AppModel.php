@@ -35,6 +35,30 @@ class AppModel extends Model {
 
     public $locale = 'de_de';
 
+    /*
+     * database functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="database functions">
+
+    /**
+     * @param null $id
+     * @return array
+     */
+    function getAll($id = null) {
+        if(isset($id) && is_numeric($id)) {
+            $condition = array($this->name . '.id' => $id);
+        } else {
+            $condition = array();
+        }
+
+        return $this->find('all', array(
+            'conditions' => $condition,
+        ));
+    }
+
+    //</editor-fold>
+
     function getNextAutoIncrement(){
 
         $table = Inflector::tableize($this->name);

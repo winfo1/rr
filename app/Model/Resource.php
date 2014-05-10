@@ -4,6 +4,12 @@ App::uses('AppModel', 'Model');
 
 class Resource extends AppModel {
 
+    /*
+     * basic definitions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
+
     const bool = 0;
     const int = 1;
 
@@ -13,6 +19,8 @@ class Resource extends AppModel {
             self::int => 'int'
         )
     );
+
+    public $order = 'name';
 
     public $validate = array(
         'name' => array(
@@ -26,4 +34,47 @@ class Resource extends AppModel {
             )
         )
     );
+
+    //</editor-fold>
+
+    /*
+     * database functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="database functions">
+
+    /**
+     * @param null $data
+     * @return array
+     */
+    public function getResourcesAsList($data = null) {
+        if(!isset($data)) {
+            $data = $this->getAll();
+        }
+
+        $result = array();
+
+        foreach ($data as $value) {
+            $result[$value['Resource']['id']] = $value['Resource']['name'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     *
+     * faster than getResourcesAsList but, when having
+     * getAll data anyway use getResourcesAsList
+     * instead
+     */
+    public function getResourcesFromList() {
+        $fields = array('id', 'name');
+
+        $result = $this->find('list', array('fields' => $fields));
+
+        return $result;
+    }
+
+    //</editor-fold>
 }

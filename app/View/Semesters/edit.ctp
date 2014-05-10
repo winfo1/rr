@@ -19,7 +19,7 @@
 
             <div class="input-group date form_start_date" data-date-format="dd MM yyyy" data-link-field="data[Semester][startdate]">
                 <?php
-                $val = strftime('%d %B %Y', $this->Time->gmt($this->request->data['Semester']['start']));
+                $val = strftime('%d %B %Y', (new DateTime($this->request->data['Semester']['start']))->getTimestamp());
                 if (WIN)
                     $val = utf8_encode($val);
                 echo $this->Form->input('startdate', array(
@@ -32,14 +32,19 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <?php echo $this->Form->hidden('start', array('value' => $this->request->data['Semester']['start'])); ?>
+            <?php
+            if ($this->Form->isFieldError('start')) {
+                echo $this->Form->error('start');
+            }
+            echo $this->Form->hidden('start', array('value' => $this->request->data['Semester']['start']));
+            ?>
         </div>
         <div class="form-group">
             <label for="SemesterEnddate"><?php echo __('Ende'); ?></label>
 
             <div class="input-group date form_end_date" data-date-format="dd MM yyyy" data-link-field="data[Semester][enddate]">
                 <?php
-                $val = strftime('%d %B %Y', $this->Time->gmt($this->request->data['Semester']['end']));
+                $val = strftime('%d %B %Y', (new DateTime($this->request->data['Semester']['end']))->getTimestamp());
                 if (WIN)
                     $val = utf8_encode($val);
                 echo $this->Form->input('enddate', array(
@@ -52,7 +57,12 @@
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <?php echo $this->Form->hidden('end', array('value' => $this->request->data['Semester']['end'])); ?>
+            <?php
+            if ($this->Form->isFieldError('end')) {
+                echo $this->Form->error('end');
+            }
+            echo $this->Form->hidden('end', array('value' => $this->request->data['Semester']['end']));
+            ?>
         </div>
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Ändern'), 'class' => 'btn btn-primary btn-lg')); ?>

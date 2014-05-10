@@ -1,10 +1,20 @@
 <?php
+
 App::uses('AppModel', 'Model');
 
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 class User extends AppModel {
+
+    /*
+     * basic definitions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
+
     public $belongsTo = array('Group', 'Organizationalunit');
+
+    public $order = 'username';
 
     const root = 'root';
     const admin = 'admin';
@@ -46,12 +56,38 @@ class User extends AppModel {
         )
     );
 
+    //</editor-fold>
+
+    /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
+
+    public function beforeSave($options = array()) {
+        if (isset($this->data[$this->alias]['password'])) {
+            $passwordHasher = new SimplePasswordHasher();
+            $this->data[$this->alias]['password'] = $passwordHasher->hash(
+                $this->data[$this->alias]['password']
+            );
+        }
+        return true;
+    }
+
+    //</editor-fold>
+
+    /*
+     * validation functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="validation functions">
+
     /**
      * Before isUniqueUsername
-     * @param array $options
+     * @param $check
      * @return boolean
      */
-    function isUniqueUsername($check) {
+    public function isUniqueUsername($check) {
 
         $username = $this->find(
             'first',
@@ -77,15 +113,27 @@ class User extends AppModel {
         }
     }
 
-    public function beforeSave($options = array()) {
-        if (isset($this->data[$this->alias]['password'])) {
-            $passwordHasher = new SimplePasswordHasher();
-            $this->data[$this->alias]['password'] = $passwordHasher->hash(
-                $this->data[$this->alias]['password']
-            );
-        }
-        return true;
+    //</editor-fold>
+
+    /*
+     * database functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="database functions">
+
+    public function getUsersFromOrganizationalUnitId($organizationalunit_id) {
+        $list = $this->find('all', array(
+            'conditions' => array(
+                'AND' => array(
+                    'User.organizationalunit_id' => $organizationalunit_id,
+                    'User.organizationalunit_verified' => 1
+                )
+            )
+        ));
+
+        return $list;
     }
 
+    //</editor-fold>
 
 }

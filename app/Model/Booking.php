@@ -2,7 +2,14 @@
 App::uses('AppModel', 'Model');
 
 class Booking extends AppModel {
-    var $belongsTo = array('Room', 'User');
+
+    /*
+     * basic definitions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic definitions">
+
+    public $belongsTo = array('Room', 'User');
 
     const active = 'active';
     const planned = 'planned';
@@ -30,6 +37,12 @@ class Booking extends AppModel {
         )
     );
 
+    public $default_names = array(
+        'Besprechung',
+        'Diss fixe',
+        'Jour fixe'
+    );
+
     public function beforeFind($query) {
         parent::beforeFind($query);
 
@@ -47,11 +60,25 @@ class Booking extends AppModel {
         ));
     }
 
-    public $default_names = array(
-        'Besprechung',
-        'Diss fixe',
-        'Jour fixe'
-    );
+    //</editor-fold>
+
+    /*
+     * database functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="database functions">
+
+    /**
+     * @return array
+     */
+    public function getNames() {
+
+        $list = $this->find('list', array(
+            'fields' => array($this->name . '.Name')
+        ));
+
+        return array_unique(array_merge($this->default_names, $list));
+    }
 
     public function isOwnedBy($booking_id, $user_id) {
         return $this->field('id', array('id' => $booking_id, 'user_id' => $user_id)) === $booking_id;
@@ -91,5 +118,7 @@ class Booking extends AppModel {
 
         return (count($blocked) != 0);
     }
+
+    //</editor-fold>
 
 }
