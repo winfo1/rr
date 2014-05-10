@@ -209,7 +209,7 @@ class BookingsController extends AppController {
                 $this->request->data['Booking']['duration'] = strval(Utils::getDiffInMin($start, $end));
             }
 
-            $room = $this->Booking->Room->getRooms($room_id);
+            $room = $this->Booking->Room->getAll($room_id);
             $approval_horizon = $room[0]['Organizationalunit']['approval_horizon'];
             $approval_horizon_max_date = (new DateTime())->modify('+' . $approval_horizon . ' week');
 
