@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         <?php $count = 0; ?>
-        <?php foreach ($resources as $resource): ?>
+        <?php foreach ($data as $resource): ?>
             <?php $count++; ?>
             <tr>
                 <td><?php echo $this->Form->checkbox('Resource.id.' . $resource['Resource']['id']); ?></td>

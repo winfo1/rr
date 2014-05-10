@@ -1,1 +1,1 @@
-cake AssetCompress.asset_compress build
+cake -app "C:\xampp\htdocs\rr\app" AssetCompress.asset_compress build

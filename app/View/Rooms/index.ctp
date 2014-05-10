@@ -19,7 +19,7 @@
         </thead>
         <tbody>
         <?php $count = 0; ?>
-        <?php foreach ($rooms as $room): ?>
+        <?php foreach ($data as $room): ?>
             <?php $count++; ?>
             <tr>
                 <td><?php echo $this->Form->checkbox('Room.id.' . $room['Room']['id']); ?></td>

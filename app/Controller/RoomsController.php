@@ -1,7 +1,10 @@
 <?php
+
+App::uses('ApplicationController', 'Controller');
+
 App::uses('Room', 'Model');
 
-class RoomsController extends AppController {
+class RoomsController extends ApplicationController {
 
     /*
      * basic definitions
@@ -12,10 +15,6 @@ class RoomsController extends AppController {
     public $components = array('Paginator', 'Search.Prg');
 
     public $presetVars = true; // using the model configuration
-
-    public $paginate = array(
-        'limit' => 15,
-    );
 
     public $condition;
 
@@ -97,12 +96,6 @@ class RoomsController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="view functions">
-
-    public function index() {
-        $this->Paginator->settings = $this->paginate;
-        $rooms = $this->Paginator->paginate('Room');
-        $this->set(compact('rooms'));
-    }
 
     public function add() {
         $this->beforeDetailDisplay();

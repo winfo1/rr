@@ -1,19 +1,15 @@
 <?php
 
+App::uses('ApplicationController', 'Controller');
+
 App::uses('Semester', 'Model');
 
-class SemestersController extends AppController {
+class SemestersController extends ApplicationController {
     /*
      * basic functions
      */
 
     //<editor-fold defaultstate="collapsed" desc="basic functions">
-
-    public $components = array('Paginator');
-
-    public $paginate = array(
-        'limit' => 15,
-    );
 
     //</editor-fold>
 
@@ -22,12 +18,6 @@ class SemestersController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="view functions">
-
-    public function index() {
-        $this->Paginator->settings = $this->paginate;
-        $semesters = $this->Paginator->paginate('Semester');
-        $this->set(compact('semesters'));
-    }
 
     public function add() {
         if ($this->request->is('post')) {

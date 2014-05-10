@@ -1,4 +1,7 @@
 <?php
+
+App::uses('AppController', 'Controller');
+
 App::uses('Booking', 'Model');
 
 App::uses('CakeEmail', 'Network/Email');
@@ -18,7 +21,6 @@ class BookingsController extends AppController {
 
     public $paginate = array(
         'limit' => 25,
-        'order' => array('Booking.startdatetime' => 'asc')
     );
 
     public function beforeFilter()
@@ -98,10 +100,7 @@ class BookingsController extends AppController {
             throw new NotFoundException(__('Buchung nicht gefunden'));
         }
 
-        $this->request->data = $this->Booking->find('first', array(
-            'conditions' => array('Booking.id' => $id),
-            'contain' => array('Room', 'User')
-        ));
+        $this->request->data = $this->Booking->getAll($id)[0];
 
         $blocked = array();
 
@@ -113,7 +112,8 @@ class BookingsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
         } else {
             $me = ($this->Auth->user('id') == $blocked[0]['User']['id']);
@@ -124,21 +124,22 @@ class BookingsController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
-            return $this->redirect(array('action' => 'index'));
+            return false;
         }
 
         $this->Session->setFlash(__('Die Buchung konnte nicht aktiviert werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
     /**
-     * @param null $room_id          i.e. 1
-     * @param null $str_day          i.e. 2014-05-01
-     * @param null $str_start_time   i.e. 19-14
-     * @param null $str_end_time     i.e. 20-14
+     * @param null $room_id i.e. 1
+     * @param null $str_day i.e. 2014-05-01
+     * @param null $str_start_time i.e. 19-14
+     * @param null $str_end_time i.e. 20-14
+     * @return bool
      */
     public function add($room_id = null, $str_day = null, $str_start_time = null, $str_end_time = null) {
         // set available rooms
@@ -316,10 +317,11 @@ class BookingsController extends AppController {
 
                         $m = $me ? __('Sie haben den Raum bereits für diesen Zeitraum gebucht') : sprintf(__('Zu diesem Zeitpunkt ist der Raum bereits durch %s gebucht'), $blocked[0]['User']['username']);
 
-                        return $this->Session->setFlash($m, 'alert', array(
+                        $this->Session->setFlash($m, 'alert', array(
                             'plugin' => 'BoostCake',
                             'class' => 'alert-danger'
                         ));
+                        return false;
                     } else {
                         $m = 'Zu diesem Zeitpunkt haben bereits mehrere Personen diesen Raum reserviert. Darunter ';
 
@@ -337,10 +339,11 @@ class BookingsController extends AppController {
                         }
                         $m .= '. ';
 
-                        return $this->Session->setFlash($m, 'alert', array(
+                        $this->Session->setFlash($m, 'alert', array(
                             'plugin' => 'BoostCake',
                             'class' => 'alert-danger'
                         ));
+                        return false;
                     }
                 }
             }
@@ -372,23 +375,26 @@ class BookingsController extends AppController {
                     
                     $this->emailAdmin($this->Booking->id, $this->request->data, $room[0], $interval_booking);
 
-                    return $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
+                    $this->redirect(array('action' => 'view', $this->Booking->id));
+                    return true;
                 }
             } else {
                 $me = ($this->Auth->user('id') == $blocked[0]['User']['id']);
 
                 $m = $me ? __('Sie haben den Raum bereits für diesen Zeitraum gebucht') : sprintf(__('Zu diesem Zeitpunkt ist der Raum bereits durch %s gebucht'), $blocked[0]['User']['username']);
 
-                return $this->Session->setFlash($m, 'alert', array(
+                $this->Session->setFlash($m, 'alert', array(
                     'plugin' => 'BoostCake',
                     'class' => 'alert-danger'
                 ));
+                return false;
             }
             $this->Session->setFlash(__('Die Buchung konnte nicht gespeichert werden. Versuchen Sie es erneut'), 'alert', array(
                 'plugin' => 'BoostCake',
                 'class' => 'alert-danger'
             ));
         }
+        return true;
     }
 
     public function edit($id = null) {
@@ -404,7 +410,7 @@ class BookingsController extends AppController {
 
 				$groups = array();
         		if ($this->request->data['Booking']['group_id'] != 0) {
-            		$groups = $this->getBookingsGroupNames($this->request->data['Booking']['group_id']);
+            		$groups = $this->Booking->getBookingsGroupNames($this->request->data['Booking']['group_id']);
             		$this->set(compact('groups'));
         		}
 
@@ -430,10 +436,11 @@ class BookingsController extends AppController {
             $blocked = array();
             if ($this->Booking->inUse($this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $id, true, $blocked))
             {
-                return $this->Session->setFlash(__('Diese Buchung kann nicht in dem neuen Zeitraum stattfinden, da dort bereits andere Buchungen sind.'), 'alert', array(
+                $this->Session->setFlash(__('Diese Buchung kann nicht in dem neuen Zeitraum stattfinden, da dort bereits andere Buchungen sind.'), 'alert', array(
                     'plugin' => 'BoostCake',
                     'class' => 'alert-danger'
                 ));
+                return false;
             }
 
             if ($this->Booking->save($this->request->data)) {
@@ -450,14 +457,18 @@ class BookingsController extends AppController {
                         'class' => 'alert-success'
                     ));
                 }
-                return $this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
+                return true;
             }
-            $this->Session->setFlash(
-                __('The user could not be saved. Please, try again.')
-            );
+            $this->Session->setFlash(__('Die Buchung konnte nicht geändert werden'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-danger'
+            ));
+            return false;
         }
 
         $this->view($id);
+        return true;
     }
 
     public function delete($type = 'id', $id = null) {
@@ -474,7 +485,8 @@ class BookingsController extends AppController {
                         'plugin' => 'BoostCake',
                         'class' => 'alert-success'
                     ));
-                    return $this->redirect(array('action' => 'index'));
+                    $this->redirect(array('action' => 'index'));
+                    return true;
                 }
                 $this->Session->setFlash(__('Buchung konnte nicht gelöscht werden'), 'alert', array(
                     'plugin' => 'BoostCake',
@@ -484,7 +496,7 @@ class BookingsController extends AppController {
 
             case 'group':
 
-                $groups = $this->getBookingsGroupNames($id);
+                $groups = $this->Booking->getBookingsGroupNames($id);
                 if (count($groups) > 0) {
                     $count = 0;
                     foreach ($groups as $group) {
@@ -495,7 +507,8 @@ class BookingsController extends AppController {
                         'plugin' => 'BoostCake',
                         'class' => 'alert-success'
                     ));
-                    return $this->redirect(array('action' => 'index'));
+                    $this->redirect(array('action' => 'index'));
+                    return true;
                 }
                 $this->Session->setFlash(__('Buchungen konnten nicht gelöscht werden'), 'alert', array(
                     'plugin' => 'BoostCake',
@@ -518,30 +531,27 @@ class BookingsController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(array('action' => 'index'));
+            return true;
         }
         $this->Session->setFlash(__('Buchung konnte nicht abgelehnt werden'), 'alert', array(
             'plugin' => 'BoostCake',
             'class' => 'alert-danger'
         ));
-        return $this->redirect(array('action' => 'index'));
+        return false;
     }
 
     public function view($id = null) {
-        $this->Booking->id = $id;
-        if (!$this->Booking->exists()) {
+        $this->request->data = $this->Booking->getAll($id)[0];
+
+        if(!isset($this->request->data) || count($this->request->data) == 0) {
             throw new NotFoundException(__('Buchung nicht gefunden'));
         }
 
         $this->beforeDetailDisplay();
 
-        $this->request->data = $this->Booking->find('first', array(
-            'conditions' => array('Booking.id' => $id),
-            'contain' => array('Room', 'User')
-        ));
-
         if ($this->request->data['Booking']['group_id'] != 0) {
-            $groups = $this->getBookingsGroupNames($this->request->data['Booking']['group_id']);
+            $groups = $this->Booking->getBookingsGroupNames($this->request->data['Booking']['group_id']);
             $this->set(compact('groups'));
         }
     }
@@ -573,16 +583,6 @@ class BookingsController extends AppController {
         return $this->Booking->find('all', array(
             'conditions' => $conditions
         ));
-    }
-
-    public function getBookingsGroupNames($group_id) {
-        $tree = $this->Booking->find('threaded', array(
-            'conditions' => array('Booking.group_id' => $group_id),
-            'fields' => array('Booking.id', 'Booking.room_id', 'Booking.name', 'Booking.startdatetime', 'Booking.enddatetime'),
-            'order' => array('Booking.startdatetime' => 'asc')
-        ));
-
-        return $tree;
     }
 
     public function cleanUp()
@@ -744,10 +744,11 @@ class BookingsController extends AppController {
 
             if (($admin['User']['role'] == 'admin') && (($admin['User']['admin_email_every_booking']) || ($admin['User']['admin_email_every_booking_plan']))) {
                 if (!Validation::email($admin['User']['emailaddress'])) {
-                    return $this->Session->setFlash(__('Es wurde keine E-Mail an den/die Verwalter dieses Raumes geschickt, weil dieser keine E-Mail-Adresse in seinen Profileinstellungen hinterlegt hat. Informieren Sie ihn Bitte darüber'), 'alert', array(
+                    $this->Session->setFlash(__('Es wurde keine E-Mail an den/die Verwalter dieses Raumes geschickt, weil dieser keine E-Mail-Adresse in seinen Profileinstellungen hinterlegt hat. Informieren Sie ihn Bitte darüber'), 'alert', array(
                         'plugin' => 'BoostCake',
                         'class' => 'alert-info'
                     ), 'info');
+                    return false;
                 }
 
                 $title = Configure::read('display.Short') . ': ';
@@ -807,11 +808,10 @@ class BookingsController extends AppController {
 
         }
 
-        return ;
+        return true;
     }
 
-    private function getIntervalCountFromEndDate(DateTime $end, DateTime $interval_end, $interval_iteration, $interval_precise_end = false)
-    {
+    private function getIntervalCountFromEndDate(DateTime $end, DateTime $interval_end, $interval_iteration, $interval_precise_end = false) {
         $days_diff = $interval_end->diff($end)->days;
 
         if ($interval_precise_end)
@@ -820,8 +820,13 @@ class BookingsController extends AppController {
             return (int)ceil($days_diff / $interval_iteration);
     }
 
-    private function getStatusFromDate($approval_horizon, DateTime $interval_date, DateTime $max_date)
-    {
+    /**
+     * @param $approval_horizon
+     * @param DateTime $interval_date
+     * @param DateTime $max_date
+     * @return string
+     */
+    private function getStatusFromDate($approval_horizon, DateTime $interval_date, DateTime $max_date) {
         if (is_null($approval_horizon) || ($approval_horizon == '-1'))
             return Booking::active;
         elseif ($approval_horizon == '0')
@@ -831,10 +836,15 @@ class BookingsController extends AppController {
         }
     }
 
-    private function isBefore(DateTime $before, DateTime $after)
-    {
+    /**
+     * @param DateTime $before
+     * @param DateTime $after
+     * @return bool
+     */
+    private function isBefore(DateTime $before, DateTime $after) {
         return date($before->format('Y-m-d')) < date($after->format('Y-m-d'));
     }
+
     //</editor-fold>
 
 }

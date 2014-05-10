@@ -1,24 +1,16 @@
 <?php
 
+App::uses('ApplicationController', 'Controller');
+
 App::uses('Organizationalunit', 'Model');
 
-class OrganizationalunitsController extends AppController {
+class OrganizationalunitsController extends ApplicationController {
 
     /*
      * basic definitions
      */
 
     //<editor-fold defaultstate="collapsed" desc="basic definitions">
-
-    public $components = array('Paginator');
-
-    public $paginate = array(
-        'limit' => 15,
-    );
-
-    public function beforeFilter() {
-        parent::beforeFilter();
-    }
 
     //</editor-fold>
 
@@ -27,12 +19,6 @@ class OrganizationalunitsController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="view functions">
-
-    public function index() {
-        $this->Paginator->settings = $this->paginate;
-        $organizationalunits = $this->Paginator->paginate('Organizationalunit');
-        $this->set(compact('organizationalunits'));
-    }
 
     public function add() {
         if ($this->request->is('post')) {

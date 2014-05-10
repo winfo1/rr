@@ -17,6 +17,8 @@ class Booking extends AppModel {
     const planning_rejected = 'planning_rejected';
     const archived = 'archived';
 
+    public $order = 'startdatetime';
+
     public $validate = array(
         'name' => array(
             'required' => array(
@@ -72,12 +74,24 @@ class Booking extends AppModel {
      * @return array
      */
     public function getNames() {
-
         $list = $this->find('list', array(
             'fields' => array($this->name . '.Name')
         ));
 
         return array_unique(array_merge($this->default_names, $list));
+    }
+
+    /**
+     * @param $group_id
+     * @return array
+     */
+    public function getBookingsGroupNames($group_id) {
+        $tree = $this->find('threaded', array(
+            'conditions' => array($this->name . '.group_id' => $group_id),
+            'fields' => array($this->name . '.id', $this->name . '.room_id', $this->name . '.name', $this->name . '.startdatetime', $this->name . '.enddatetime')
+        ));
+
+        return $tree;
     }
 
     public function isOwnedBy($booking_id, $user_id) {

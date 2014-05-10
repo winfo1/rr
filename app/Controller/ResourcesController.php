@@ -1,24 +1,16 @@
 <?php
 
+App::uses('ApplicationController', 'Controller');
+
 App::uses('Resource', 'Model');
 
-class ResourcesController extends AppController {
+class ResourcesController extends ApplicationController {
 
     /*
      * basic definitions
      */
 
     //<editor-fold defaultstate="collapsed" desc="basic definitions">
-
-    public $components = array('Paginator');
-
-    public $paginate = array(
-        'limit' => 15,
-    );
-
-    public function beforeFilter() {
-        parent::beforeFilter();
-    }
 
     public function beforeRender() {
         parent::beforeRender();
@@ -34,12 +26,6 @@ class ResourcesController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="view functions">
-
-    public function index() {
-        $this->Paginator->settings = $this->paginate;
-        $resources = $this->Paginator->paginate('Resource');
-        $this->set(compact('resources'));
-    }
 
     public function add() {
         if ($this->request->is('post')) {

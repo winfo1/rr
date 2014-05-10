@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         <?php $count = 0; ?>
-        <?php foreach ($users as $user): ?>
+        <?php foreach ($data as $user): ?>
             <?php $count++; ?>
             <tr>
                 <td><?php echo $this->Form->checkbox('User.id.' . $user['User']['id']); ?></td>

@@ -1,5 +1,7 @@
 <?php
 
+App::uses('AppController', 'Controller');
+
 class MaintenanceController extends AppController {
     /*
      * basic functions

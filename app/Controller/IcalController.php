@@ -1,5 +1,7 @@
 <?php
 
+App::uses('AppController', 'Controller');
+
 class IcalController extends AppController
 {
     var $helpers = array('Html', 'Text', 'ICal');

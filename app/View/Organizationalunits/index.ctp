@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         <?php $count = 0; ?>
-        <?php foreach ($organizationalunits as $organizationalunit): ?>
+        <?php foreach ($data as $organizationalunit): ?>
             <?php $count++; ?>
             <tr>
                 <td><?php echo $this->Form->checkbox('Organizationalunit.id.' . $organizationalunit['Organizationalunit']['id']); ?></td>

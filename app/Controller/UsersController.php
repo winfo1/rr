@@ -1,20 +1,16 @@
 <?php
 
+App::uses('ApplicationController', 'Controller');
+
 App::uses('User', 'Model');
 
-class UsersController extends AppController {
+class UsersController extends ApplicationController {
 
     /*
      * basic definitions
      */
 
     //<editor-fold defaultstate="collapsed" desc="basic definitions">
-
-    public $components = array('Paginator');
-
-    public $paginate = array(
-        'limit' => 15,
-    );
 
     public function beforeFilter() {
         parent::beforeFilter();
@@ -60,12 +56,6 @@ class UsersController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="view functions">
-
-    public function index() {
-        $this->Paginator->settings = $this->paginate;
-        $users = $this->Paginator->paginate('User');
-        $this->set(compact('users'));
-    }
 
     public function login() {
         if ($this->Session->check('Auth.User.id')) {
