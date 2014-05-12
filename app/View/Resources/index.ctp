@@ -1,53 +1,41 @@
-<div class="container">
-    <h1><?php echo __('Ressourcenverwaltung'); ?></h1>
+<?php
+$fields = array(
+    'name' => array(
+        'link' => true,
+    ),
+    'type_enum' => array(),
+    'created' => array(
+        'center' => true,
+        'type' => 'datetime',
+    ),
+    'modified' => array(
+        'center' => true,
+        'type' => 'datetime',
+    )
+);
 
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th><?php echo $this->Form->checkbox('all', array('name' => 'CheckAll', 'id' => 'CheckAll')); ?></th>
-            <th><?php echo $this->Paginator->sort('name', 'Name'); ?></th>
-            <th><?php echo $this->Paginator->sort('type', 'Typ'); ?></th>
-            <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
-            <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th><?php echo __('Aktionen'); ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php $count = 0; ?>
-        <?php foreach ($data as $resource): ?>
-            <?php $count++; ?>
-            <tr>
-                <td><?php echo $this->Form->checkbox('Resource.id.' . $resource['Resource']['id']); ?></td>
-                <td><?php echo $this->Html->link($resource['Resource']['name'], array('action' => 'edit', $resource['Resource']['id']), array('escape' => false)); ?></td>
-                <td class="text-center"><?php echo $type[$resource['Resource']['type']]; ?></td>
-                <td class="text-center"><?php echo $this->Time->niceShort($resource['Resource']['created']); ?></td>
-                <td class="text-center"><?php echo $this->Time->niceShort($resource['Resource']['modified']); ?></td>
-                <td><?php
+function default_button($value, $mainModel) {
+    return $value[$mainModel]['id'];
+}
 
-                    echo $this->Html->link(__('Bearbeiten'), array('action' => 'edit', $resource['Resource']['id']));
+$links = array(
+    'edit.button' => array(
+        'url' => array('action' => 'edit', 'default_button()'),
+        'options' => array()),
+    'delete.button' => array(
+        'url' => array('action' => 'delete', 'default_button()'),
+        'options' => array()),
+);
 
-                    echo ' | ';
+$string['title'] = __('Ressourcenverwaltung');
+$string['name'] = __('Name');
+$string['type_enum'] = __('Typ');
+$string['created'] = __('Erstellt');
+$string['modified'] = __('Letzte Änderung');
+$string['action'] = __('Aktionen');
+$string['edit.button'] = __('Bearbeiten');
+$string['delete.button'] = __('Löschen');
+$string['add.text'] = __('Es existieren noch kein Ressource. Jetzt die erste Ressource');
+$string['add.button'] = __('Hinzufügen');
 
-                    echo $this->Html->link(__('Löschen'), array('action' => 'delete', $resource['Resource']['id']));
-
-                    ?></td>
-            </tr>
-        <?php endforeach; ?>
-        <?php unset($resource); ?>
-        </tbody>
-    </table>
-
-    <ul class="pagination pull-left">
-        <?php
-        echo $this->Paginator->first('《', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->prev('〈', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->numbers(array('tag' => 'li', 'separator' => '', 'currentClass' => 'active', 'currentTag' => 'a'));
-        echo $this->Paginator->next('〉', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->last('》', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        ?>
-    </ul>
-
-    <?php
-    echo $this->Html->link(__('Hinzufügen'), array('action' => 'add'), array('class' => 'btn btn-default', 'style' => 'margin-left: 5px'));
-    ?>
-</div>
+echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'string'));

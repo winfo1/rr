@@ -1,67 +1,55 @@
-<div class="container">
-    <h1><?php echo __('Verwaltung der Räume'); ?></h1>
+<?php
+$fields = array(
+    'name' => array(
+        'link' => true,
+    ),
+    'Organizationalunit.name' => array(),
+    'Building.name' => array(),
+    'floor' => array(),
+    'number' => array(),
+    'barrier_free' => array(),
+    'seats' => array(),
+    'created' => array(
+        'center' => true,
+        'type' => 'datetime',
+    ),
+    'modified' => array(
+        'center' => true,
+        'type' => 'datetime',
+    )
+);
 
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th><?php echo $this->Form->checkbox('all', array('name' => 'CheckAll', 'id' => 'CheckAll')); ?></th>
-            <th><?php echo $this->Paginator->sort('name', 'Name'); ?></th>
-            <th><?php echo $this->Paginator->sort('Organizationalunit.name', 'Organisationseinheit'); ?></th>
-            <th><?php echo $this->Paginator->sort('Building.name', 'Gebäude'); ?></th>
-            <th><?php echo $this->Paginator->sort('floor', 'Etage'); ?></th>
-            <th><?php echo $this->Paginator->sort('number', 'Nummer'); ?></th>
-            <th><?php echo $this->Paginator->sort('barrier_free', 'Barrierefrei'); ?></th>
-            <th><?php echo $this->Paginator->sort('seats', 'Sitze'); ?></th>
-            <th><?php echo $this->Paginator->sort('created', 'Erstellt'); ?></th>
-            <th><?php echo $this->Paginator->sort('modified', 'Letzte Änderung'); ?></th>
-            <th><?php echo __('Aktionen'); ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php $count = 0; ?>
-        <?php foreach ($data as $room): ?>
-            <?php $count++; ?>
-            <tr>
-                <td><?php echo $this->Form->checkbox('Room.id.' . $room['Room']['id']); ?></td>
-                <td><?php echo $this->Html->link($room['Room']['name'], array('action' => 'edit', $room['Room']['id']), array('escape' => false)); ?></td>
-                <td class="text-center"><?php echo $room['Organizationalunit']['name']; ?></td>
-                <td class="text-center"><?php echo $room['Building']['name']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['floor']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['number']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['barrier_free']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['seats']; ?></td>
-                <td class="text-center"><?php echo $this->Time->niceShort($room['Room']['created']); ?></td>
-                <td class="text-center"><?php echo $this->Time->niceShort($room['Room']['modified']); ?></td>
-                <td><?php
+function default_button($value, $mainModel) {
+    return $value[$mainModel]['id'];
+}
 
-                    echo $this->Html->link("Abonnieren", array('controller' => 'ical', 'action' => 'index', 'room', $room['Room']['id']));
+$links = array(
+    'subscribe.button' => array(
+        'url' => array('controller' => 'ical', 'action' => 'index', 'room', 'default_button()'),
+        'options' => array()),
+    'edit.button' => array(
+        'url' => array('action' => 'edit', 'default_button()'),
+        'options' => array()),
+    'delete.button' => array(
+        'url' => array('action' => 'delete', 'default_button()'),
+        'options' => array()),
+);
 
-                    echo ' | ';
+$string['title'] = __('Verwaltung der Räume');
+$string['name'] = __('Name');
+$string['Organizationalunit.name'] = __('Organisationseinheit');
+$string['Building.name'] = __('Gebäude');
+$string['floor'] = __('Etage');
+$string['number'] = __('Nummer');
+$string['barrier_free'] = __('Barrierefrei');
+$string['seats'] = __('Sitze');
+$string['created'] = __('Erstellt');
+$string['modified'] = __('Letzte Änderung');
+$string['action'] = __('Aktionen');
+$string['subscribe.button'] = __('Abonnieren');
+$string['edit.button'] = __('Bearbeiten');
+$string['delete.button'] = __('Löschen');
+$string['add.text'] = __('Es existieren noch kein Raum. Jetzt den ersten Raum');
+$string['add.button'] = __('Hinzufügen');
 
-                    echo $this->Html->link("Bearbeiten", array('action' => 'edit', $room['Room']['id']));
-
-                    echo ' | ';
-
-                    echo $this->Html->link("Löschen", array('action' => 'delete', $room['Room']['id']));
-
-                    ?></td>
-            </tr>
-        <?php endforeach; ?>
-        <?php unset($room); ?>
-        </tbody>
-    </table>
-
-    <ul class="pagination pull-left">
-        <?php
-        echo $this->Paginator->first('《', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->prev('〈', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->numbers(array('tag' => 'li', 'separator' => '', 'currentClass' => 'active', 'currentTag' => 'a'));
-        echo $this->Paginator->next('〉', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->last('》', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        ?>
-    </ul>
-
-    <?php
-    echo $this->Html->link(__('Hinzufügen'), array('action' => 'add'), array('class' => 'btn btn-default', 'style' => 'margin-left: 5px'));
-    ?>
-</div>
+echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'string'));

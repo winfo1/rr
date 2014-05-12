@@ -28,7 +28,7 @@
             </thead>
             <tbody>
             <?php $count = 0; ?>
-            <?php foreach ($bookings as $booking): ?>
+            <?php foreach ($data as $booking): ?>
                 <?php $count++; ?>
                 <tr>
                     <td><?php echo $this->Form->checkbox('Booking.id.' . $booking['Booking']['id']); ?></td>

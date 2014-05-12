@@ -89,8 +89,8 @@ class BookingsController extends AppController {
     public function index($view = null) {
         if(isset($view) && ($view == 'table')) {
             $this->Paginator->settings = $this->paginate;
-            $bookings = $this->Paginator->paginate('Booking');
-            $this->set(compact('bookings'));
+            $data = $this->Paginator->paginate('Booking');
+            $this->set(compact('data'));
         }
     }
 

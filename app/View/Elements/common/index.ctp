@@ -1,3 +1,4 @@
+<?php App::import('Lib', 'Utils'); ?>
 <?php if(isset($string)) : ?>
 <div class="container">
     <h1><?php echo $string['title']; ?></h1>
@@ -25,6 +26,14 @@
 
                     foreach ($fields as $field => $fieldOptions) {
 
+                        $pos = strpos($field, '.');
+                        $model = $mainModel;
+
+                        if($pos > 0) {
+                            $model = substr($field, 0, $pos);
+                            $field = substr($field, $pos + 1);
+                        }
+
                         if(array_key_exists('center', $fieldOptions) && $fieldOptions['center'])
                             echo '<td class="text-center">';
                         else
@@ -33,18 +42,18 @@
                         if(array_key_exists('type', $fieldOptions)) {
                             switch ($fieldOptions['type']) {
                                 case 'datetime':
-                                    $text = $this->Time->niceShort($value[$mainModel][$field]);
+                                    $text = $this->Time->niceShort($value[$model][$field]);
                                     break;
                                 default:
-                                    $text = $value[$mainModel][$field];
+                                    $text = $value[$model][$field];
                                     break;
                             }
                         } else {
-                            $text = $value[$mainModel][$field];
+                            $text = $value[$model][$field];
                         }
 
                         if(array_key_exists('link', $fieldOptions) && $fieldOptions['link']) {
-                            echo $this->Html->link($text, array('action' => 'edit', $value[$mainModel]['id']), array('escape' => false));
+                            echo $this->Html->link($text, array('action' => 'edit', $value[$model]['id']), array('escape' => false));
                         } else {
                             echo $text;
                         }
@@ -53,16 +62,31 @@
                     }
                     unset($fieldOptions);
                     unset($field);
+
+                    echo '<td>';
+
+                    foreach ($links as $link => $linkOptions) {
+
+                        $urls = $linkOptions['url'];
+                        for ($i = 0; $i < count($urls); $i++) {
+                            if(array_key_exists($i, $urls) && Utils::endsWith($urls[$i], '()'))  {
+                                $func = substr($urls[$i], 0, strlen($urls[$i]) - 2);
+                                $urls[$i] = $func($value, $mainModel);
+                            }
+
+                        }
+
+                        echo $this->Html->link($string[$link], $urls, $linkOptions['options']);
+
+                        if($linkOptions !== end($links)) {
+                            echo ' | ';
+                        }
+                    }
+                    unset($linkOptions);
+                    unset($link);
+
+                    echo '</td>';
                     ?>
-                    <td><?php
-
-                        echo $this->Html->link($string['edit.button'], array('action' => 'edit', $value[$mainModel]['id']));
-
-                        echo ' | ';
-
-                        echo $this->Html->link($string['delete.button'], array('action' => 'delete', $value[$mainModel]['id']));
-
-                        ?></td>
                 </tr>
             <?php endforeach; ?>
             <?php unset($value); ?>

@@ -37,4 +37,23 @@ class Utils {
         }
         return $end;
     }
+
+    /**
+     * @param $str
+     * @param $needle
+     * @return bool
+     */
+    public static function startsWith($str, $needle){
+        return substr($str, 0, strlen($needle)) === $needle;
+    }
+
+    /**
+     * @param $str
+     * @param $needle
+     * @return bool
+     */
+    public static function endsWith($str, $needle){
+        $length = strlen($needle);
+        return !$length || substr($str, - $length) === $needle;
+    }
 }
