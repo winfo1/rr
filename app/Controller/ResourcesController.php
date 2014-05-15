@@ -22,6 +22,22 @@ class ResourcesController extends ApplicationController {
     //</editor-fold>
 
     /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
+
+    protected function _addStrings() {
+        parent::_addStrings();
+
+        $this->string['Resource.title'] = __('Ressourcenverwaltung');
+        $this->string['Resource.add-text'] = __('Es existieren noch kein Ressource. Jetzt die erste Ressource');
+        $this->string['Resource.type_enum'] = __('Typ');
+    }
+
+    //</editor-fold>
+
+    /*
      * view functions
      */
 
@@ -73,6 +89,9 @@ class ResourcesController extends ApplicationController {
     }
 
     public function delete($id = null) {
+        if($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
         $this->Resource->id = $id;
         if (!$this->Resource->exists()) {
             throw new NotFoundException(__('Ressource nicht gefunden'));

@@ -54,6 +54,7 @@ class AppController extends Controller {
                 )
             )
         ),
+        // 'Security',
         'Session',
         'Utility.AutoLogin' => array(
             'cookieName' => 'rememberMe',
@@ -71,8 +72,17 @@ class AppController extends Controller {
         'Status'
     );
 
+    public $string = array();
+
     public function beforeFilter() {
         $this->Auth->allow('index', 'view');
+    }
+
+    public function beforeRender() {
+        parent::beforeRender();
+
+        $string = $this->string;
+        $this->set(compact('string'));
     }
 
     public function isAuthorized($user) {
@@ -83,5 +93,26 @@ class AppController extends Controller {
 
         // Default deny
         return false;
+    }
+
+    public function __construct($request = null, $response = null) {
+        parent::__construct($request, $response);
+
+        $this->_addStrings();
+    }
+
+    protected function _addStrings() {
+        $this->string['actions'] = __('Aktionen');
+        $this->string['add'] = __('Hinzufügen');
+        $this->string['created'] = __('Erstellt');
+        $this->string['delete'] = __('Löschen');
+        $this->string['edit'] = __('Bearbeiten');
+        $this->string['end'] = __('Ende');
+        $this->string['name'] = __('Name');
+        $this->string['modified'] = __('Letzte Änderung');
+        $this->string['search_result'] = __('Suchergebnis');
+        $this->string['short'] = __('Abkürzung');
+        $this->string['start'] = __('Start');
+        $this->string['subscribe'] = __('Abonnieren');
     }
 }

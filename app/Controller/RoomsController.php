@@ -89,6 +89,22 @@ class RoomsController extends ApplicationController {
         $this->set(compact('resources'));
     }
 
+    protected function _addStrings() {
+        parent::_addStrings();
+
+        $this->string['Room.title'] = __('Verwaltung der Räume');
+        $this->string['Room.add-text'] = __('Es existieren noch kein Raum. Jetzt den ersten Raum');
+        $this->string['Room.not-found'] = __('Keine Räume nach den entsprechenden Kriterien gefunden');
+
+        $this->string['Booking.add'] = __('Buchen');
+        $this->string['Organizationalunit.name'] = __('Organisationseinheit');
+        $this->string['Building.name'] = __('Gebäude');
+        $this->string['Room.floor'] = __('Etage');
+        $this->string['Room.number'] = __('Nummer');
+        $this->string['Room.barrier_free'] = __('Barrierefrei');
+        $this->string['Room.seats'] = __('Sitze');
+    }
+
     //</editor-fold>
 
     /*
@@ -181,6 +197,9 @@ class RoomsController extends ApplicationController {
     }
 
     public function delete($id = null) {
+        if($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
         $this->Room->id = $id;
         if (!$this->Room->exists()) {
             throw new NotFoundException(__('Raum nicht gefunden'));
@@ -206,7 +225,7 @@ class RoomsController extends ApplicationController {
         $this->beforeDetailDisplay();
         $this->Prg->commonProcess();
         $this->Paginator->settings['conditions'] = $this->Room->parseCriteria($this->Prg->parsedParams());
-        $this->set('rooms', $this->Paginator->paginate());
+        $this->set('data', $this->Paginator->paginate());
 
         // set view
         if (!isset($this->request->data['Room']['view_tabs']) ) {

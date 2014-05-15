@@ -14,6 +14,21 @@ class SemestersController extends ApplicationController {
     //</editor-fold>
 
     /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
+
+    protected function _addStrings() {
+        parent::_addStrings();
+
+        $this->string['Semester.title'] = __('Semesterverwaltung');
+        $this->string['Semester.add-text'] = __('Es existieren noch kein Semester. Jetzt das erste Semester');
+    }
+
+    //</editor-fold>
+
+    /*
      * view functions
      */
 
@@ -65,6 +80,9 @@ class SemestersController extends ApplicationController {
     }
 
     public function delete($id = null) {
+        if($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
         $this->Semester->id = $id;
         if (!$this->Semester->exists()) {
             throw new NotFoundException(__('Semester nicht gefunden'));

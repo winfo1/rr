@@ -15,6 +15,21 @@ class BuildingsController extends ApplicationController {
     //</editor-fold>
 
     /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
+
+    protected function _addStrings() {
+        parent::_addStrings();
+
+        $this->string['Building.title'] = __('Gebäudeverwaltung');
+        $this->string['Building.add-text'] = __('Es existieren noch keine Gebäude. Jetzt das erste Gebäude');
+    }
+
+    //</editor-fold>
+
+    /*
      * view functions
      */
 
@@ -66,6 +81,9 @@ class BuildingsController extends ApplicationController {
     }
 
     public function delete($id = null) {
+        if($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
         $this->Building->id = $id;
         if (!$this->Building->exists()) {
             throw new NotFoundException(__('Gebäude nicht gefunden'));

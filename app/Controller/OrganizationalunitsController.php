@@ -15,6 +15,21 @@ class OrganizationalunitsController extends ApplicationController {
     //</editor-fold>
 
     /*
+     * basic functions
+     */
+
+    //<editor-fold defaultstate="collapsed" desc="basic functions">
+
+    protected function _addStrings() {
+        parent::_addStrings();
+
+        $this->string['Organizationalunit.title'] = __('Verwaltung der Organisationseinheiten');
+        $this->string['Organizationalunit.add-text'] = __('Es existieren noch keine Organisationseinheiten. Jetzt die erste Organisationseinheit');
+    }
+
+    //</editor-fold>
+
+    /*
      * view functions
      */
 
@@ -66,6 +81,9 @@ class OrganizationalunitsController extends ApplicationController {
     }
 
     public function delete($id = null) {
+        if($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
         $this->Organizationalunit->id = $id;
         if (!$this->Organizationalunit->exists()) {
             throw new NotFoundException(__('Organisationseinheit nicht gefunden'));

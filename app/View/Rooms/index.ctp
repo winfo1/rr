@@ -5,10 +5,10 @@ $fields = array(
     ),
     'Organizationalunit.name' => array(),
     'Building.name' => array(),
-    'floor' => array(),
-    'number' => array(),
-    'barrier_free' => array(),
-    'seats' => array(),
+    'Room.floor' => array(),
+    'Room.number' => array(),
+    'Room.barrier_free' => array(),
+    'Room.seats' => array(),
     'created' => array(
         'center' => true,
         'type' => 'datetime',
@@ -24,32 +24,20 @@ function default_button($value, $mainModel) {
 }
 
 $links = array(
-    'subscribe.button' => array(
+    'subscribe' => array(
         'url' => array('controller' => 'ical', 'action' => 'index', 'room', 'default_button()'),
         'options' => array()),
-    'edit.button' => array(
+    'edit' => array(
         'url' => array('action' => 'edit', 'default_button()'),
         'options' => array()),
-    'delete.button' => array(
+    'delete' => array(
         'url' => array('action' => 'delete', 'default_button()'),
+        'postLink' => true,
         'options' => array()),
 );
 
-$string['title'] = __('Verwaltung der Räume');
-$string['name'] = __('Name');
-$string['Organizationalunit.name'] = __('Organisationseinheit');
-$string['Building.name'] = __('Gebäude');
-$string['floor'] = __('Etage');
-$string['number'] = __('Nummer');
-$string['barrier_free'] = __('Barrierefrei');
-$string['seats'] = __('Sitze');
-$string['created'] = __('Erstellt');
-$string['modified'] = __('Letzte Änderung');
-$string['action'] = __('Aktionen');
-$string['subscribe.button'] = __('Abonnieren');
-$string['edit.button'] = __('Bearbeiten');
-$string['delete.button'] = __('Löschen');
-$string['add.text'] = __('Es existieren noch kein Raum. Jetzt den ersten Raum');
-$string['add.button'] = __('Hinzufügen');
+$options = array(
+    'addable' => true,
+);
 
-echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'string'));
+echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'options', 'string'));

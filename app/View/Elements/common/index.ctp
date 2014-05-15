@@ -1,8 +1,24 @@
 <?php App::import('Lib', 'Utils'); ?>
 <?php if(isset($string)) : ?>
-<div class="container">
-    <h1><?php echo $string['title']; ?></h1>
+<?php
+$mainModel = Inflector::classify($this->params['controller']);
 
+$container = true;
+$addable = false;
+
+if(isset($options)){
+    if(array_key_exists('container', $options)) {
+        $container = $options['container'];
+    }
+    if(array_key_exists('addable', $options)) {
+        $addable = $options['addable'];
+    }
+}
+?>
+<?php if($container) : ?>
+<div class="container">
+<?php endif; ?>
+    <h1><?=h($string[$addable ? $mainModel . '.title' : 'search_result'])?></h1>
     <?php if(isset($data) && (count($data) > 0)) : ?>
         <table class="table table-hover">
             <thead>
@@ -13,13 +29,13 @@
                 <?php endforeach; ?>
                 <?php unset($fieldOptions); ?>
                 <?php unset($field); ?>
-                <th><?php echo $string['action']; ?></th>
+                <th><?=h($string['actions'])?></th>
             </tr>
             </thead>
             <tbody>
             <?php $count = 0; ?>
             <?php foreach ($data as $value): ?>
-                <?php $count++; $mainModel = array_keys($value)[0]; ?>
+                <?php $count++; ?>
                 <tr>
                     <td><?php echo $this->Form->checkbox($mainModel . '.id.' . $value[$mainModel]['id']); ?></td>
                     <?php
@@ -53,9 +69,9 @@
                         }
 
                         if(array_key_exists('link', $fieldOptions) && $fieldOptions['link']) {
-                            echo $this->Html->link($text, array('action' => 'edit', $value[$model]['id']), array('escape' => false));
+                            echo $this->Html->link($text, array('action' => 'edit', $value[$model]['id']));
                         } else {
-                            echo $text;
+                            echo h($text);
                         }
 
                         echo '</td>';
@@ -76,7 +92,11 @@
 
                         }
 
-                        echo $this->Html->link($string[$link], $urls, $linkOptions['options']);
+                        if(array_key_exists('postLink', $linkOptions) && $linkOptions['postLink']) {
+                            echo $this->Form->postLink($string[$link], $urls, $linkOptions['options']);
+                        } else {
+                            echo $this->Html->link($string[$link], $urls, $linkOptions['options']);
+                        }
 
                         if($linkOptions !== end($links)) {
                             echo ' | ';
@@ -103,8 +123,10 @@
             ?>
         </ul>
     <?php else : ?>
-        <?php echo $string['add.text']; ?>
+        <?=h($string[$mainModel . ($addable ?  '.add-text' : '.not-found')])?>
     <?php endif; ?>
-    <?php echo $this->Html->link($string['add.button'], array('action' => 'add'), array('class' => 'btn btn-default', 'style' => 'margin-left: 5px')); ?>
+    <?php if($addable) { echo $this->Html->link($string['add'], array('action' => 'add'), array('class' => 'btn btn-default', 'style' => 'margin-left: 5px')); } ?>
+<?php endif; ?>
+<?php if($container) : ?>
 </div>
 <?php endif; ?>

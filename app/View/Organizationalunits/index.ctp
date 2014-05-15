@@ -19,27 +19,20 @@ function default_button($value, $mainModel) {
 }
 
 $links = array(
-    'subscribe.button' => array(
+    'subscribe' => array(
         'url' => array('controller' => 'ical', 'action' => 'index', 'organizationalunit', 'default_button()'),
         'options' => array()),
-    'edit.button' => array(
+    'edit' => array(
         'url' => array('action' => 'edit', 'default_button()'),
         'options' => array()),
-    'delete.button' => array(
+    'delete' => array(
         'url' => array('action' => 'delete', 'default_button()'),
+        'postLink' => true,
         'options' => array()),
 );
 
-$string['title'] = __('Verwaltung der Organisationseinheiten');
-$string['short'] = __('Abkürzung');
-$string['name'] = __('Name');
-$string['created'] = __('Erstellt');
-$string['modified'] = __('Letzte Änderung');
-$string['action'] = __('Aktionen');
-$string['subscribe.button'] = __('Abonnieren');
-$string['edit.button'] = __('Bearbeiten');
-$string['delete.button'] = __('Löschen');
-$string['add.text'] = __('Es existieren noch keine Organisationseinheiten. Jetzt die erste Organisationseinheit');
-$string['add.button'] = __('Hinzufügen');
+$options = array(
+    'addable' => true,
+);
 
-echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'string'));
+echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'options', 'string'));

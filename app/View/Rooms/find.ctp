@@ -107,55 +107,42 @@
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Suchen'), 'class' => 'btn btn-primary btn-lg')); ?>
 
+    <?php
+    $fields = array(
+        'name' => array(),
+        'Organizationalunit.name' => array(),
+        'Building.name' => array(),
+        'Room.floor' => array(),
+        'Room.number' => array(),
+        'Room.barrier_free' => array(),
+        'Room.seats' => array(),
+        'created' => array(
+            'center' => true,
+            'type' => 'datetime',
+        ),
+        'modified' => array(
+            'center' => true,
+            'type' => 'datetime',
+        )
+    );
 
-    <h1><?php echo __('Suchergebnis'); ?></h1>
-    <?php if(isset($rooms) && (count($rooms) > 0)) : ?>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th><?php echo $this->Form->checkbox('all', array('name' => 'CheckAll', 'id' => 'CheckAll')); ?></th>
-            <th><?php echo $this->Paginator->sort('name', 'Name'); ?></th>
-            <th><?php echo $this->Paginator->sort('Organizationalunit.name', 'Organisationseinheit'); ?></th>
-            <th><?php echo $this->Paginator->sort('Building.name', 'Gebäude'); ?></th>
-            <th><?php echo $this->Paginator->sort('floor', 'Etage'); ?></th>
-            <th><?php echo $this->Paginator->sort('number', 'Nummer'); ?></th>
-            <th><?php echo $this->Paginator->sort('barrier_free', 'Barrierefrei'); ?></th>
-            <th><?php echo $this->Paginator->sort('seats', 'Sitze'); ?></th>
-            <th><?php echo __('Aktionen'); ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php $count = 0; ?>
-        <?php foreach ($rooms as $room): ?>
-            <?php $count++; ?>
-            <tr>
-                <td><?php echo $this->Form->checkbox('Room.id.' . $room['Room']['id']); ?></td>
-                <td><?php echo $this->Html->link($room['Room']['name'], array('controller' => 'bookings', 'action' => 'add', $room['Room']['id']), array('escape' => false)); ?></td>
-                <td class="text-center"><?php echo $room['Organizationalunit']['name']; ?></td>
-                <td class="text-center"><?php echo $room['Building']['name']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['floor']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['number']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['barrier_free']; ?></td>
-                <td class="text-center"><?php echo $room['Room']['seats']; ?></td>
-                <td><?php echo $this->Html->link(__('Buchen'), array('controller' => 'bookings', 'action' => 'add', $room['Room']['id'])); ?></td>
-            </tr>
-        <?php endforeach; ?>
-        <?php unset($room); ?>
-        </tbody>
-    </table>
+    function add_booking_button($value, $mainModel) {
+        return $value[$mainModel]['id'];
+    }
 
-    <ul class="pagination pull-left">
-        <?php
-        echo $this->Paginator->first('《', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->prev('〈', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->numbers(array('tag' => 'li', 'separator' => '', 'currentClass' => 'active', 'currentTag' => 'a'));
-        echo $this->Paginator->next('〉', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        echo $this->Paginator->last('》', array('class' => '', 'tag' => 'li'), null, array('class' => 'disabled', 'tag' => 'li'));
-        ?>
-    </ul>
-    <?php else : ?>
-        <?php echo __('Keine Räume nach den entsprechenden Kriterien gefunden'); ?>
-    <?php endif; ?>
+    $links = array(
+        'Booking.add' => array(
+            'url' => array('controller' => 'bookings', 'action' => 'add', 'add_booking_button()'),
+            'options' => array()),
+    );
+
+    $options = array(
+        'container' => false,
+    );
+
+    echo $this->element('common' . DS . 'index', compact('data', 'fields', 'links', 'options', 'string'));
+
+    ?>
 </div>
 
     <script type="text/javascript">
