@@ -7,7 +7,7 @@
         </legend>
         <div class="well"><?php echo __('Mit dem Verwaltungsstatus können Sie in Ihrer Organisationseinheit neue Räume hinzufügen und bearbeiten, sowie dessen Buchungen verwalten. Nachdem Sie dieses Formular abgeschickt haben, wird Ihre Identität geprüft. Dies kann in der Regel ein bis zwei Tage dauern.'); ?></div>
 
-        <input type="hidden" name="data[Organizationalunit][name]" value="<?php echo $this->request->data['Organizationalunit']['name']; ?>"/>
+        <?php echo $this->Form->hidden('Organizationalunit.name'); ?>
 
         <div class="form-group">
             <div class="checkbox">

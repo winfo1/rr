@@ -49,5 +49,4 @@
 
     <script type="text/javascript">
         $('#UserUsername').focus();
-        //$('#UserAutoLogin').bootstrapSwitch('width', '200');
     </script>
