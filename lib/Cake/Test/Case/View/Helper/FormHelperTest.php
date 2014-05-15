@@ -352,6 +352,9 @@ class ValidateUser extends CakeTestModel {
 		'name' => array('type' => 'string', 'null' => '', 'default' => '', 'length' => '255'),
 		'email' => array('type' => 'string', 'null' => '', 'default' => '', 'length' => '255'),
 		'balance' => array('type' => 'float', 'null' => false, 'length' => '5,2'),
+		'cost_decimal' => array('type' => 'decimal', 'null' => false, 'length' => '6,3'),
+		'ratio' => array('type' => 'decimal', 'null' => false, 'length' => '10,6'),
+		'population' => array('type' => 'decimal', 'null' => false, 'length' => '15,0'),
 		'created' => array('type' => 'date', 'null' => '1', 'default' => '', 'length' => ''),
 		'updated' => array('type' => 'datetime', 'null' => '1', 'default' => '', 'length' => null)
 	);
@@ -686,9 +689,10 @@ class FormHelperTest extends CakeTestCase {
 	public function testFormSecurityFields() {
 		$key = 'testKey';
 		$fields = array('Model.password', 'Model.username', 'Model.valid' => '0');
+		$secureAttributes = array('form' => 'MyTestForm');
 
 		$this->Form->request['_Token'] = array('key' => $key);
-		$result = $this->Form->secure($fields);
+		$result = $this->Form->secure($fields, $secureAttributes);
 
 		$hash = Security::hash(serialize($fields) . Configure::read('Security.salt'));
 		$hash .= ':' . 'Model.valid';
@@ -698,28 +702,13 @@ class FormHelperTest extends CakeTestCase {
 			'div' => array('style' => 'display:none;'),
 			array('input' => array(
 				'type' => 'hidden', 'name' => 'data[_Token][fields]',
-				'value' => $hash, 'id' => 'preg:/TokenFields\d+/'
+				'value' => $hash, 'id' => 'preg:/TokenFields\d+/',
+				'form' => 'MyTestForm',
 			)),
 			array('input' => array(
 				'type' => 'hidden', 'name' => 'data[_Token][unlocked]',
-				'value' => '', 'id' => 'preg:/TokenUnlocked\d+/'
-			)),
-			'/div'
-		);
-		$this->assertTags($result, $expected);
-
-		$path = CAKE . 'Test' . DS . 'test_app' . DS . 'Config' . DS;
-		$this->Form->Html->loadConfig('htmlhelper_tags', $path);
-		$result = $this->Form->secure($fields);
-		$expected = array(
-			'div' => array('class' => 'hidden'),
-			array('input' => array(
-				'type' => 'hidden', 'name' => 'data[_Token][fields]',
-				'value' => $hash, 'id' => 'preg:/TokenFields\d+/'
-			)),
-			array('input' => array(
-				'type' => 'hidden', 'name' => 'data[_Token][unlocked]',
-				'value' => '', 'id' => 'preg:/TokenUnlocked\d+/'
+				'value' => '', 'id' => 'preg:/TokenUnlocked\d+/',
+				'form' => 'MyTestForm',
 			)),
 			'/div'
 		);
@@ -797,6 +786,36 @@ class FormHelperTest extends CakeTestCase {
 			'/label',
 			array('input' => array(
 				'type' => 'number', 'name' => 'data[Contact][foo]',
+				'id' => 'ContactFoo'
+			)),
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+	}
+
+/**
+ * Tests correct generation of file upload fields for binary fields
+ *
+ * @return void
+ */
+	public function testFileUploadFieldTypeGenerationForBinaries() {
+		$model = ClassRegistry::getObject('Contact');
+		$model->setSchema(array('foo' => array(
+			'type' => 'binary',
+			'null' => false,
+			'default' => null,
+			'length' => 1024
+		)));
+
+		$this->Form->create('Contact');
+		$result = $this->Form->input('foo');
+		$expected = array(
+			'div' => array('class' => 'input file'),
+			'label' => array('for' => 'ContactFoo'),
+			'Foo',
+			'/label',
+			array('input' => array(
+				'type' => 'file', 'name' => 'data[Contact][foo]',
 				'id' => 'ContactFoo'
 			)),
 			'/div'
@@ -1275,7 +1294,7 @@ class FormHelperTest extends CakeTestCase {
  *
  * @return void
  */
-	public function testFormSecuredFileInput() {
+	public function testSecuredFileInput() {
 		$this->Form->request['_Token'] = array('key' => 'testKey');
 		$this->assertEquals(array(), $this->Form->fields);
 
@@ -1292,7 +1311,7 @@ class FormHelperTest extends CakeTestCase {
  *
  * @return void
  */
-	public function testFormSecuredMultipleSelect() {
+	public function testSecuredMultipleSelect() {
 		$this->Form->request['_Token'] = array('key' => 'testKey');
 		$this->assertEquals(array(), $this->Form->fields);
 		$options = array('1' => 'one', '2' => 'two');
@@ -1311,7 +1330,7 @@ class FormHelperTest extends CakeTestCase {
  *
  * @return void
  */
-	public function testFormSecuredRadio() {
+	public function testSecuredRadio() {
 		$this->Form->request['_Token'] = array('key' => 'testKey');
 		$this->assertEquals(array(), $this->Form->fields);
 		$options = array('1' => 'option1', '2' => 'option2');
@@ -1326,7 +1345,7 @@ class FormHelperTest extends CakeTestCase {
  *
  * @return void
  */
-	public function testFormSecuredAndDisabledNotAssoc() {
+	public function testSecuredAndDisabledNotAssoc() {
 		$this->Form->request['_Token'] = array('key' => 'testKey');
 
 		$this->Form->select('Model.select', array(1, 2), array('disabled'));
@@ -1348,7 +1367,7 @@ class FormHelperTest extends CakeTestCase {
  *
  * @return void
  */
-	public function testFormSecuredAndDisabled() {
+	public function testSecuredAndDisabled() {
 		$this->Form->request['_Token'] = array('key' => 'testKey');
 
 		$this->Form->checkbox('Model.checkbox', array('disabled' => true));
@@ -1368,6 +1387,34 @@ class FormHelperTest extends CakeTestCase {
 			'Model.radio' => ''
 		);
 		$this->assertEquals($expected, $this->Form->fields);
+	}
+
+/**
+ * Test that only the path + query elements of a form's URL show up in their hash.
+ *
+ * @return void
+ */
+	public function testSecuredFormUrlIgnoresHost() {
+		$this->Form->request['_Token'] = array('key' => 'testKey');
+
+		$expected = '0ff0c85cd70584d8fd18fa136846d22c66c21e2d%3A';
+		$this->Form->create('Address', array(
+			'url' => array('controller' => 'articles', 'action' => 'view', 1, '?' => array('page' => 1))
+		));
+		$result = $this->Form->secure();
+		$this->assertContains($expected, $result);
+
+		$this->Form->create('Address', array('url' => 'http://localhost/articles/view/1?page=1'));
+		$result = $this->Form->secure();
+		$this->assertContains($expected, $result, 'Full URL should only use path and query.');
+
+		$this->Form->create('Address', array('url' => '/articles/view/1?page=1'));
+		$result = $this->Form->secure();
+		$this->assertContains($expected, $result, 'URL path + query should work.');
+
+		$this->Form->create('Address', array('url' => '/articles/view/1'));
+		$result = $this->Form->secure();
+		$this->assertNotContains($expected, $result, 'URL is different');
 	}
 
 /**
@@ -1871,6 +1918,39 @@ class FormHelperTest extends CakeTestCase {
 			'Balance',
 			'/label',
 			'input' => array('name', 'type' => 'number', 'id', 'step'),
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Form->input('ValidateUser.cost_decimal');
+		$expected = array(
+			'div' => array('class'),
+			'label' => array('for'),
+			'Cost Decimal',
+			'/label',
+			'input' => array('name', 'type' => 'number', 'step' => '0.001', 'id'),
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Form->input('ValidateUser.ratio');
+		$expected = array(
+			'div' => array('class'),
+			'label' => array('for'),
+			'Ratio',
+			'/label',
+			'input' => array('name', 'type' => 'number', 'step' => '0.000001', 'id'),
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Form->input('ValidateUser.population');
+		$expected = array(
+			'div' => array('class'),
+			'label' => array('for'),
+			'Population',
+			'/label',
+			'input' => array('name', 'type' => 'number', 'step' => '1', 'id'),
 			'/div',
 		);
 		$this->assertTags($result, $expected);
@@ -7727,6 +7807,74 @@ class FormHelperTest extends CakeTestCase {
 	}
 
 /**
+ * Test that postLink adds form tags to view block
+ *
+ * @return void
+ */
+	public function testPostLinkFormBuffer() {
+		$result = $this->Form->postLink('Delete', '/posts/delete/1', array('inline' => false));
+		$this->assertTags($result, array(
+			'a' => array('href' => '#', 'onclick' => 'preg:/document\.post_\w+\.submit\(\); event\.returnValue = false; return false;/'),
+			'Delete',
+			'/a'
+		));
+
+		$result = $this->View->fetch('postLink');
+		$this->assertTags($result, array(
+			'form' => array(
+				'method' => 'post', 'action' => '/posts/delete/1',
+				'name' => 'preg:/post_\w+/', 'id' => 'preg:/post_\w+/', 'style' => 'display:none;'
+			),
+			'input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'POST'),
+			'/form'
+		));
+
+		$result = $this->Form->postLink('Delete', '/posts/delete/2',
+			array('inline' => false, 'method' => 'DELETE')
+		);
+		$this->assertTags($result, array(
+			'a' => array('href' => '#', 'onclick' => 'preg:/document\.post_\w+\.submit\(\); event\.returnValue = false; return false;/'),
+			'Delete',
+			'/a'
+		));
+
+		$result = $this->View->fetch('postLink');
+		$this->assertTags($result, array(
+			'form' => array(
+				'method' => 'post', 'action' => '/posts/delete/1',
+				'name' => 'preg:/post_\w+/', 'id' => 'preg:/post_\w+/', 'style' => 'display:none;'
+			),
+			'input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'POST'),
+			'/form',
+			array(
+				'form' => array(
+					'method' => 'post', 'action' => '/posts/delete/2',
+					'name' => 'preg:/post_\w+/', 'id' => 'preg:/post_\w+/', 'style' => 'display:none;'
+				),
+			),
+			array('input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'DELETE')),
+			'/form'
+		));
+
+		$result = $this->Form->postLink('Delete', '/posts/delete/1', array('block' => 'foobar'));
+		$this->assertTags($result, array(
+			'a' => array('href' => '#', 'onclick' => 'preg:/document\.post_\w+\.submit\(\); event\.returnValue = false; return false;/'),
+			'Delete',
+			'/a'
+		));
+
+		$result = $this->View->fetch('foobar');
+		$this->assertTags($result, array(
+			'form' => array(
+				'method' => 'post', 'action' => '/posts/delete/1',
+				'name' => 'preg:/post_\w+/', 'id' => 'preg:/post_\w+/', 'style' => 'display:none;'
+			),
+			'input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'POST'),
+			'/form'
+		));
+	}
+
+/**
  * testSubmitButton method
  *
  * @return void
@@ -9136,6 +9284,15 @@ class FormHelperTest extends CakeTestCase {
  */
 	public function testFormEnd() {
 		$this->assertEquals('</form>', $this->Form->end());
+
+		$result = $this->Form->end('', array('form' => 'form-name'));
+		$expected = array(
+			'div' => array('class' => 'submit'),
+			'input' => array('type' => 'submit', 'value' => ''),
+			'/div',
+			'/form'
+		);
+		$this->assertTags($result, $expected);
 
 		$result = $this->Form->end('');
 		$expected = array(
