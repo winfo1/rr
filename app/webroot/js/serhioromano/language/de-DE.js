@@ -1,8 +1,8 @@
-﻿if(!window.calendar_languages) {
+if(!window.calendar_languages) {
 	window.calendar_languages = {};
 }
 window.calendar_languages['de-DE'] = {
-	error_noview:     'Kalender: View {0} nicht gefunden',
+	error_noview:     'Kalender: Ansicht {0} nicht gefunden',
 	error_dateformat: 'Kalender: Falsches Datumsformat {0}. Sollte entweder "now" oder "yyyy-mm-dd" sein',
 	error_loadurl:    'Kalender: Event-URL nicht gesetzt.',
 	error_where:      'Kalender: Falsche Navigationsrichtung {0}. Nur "next", "prev" oder "today" sind erlaubt',

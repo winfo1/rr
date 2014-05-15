@@ -8,6 +8,7 @@
 		view: 'month',
 		tmpl_path: rr_base_url + 'tmpls/',
 		tmpl_cache: false,
+		day: '2013-03-12',
 		onAfterEventsLoad: function(events) {
 			if(!events) {
 				return;
@@ -49,4 +50,24 @@
 		});
 	});
 
+	$('#first_day').change(function(){
+		var value = $(this).val();
+		value = value.length ? parseInt(value) : null;
+		calendar.setOptions({first_day: value});
+		calendar.view();
+	});
+
+	$('#language').change(function(){
+		calendar.setLanguage($(this).val());
+		calendar.view();
+	});
+
+	$('#events-in-modal').change(function(){
+		var val = $(this).is(':checked') ? $(this).val() : null;
+		calendar.setOptions({modal: val});
+	});
+	$('#events-modal .modal-header, #events-modal .modal-footer').click(function(e){
+		//e.preventDefault();
+		//e.stopPropagation();
+	});
 }(jQuery));

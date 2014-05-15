@@ -118,6 +118,12 @@ if(!String.prototype.formatNum) {
 		onAfterViewLoad:    function(view) {
 			// Inside this function 'this' is the calendar instance
 		},
+		onAfterModalShown:  function(events) {
+			// Inside this function 'this' is the calendar instance
+		},
+		onAfterModalHidden: function(events) {
+			// Inside this function 'this' is the calendar instance
+		},
 		// -------------------------------------------------------------
 		// INTERNAL USE ONLY. DO NOT ASSIGN IT WILL BE OVERRIDDEN ANYWAY
 		// -------------------------------------------------------------
@@ -679,11 +685,20 @@ if(!String.prototype.formatNum) {
 				addClass("saturday", classes);
 				break;
 		}
+
+		addClass(date.toDateString(), classes);
+
 		return classes.join(" ");
 	};
 
 	Calendar.prototype.view = function(view) {
-		if(view) this.options.view = view;
+		if(view) {
+			if(!this.options.views[view].enable) {
+				return;
+			}
+			this.options.view = view;
+		}
+
 
 		this._init_position();
 		this._loadEvents();
@@ -855,13 +870,13 @@ if(!String.prototype.formatNum) {
 							type:     'GET',
 							async:    false
 						}).done(function(json) {
-								if(!json.success) {
-									$.error(json.error);
-								}
-								if(json.result) {
-									events = json.result;
-								}
-							});
+							if(!json.success) {
+								$.error(json.error);
+							}
+							if(json.result) {
+								events = json.result;
+							}
+						});
 						return events;
 					};
 				}
@@ -884,22 +899,30 @@ if(!String.prototype.formatNum) {
 		});
 	};
 
+	Calendar.prototype._templatePath = function(name) {
+		if(typeof this.options.tmpl_path == 'function') {
+			return this.options.tmpl_path(name)
+		}
+		else {
+			return this.options.tmpl_path + name + '.html';
+		}
+	};
+
 	Calendar.prototype._loadTemplate = function(name) {
 		if(this.options.templates[name]) {
 			return;
 		}
 		var self = this;
 		$.ajax({
-			url:      this.options.tmpl_path + name + '.html',
+			url:      self._templatePath(name),
 			dataType: 'html',
 			type:     'GET',
 			async:    false,
 			cache:    this.options.tmpl_cache
 		}).done(function(html) {
-				self.options.templates[name] = _.template(html);
-			});
+			self.options.templates[name] = _.template(html);
+		});
 	};
-
 
 	Calendar.prototype._update = function() {
 		var self = this;
@@ -908,17 +931,11 @@ if(!String.prototype.formatNum) {
 
 		$('*[data-cal-date]').click(function() {
 			var view = $(this).data('cal-view');
-			if(!self.options.views[view].enable) {
-				return;
-			}
 			self.options.day = $(this).data('cal-date');
 			self.view(view);
 		});
 		$('.cal-cell').dblclick(function() {
 			var view = $('[data-cal-date]', this).data('cal-view');
-			if(!self.options.views[view].enable) {
-				return;
-			}
 			self.options.day = $('[data-cal-date]', this).data('cal-date');
 			self.view(view);
 		});
@@ -996,6 +1013,12 @@ if(!String.prototype.formatNum) {
 						if(_.isFunction(self.options.modal_title)) {
 							modal.find("h3").html(self.options.modal_title(event));
 						}
+					})
+					.on('shown.bs.modal', function() {
+						self.options.onAfterModalShown.call(self, self.options.events);
+					})
+					.on('hidden.bs.modal', function() {
+						self.options.onAfterModalHidden.call(self, self.options.events);
 					})
 					.data('handled.bootstrap-calendar', true).data('handled.event-id', event.id);
 			}
@@ -1088,7 +1111,11 @@ if(!String.prototype.formatNum) {
 	Calendar.prototype.getEventsBetween = function(start, end) {
 		var events = [];
 		$.each(this.options.events, function() {
-			if((parseInt(this.start) < end || this.start == null) && (parseInt(this.end) >= start || this.end == null)) {
+			if(this.start == null) {
+				return true;
+			}
+			var event_end = this.end || this.start;
+			if((parseInt(this.start) < end) && (parseInt(event_end) >= start)) {
 				events.push(this);
 			}
 		});
@@ -1130,7 +1157,10 @@ if(!String.prototype.formatNum) {
 			$('div.cal-cell1').removeClass('day-highlight dh-' + $(this).data('event-class'));
 		});
 
-		self._update_modal();
+		// Wait 400ms before updating the modal (400ms is the time for the slider to fade out and slide up)
+		setTimeout(function() {
+			self._update_modal();
+		}, 400);
 	}
 
 	function getEasterDate(year, offsetDays) {
