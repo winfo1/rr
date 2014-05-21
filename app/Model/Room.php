@@ -227,7 +227,7 @@ class Room extends AppModel {
     }
 
     public function isOwnedThroughOrganizationalUnitBy($room_id, $organizationalunit_id) {
-        return $this->field('id', array('id' => $room_id, 'organizationalunit_id' => $organizationalunit_id)) === $room_id;
+        return $this->field('id', array('id' => $room_id, 'organizationalunit_id' => $organizationalunit_id), '') === $room_id;
     }
 
     //</editor-fold>
