@@ -46,8 +46,8 @@ if(!String.prototype.formatNum) {
 		// Initial date. No matter month, week or day this will be a starting point. Can be 'now' or a date in format 'yyyy-mm-dd'
 		day:                'now',
 		// Day Start time and end time with time intervals. Time split 10, 15 or 30.
-		time_start:         '07:00',
-		time_end:           '21:00',
+		time_start:         '07:30',
+		time_end:           '20:00',
 		time_split:         '30',
 		// Source of events data. It can be one of the following:
 		// - URL to return JSON list of events in special format.
@@ -435,19 +435,20 @@ if(!String.prototype.formatNum) {
 
 	Calendar.prototype._calculate_hour_minutes = function(data) {
 		var $self = this;
-		data.in_hour = 60 / parseInt(this.options.time_split);
-		data.hour_split = parseInt(this.options.time_split);
+		var time_split = parseInt(this.options.time_split);
+        var time_split_count = 60 / time_split;
+        var time_split_hour = Math.min(time_split_count, 1);
 
-		if(!/^\d+$/.exec(data.in_hour) || this.options.time_split > 30) {
+		if(((time_split_count >= 1) && (time_split_count % 1 != 0)) || ((time_split_count < 1) && (1440 / time_split % 1 != 0))) {
 			$.error(this.locale.error_timedevide);
 		}
 
 		var time_start = this.options.time_start.split(":");
 		var time_end = this.options.time_end.split(":");
 
-		data.hours = (parseInt(time_end[0]) - parseInt(time_start[0]));
-		var lines = data.hours * data.in_hour;
-		var ms_per_line = (60000 * parseInt(this.options.time_split));
+		data.hours = (parseInt(time_end[0]) - parseInt(time_start[0])) * time_split_hour;
+		var lines = data.hours * time_split_count - parseInt(time_start[1]) / time_split;
+		var ms_per_line = (60000 * time_split);
 
 		var start = new Date(this.options.position.start.getTime());
 		start.setHours(time_start[0]);
@@ -494,13 +495,15 @@ if(!String.prototype.formatNum) {
 
 			var event_start = start.getTime() - e.start;
 
-			if(event_start >= 0) {
+            warn(Math.abs(event_start) / ms_per_line);
+
+            if(event_start >= 0) {
 				e.top = 0;
 			} else {
 				e.top = Math.abs(event_start) / ms_per_line;
 			}
 
-			var lines_left = lines - e.top;
+			var lines_left = Math.abs(lines - e.top);
 			var lines_in_event = (e.end - e.start) / ms_per_line;
 			if(event_start >= 0) {
 				lines_in_event = (e.end - start.getTime()) / ms_per_line;
@@ -519,14 +522,26 @@ if(!String.prototype.formatNum) {
 		//warn(d.getTime());
 	};
 
+    Calendar.prototype._hour_min = function(hour) {
+        var time_start = this.options.time_start.split(":");
+        var time_split = parseInt(this.options.time_split);
+        var in_hour = 60 / time_split;
+        return (hour == 0) ? (in_hour - (parseInt(time_start[1]) / time_split)) : in_hour;
+    };
+
 	Calendar.prototype._hour = function(hour, part) {
 		var time_start = this.options.time_start.split(":");
+        var time_split = parseInt(this.options.time_split);
+        var time_start_h = parseInt(time_start[0]);
+        var time_start_m = parseInt(time_start[1]);
 
-		var hour = "" + (parseInt(time_start[0]) + hour);
-		var minute = "" + (this.options.time_split * part);
+		var r_h = time_start_h + hour * Math.max(time_split / 60, 1);
+		var r_m = time_split * part;
+        if((hour == 0))
+            r_m += time_start_m;
 
-		return hour.formatNum(2) + ":" + minute.formatNum(2);
-	}
+		return r_h.toString().formatNum(2) + ":" + r_m.toString().formatNum(2);
+	};
 
 	Calendar.prototype._week = function(event) {
 		this._loadTemplate('week-days');

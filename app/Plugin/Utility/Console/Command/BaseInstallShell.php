@@ -168,7 +168,24 @@ abstract class BaseInstallShell extends AppShell {
      * @return bool
      */
     public function checkRequiredTables() {
+        if ($this->requiredTables) {
+            $this->out(sprintf('The following tables are required: <info>%s</info>', implode(', ', $this->requiredTables)));
+            $this->out('<success>Checking tables...</success>');
 
+            $tables = $this->db->listSources();
+            $missing = array();
+
+            foreach ($this->requiredTables as $table) {
+                if (!in_array($table, $tables)) {
+                    $missing[] = $table;
+                }
+            }
+
+            if ($missing) {
+                $this->err(sprintf('<error>Missing tables %s; can not proceed</error>', implode(', ', $missing)));
+                return false;
+            }
+        }
 
         $this->out('<success>Table status good, proceeding...</success>');
         return true;

@@ -20,6 +20,7 @@ use Transit\Transformer\Image\RotateTransformer;
 use Transit\Transformer\Image\FitTransformer;
 use Transit\Transporter\Aws\S3Transporter;
 use Transit\Transporter\Aws\GlacierTransporter;
+use Transit\Transporter\Rackspace\CloudFilesTransporter;
 
 /**
  * A CakePHP Behavior that attaches a file to a model, uploads automatically,
@@ -43,6 +44,7 @@ class AttachmentBehavior extends ModelBehavior {
      */
     const S3 = 's3';
     const GLACIER = 'glacier';
+    const CLOUD_FILES = 'cloudfiles';
 
     /**
      * Transit instances indexed by model alias.
@@ -275,7 +277,6 @@ class AttachmentBehavior extends ModelBehavior {
      */
     public function beforeSave(Model $model, $options = array()) {
         $alias = $model->alias;
-        $cleanup = array();
 
         if (empty($model->data[$alias])) {
             return true;
@@ -447,14 +448,7 @@ class AttachmentBehavior extends ModelBehavior {
      */
     public function deleteFiles(Model $model, $id, array $filter = array(), $isDelete = false) {
         $columns = $this->_columns[$model->alias];
-        $tmp = $model->virtualFields;
-        $model->virtualFields = array();
-        $data = $model->find('first', array(
-            'conditions' => array($model->alias . '.' . $model->primaryKey => $id),
-            'contain' => false,
-            'recursive' => -1
-        ));
-        $model->virtualFields = $tmp;
+        $data = $this->_doFind($model, array($model->alias . '.' . $model->primaryKey => $id));
 
         if (empty($data[$model->alias])) {
             return false;
@@ -658,6 +652,9 @@ class AttachmentBehavior extends ModelBehavior {
             case self::GLACIER:
                 return new GlacierTransporter($options['accessKey'], $options['secretKey'], $options);
             break;
+            case self::CLOUD_FILES:
+                return new CloudFilesTransporter($options['username'], $options['apiKey'], $options);
+            break;
             default:
                 if (isset($attachment['transporters'][$class])) {
                     return new $attachment['transporters'][$class]($options);
@@ -690,6 +687,30 @@ class AttachmentBehavior extends ModelBehavior {
         $file->rename($nameCallback, $options['append'], $options['prepend']);
 
         return (string) $options['finalPath'] . $file->basename();
+    }
+
+    /**
+     * Trigger a find() call but disable virtual fields before doing so.
+     *
+     * @param Model $model
+     * @param array $where
+     * @param string $type
+     * @return array
+     */
+    protected function _doFind(Model $model, array $where, $type = 'first') {
+        $virtual = $model->virtualFields;
+        $model->virtualFields = array();
+
+        $results = $model->find($type, array(
+            'conditions' => $where,
+            'contain' => false,
+            'recursive' => -1,
+            'order' => ''
+        ));
+
+        $model->virtualFields = $virtual;
+
+        return $results;
     }
 
     /**
@@ -750,14 +771,7 @@ class AttachmentBehavior extends ModelBehavior {
      */
     protected function _cleanupOldFiles(Model $model, array $fields) {
         $columns = $this->_columns[$model->alias];
-        $tmp = $model->virtualFields;
-        $model->virtualFields = array();
-        $data = $model->find('first', array(
-            'conditions' => array($model->alias . '.' . $model->primaryKey => $model->id),
-            'contain' => false,
-            'recursive' => -1
-        ));
-        $model->virtualFields = $tmp;
+        $data = $this->_doFind($model, array($model->alias . '.' . $model->primaryKey => $model->id));
 
         if (empty($data[$model->alias])) {
             return;

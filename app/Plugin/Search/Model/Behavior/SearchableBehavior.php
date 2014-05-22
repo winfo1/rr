@@ -5,7 +5,7 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2009 - 2013, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2009 - 2014, Cake Development Corporation (http://cakedc.com)
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
 App::uses('ModelBehavior', 'Model');
@@ -96,7 +96,7 @@ class SearchableBehavior extends ModelBehavior {
 
 			if (in_array($field['type'], array('like'))) {
 				$this->_addCondLike($Model, $conditions, $data, $field);
-			} elseif (in_array($field['type'], array('value'))) {
+			} elseif (in_array($field['type'], array('value', 'lookup'))) {
 				$this->_addCondValue($Model, $conditions, $data, $field);
 			} elseif ($field['type'] === 'expression') {
 				$this->_addCondExpression($Model, $conditions, $data, $field);
@@ -141,7 +141,7 @@ class SearchableBehavior extends ModelBehavior {
 
 		$result = array();
 		foreach ($vars as $var => $val) {
-			if (in_array($var, Set::extract($Model->filterArgs, '{n}.name'))) {
+			if (in_array($var, Hash::extract($Model->filterArgs, '{n}.name'))) {
 				$result[$var] = $val;
 			}
 		}
@@ -429,7 +429,7 @@ class SearchableBehavior extends ModelBehavior {
 			$conditionsAdd = $Model->{$field['method']}($data, $field);
 			// if our conditions function returns something empty, nothing to merge in
 			if (!empty($conditionsAdd)) {
-				$conditions = Set::merge($conditions, (array)$conditionsAdd);
+				$conditions = Hash::merge($conditions, (array)$conditionsAdd);
 			}
 		}
 		return $conditions;

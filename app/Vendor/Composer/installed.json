@@ -86,6 +86,210 @@
         ]
     },
     {
+        "name": "mjohnson/utility",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/milesj/utility.git",
+            "reference": "6bfe0742c5f4fea3439b3478e79651dcd6125146"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/milesj/utility/zipball/6bfe0742c5f4fea3439b3478e79651dcd6125146",
+            "reference": "6bfe0742c5f4fea3439b3478e79651dcd6125146",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "ext-mbstring": "*",
+            "php": ">=5.3.0"
+        },
+        "suggest": {
+            "mjohnson/decoda": "Enable Decoda for BBCode parsing in the DecodaHelper",
+            "titon/utility": "Enable Titon to parse feeds in FeedSource and process AJAX in the AjaxHandlerComponent"
+        },
+        "time": "2014-05-22 02:13:35",
+        "type": "cakephp-plugin",
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Miles Johnson",
+                "homepage": "http://milesj.me"
+            }
+        ],
+        "description": "A collection of CakePHP utility libraries.",
+        "homepage": "http://milesj.me/code/cakephp/utility",
+        "keywords": [
+            "Behavior",
+            "Sitemap",
+            "aggregator",
+            "ajax-handler",
+            "auto-login",
+            "bbcode",
+            "cache-kill",
+            "cacheable",
+            "cakephp",
+            "component",
+            "controller",
+            "convertable",
+            "datasource",
+            "decoda",
+            "enumerable",
+            "feed",
+            "filterable",
+            "helper",
+            "markup",
+            "model",
+            "open-graph",
+            "plugin",
+            "shell",
+            "sluggable",
+            "spam-blocker",
+            "utility",
+            "validateable"
+        ]
+    },
+    {
+        "name": "cakedc/search",
+        "version": "dev-develop",
+        "version_normalized": "dev-develop",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/CakeDC/search.git",
+            "reference": "de65de015fe09d2c93adf756edf047694c52cf57"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/CakeDC/search/zipball/de65de015fe09d2c93adf756edf047694c52cf57",
+            "reference": "de65de015fe09d2c93adf756edf047694c52cf57",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "php": ">=5.3.0"
+        },
+        "time": "2014-05-12 11:16:03",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "Search"
+        },
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Cake Development Corporation",
+                "email": "team@cakedc.com",
+                "homepage": "http://cakedc.com"
+            }
+        ],
+        "description": "The Search plugin allows you to make any kind of data searchable, enabling you to implement a robust searching rapidly.",
+        "homepage": "http://github.com/CakeDC/search"
+    },
+    {
+        "name": "mjohnson/uploader",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/milesj/uploader.git",
+            "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/milesj/uploader/zipball/9b6c0bac6c4c87708f0d1787664de73e89f900d2",
+            "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "ext-curl": "*",
+            "ext-fileinfo": "*",
+            "ext-mbstring": "*",
+            "mjohnson/transit": "~1.5",
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "aws/aws-sdk-php": "~2.2",
+            "ext-exif": "Extract exif data from images",
+            "ext-gd": "Enable the GD library for image transforming"
+        },
+        "time": "2014-03-31 01:28:48",
+        "type": "cakephp-plugin",
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Miles Johnson",
+                "homepage": "http://milesj.me"
+            }
+        ],
+        "description": "File uploader and validation plugin for CakePHP.",
+        "homepage": "http://milesj.me/code/cakephp/uploader",
+        "keywords": [
+            "attachment",
+            "cakephp",
+            "file",
+            "plugin",
+            "uploader",
+            "validation"
+        ]
+    },
+    {
+        "name": "markstory/asset_compress",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/markstory/asset_compress.git",
+            "reference": "3d6548a7ff26367e00a3247f93cf06e83e0988ea"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/markstory/asset_compress/zipball/3d6548a7ff26367e00a3247f93cf06e83e0988ea",
+            "reference": "3d6548a7ff26367e00a3247f93cf06e83e0988ea",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "php": ">=5.3.0"
+        },
+        "time": "2014-05-04 02:22:57",
+        "type": "cakephp-plugin",
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mark Story",
+                "homepage": "http://mark-story.com",
+                "role": "Author"
+            }
+        ],
+        "description": "An asset compression plugin for CakePHP. Provides file concatenation and a flexible filter system for preprocessing and minification.",
+        "homepage": "https://github.com/markstory/asset_compress",
+        "keywords": [
+            "assets",
+            "cakephp",
+            "coffee-script",
+            "less",
+            "minifier",
+            "sass"
+        ]
+    },
+    {
         "name": "mjohnson/transit",
         "version": "1.5.1",
         "version_normalized": "1.5.1.0",
@@ -158,210 +362,6 @@
             "uploader",
             "validator",
             "video"
-        ]
-    },
-    {
-        "name": "mjohnson/uploader",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/milesj/uploader.git",
-            "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/milesj/uploader/zipball/9b6c0bac6c4c87708f0d1787664de73e89f900d2",
-            "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*",
-            "ext-curl": "*",
-            "ext-fileinfo": "*",
-            "ext-mbstring": "*",
-            "mjohnson/transit": "~1.5",
-            "php": ">=5.3.3"
-        },
-        "suggest": {
-            "aws/aws-sdk-php": "~2.2",
-            "ext-exif": "Extract exif data from images",
-            "ext-gd": "Enable the GD library for image transforming"
-        },
-        "time": "2014-03-31 01:28:48",
-        "type": "cakephp-plugin",
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Miles Johnson",
-                "homepage": "http://milesj.me"
-            }
-        ],
-        "description": "File uploader and validation plugin for CakePHP.",
-        "homepage": "http://milesj.me/code/cakephp/uploader",
-        "keywords": [
-            "attachment",
-            "cakephp",
-            "file",
-            "plugin",
-            "uploader",
-            "validation"
-        ]
-    },
-    {
-        "name": "mjohnson/utility",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/milesj/utility.git",
-            "reference": "3e97eceb802df26c718e70770ac3d0083ded9a9f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/milesj/utility/zipball/3e97eceb802df26c718e70770ac3d0083ded9a9f",
-            "reference": "3e97eceb802df26c718e70770ac3d0083ded9a9f",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*",
-            "ext-mbstring": "*",
-            "php": ">=5.3.0"
-        },
-        "suggest": {
-            "mjohnson/decoda": "Enable Decoda for BBCode parsing in the DecodaHelper",
-            "titon/utility": "Enable Titon to parse feeds in FeedSource and process AJAX in the AjaxHandlerComponent"
-        },
-        "time": "2014-04-23 03:25:56",
-        "type": "cakephp-plugin",
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Miles Johnson",
-                "homepage": "http://milesj.me"
-            }
-        ],
-        "description": "A collection of CakePHP utility libraries.",
-        "homepage": "http://milesj.me/code/cakephp/utility",
-        "keywords": [
-            "Behavior",
-            "Sitemap",
-            "aggregator",
-            "ajax-handler",
-            "auto-login",
-            "bbcode",
-            "cache-kill",
-            "cacheable",
-            "cakephp",
-            "component",
-            "controller",
-            "convertable",
-            "datasource",
-            "decoda",
-            "enumerable",
-            "feed",
-            "filterable",
-            "helper",
-            "markup",
-            "model",
-            "open-graph",
-            "plugin",
-            "shell",
-            "sluggable",
-            "spam-blocker",
-            "utility",
-            "validateable"
-        ]
-    },
-    {
-        "name": "cakedc/search",
-        "version": "dev-develop",
-        "version_normalized": "dev-develop",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/CakeDC/search.git",
-            "reference": "dee81faa3fed1c364d0e164c8b2851afadd6fdd7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/CakeDC/search/zipball/dee81faa3fed1c364d0e164c8b2851afadd6fdd7",
-            "reference": "dee81faa3fed1c364d0e164c8b2851afadd6fdd7",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*",
-            "php": ">=5.3.0"
-        },
-        "time": "2014-04-28 09:15:14",
-        "type": "cakephp-plugin",
-        "extra": {
-            "installer-name": "Search"
-        },
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Cake Development Corporation",
-                "email": "team@cakedc.com",
-                "homepage": "http://cakedc.com"
-            }
-        ],
-        "description": "The Search plugin allows you to make any kind of data searchable, enabling you to implement a robust searching rapidly.",
-        "homepage": "http://github.com/CakeDC/search"
-    },
-    {
-        "name": "markstory/asset_compress",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/markstory/asset_compress.git",
-            "reference": "3d6548a7ff26367e00a3247f93cf06e83e0988ea"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/markstory/asset_compress/zipball/3d6548a7ff26367e00a3247f93cf06e83e0988ea",
-            "reference": "3d6548a7ff26367e00a3247f93cf06e83e0988ea",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*",
-            "php": ">=5.3.0"
-        },
-        "time": "2014-05-04 02:22:57",
-        "type": "cakephp-plugin",
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mark Story",
-                "homepage": "http://mark-story.com",
-                "role": "Author"
-            }
-        ],
-        "description": "An asset compression plugin for CakePHP. Provides file concatenation and a flexible filter system for preprocessing and minification.",
-        "homepage": "https://github.com/markstory/asset_compress",
-        "keywords": [
-            "assets",
-            "cakephp",
-            "coffee-script",
-            "less",
-            "minifier",
-            "sass"
         ]
     },
     {

@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CakeDC/search.git",
-                "reference": "dee81faa3fed1c364d0e164c8b2851afadd6fdd7"
+                "reference": "de65de015fe09d2c93adf756edf047694c52cf57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CakeDC/search/zipball/dee81faa3fed1c364d0e164c8b2851afadd6fdd7",
-                "reference": "dee81faa3fed1c364d0e164c8b2851afadd6fdd7",
+                "url": "https://api.github.com/repos/CakeDC/search/zipball/de65de015fe09d2c93adf756edf047694c52cf57",
+                "reference": "de65de015fe09d2c93adf756edf047694c52cf57",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
             ],
             "description": "The Search plugin allows you to make any kind of data searchable, enabling you to implement a robust searching rapidly.",
             "homepage": "http://github.com/CakeDC/search",
-            "time": "2014-04-28 09:15:14"
+            "time": "2014-05-12 11:16:03"
         },
         {
             "name": "composer/installers",
@@ -297,12 +297,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/milesj/utility.git",
-                "reference": "3e97eceb802df26c718e70770ac3d0083ded9a9f"
+                "reference": "6bfe0742c5f4fea3439b3478e79651dcd6125146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/milesj/utility/zipball/3e97eceb802df26c718e70770ac3d0083ded9a9f",
-                "reference": "3e97eceb802df26c718e70770ac3d0083ded9a9f",
+                "url": "https://api.github.com/repos/milesj/utility/zipball/6bfe0742c5f4fea3439b3478e79651dcd6125146",
+                "reference": "6bfe0742c5f4fea3439b3478e79651dcd6125146",
                 "shasum": ""
             },
             "require": {
@@ -356,7 +356,7 @@
                 "utility",
                 "validateable"
             ],
-            "time": "2014-04-23 03:25:56"
+            "time": "2014-05-22 02:13:35"
         },
         {
             "name": "nervo/yuicompressor",
