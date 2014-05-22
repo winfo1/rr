@@ -90,13 +90,15 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
                             <td><?php echo $this->request->data['Room']['seats']; ?></td>
                         </tr>
                         <?php
-
-                        if(array_key_exists('Resource', $rooms_all[$this->request->data['Booking']['room_id']])) {
-                            foreach ($rooms_all[$this->request->data['Booking']['room_id']]['Resource'] as $value) {
-                                echo '<tr><td>' . $value['name'] . '</td><td>' . $value['ResourcesRoom']['value'] . '</td></tr>';
+                        foreach($rooms_all as $room) {
+                            if($room['Room']['id'] == $this->request->data['Booking']['room_id']){
+                                if(array_key_exists('Resource', $room)) {
+                                    foreach ($room['Resource'] as $value) {
+                                        echo '<tr><td>' . $value['name'] . '</td><td>' . $value['ResourcesRoom']['value'] . '</td></tr>';
+                                    }
+                                }
                             }
                         }
-
                         ?>
                         </tbody>
                     </table>
