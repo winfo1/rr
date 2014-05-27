@@ -1,4 +1,9 @@
 <div class="container">
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Räume', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Raum hinzufügen'); ?></li>
+    </ol>
     <?php echo $this->Form->create('Room', array(
         'type' => 'file',
         'class' => 'well',
@@ -30,8 +35,7 @@
                 'label' => false
             ));
             ?>
-            <p class="help-block">Es sind nur Bilddateien erlaubt. Das Bild wird mit dem Klick auf Hinzufügen
-                hochgeladen.</p>
+            <p class="help-block">Es sind nur Bilddateien erlaubt. Das Bild wird mit dem Klick auf Hinzufügen hochgeladen.</p>
         </div>
 
         <?php
@@ -56,8 +60,7 @@
                 'multiple'
             ));
             ?>
-            <p class="help-block">Es sind nur Bilddateien erlaubt. Die Bilder werden mit dem Klick auf Hinzufügen
-                hochgeladen.</p>
+            <p class="help-block">Es sind nur Bilddateien erlaubt. Die Bilder werden mit dem Klick auf Hinzufügen hochgeladen.</p>
         </div>
         <div class="form-group">
             <label for="RoomRessourceList"><?php echo __('Ressourcen'); ?></label>

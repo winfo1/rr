@@ -1,4 +1,9 @@
 <div class="container">
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Ressourcen', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Ressource hinzufügen'); ?></li>
+    </ol>
     <?php echo $this->Form->create('Resource', array(
         'class' => 'well',
         'inputDefaults' => array(
