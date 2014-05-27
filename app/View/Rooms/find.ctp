@@ -212,6 +212,6 @@
                 RoomViewTabs.val($(e.target).attr('href').charAt(1));
             });
 
-            $('#RoomName').focus();
+            $('.well #RoomName').focus();
         });
     </script>

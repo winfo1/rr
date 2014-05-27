@@ -100,6 +100,7 @@ $action = $this->params['action'];
                                 <li class="<?php echo (($controller == 'pages' && $page == 'home') ? 'active' : '')?>"><?php echo $this->Html->link('Home', array('controller' => 'pages', 'action' => 'display', 'home')); ?></li>
                                 <li class="<?php echo (($controller == 'bookings' && $action == 'add') ? 'active' : '')?>"><?php echo $this->Html->link('Buchen', array('controller' => 'bookings', 'action' => 'add')); ?></li>
                                 <li class="<?php echo (($controller == 'bookings' && $action == 'index') ? 'active' : '')?>"><?php echo $this->Html->link('Buchungen', array('controller' => 'bookings', 'action' => 'index')); ?></li>
+                                <li class="<?php echo (($controller == 'rooms' && $action == 'find') ? 'active' : '')?>"><?php echo $this->Html->link('Suchen', array('controller' => 'rooms', 'action' => 'find')); ?></li>
                                 <?php if($this->Session->check('Auth.User.username') && (in_array($this->Session->read('Auth.User.role'), array('admin', 'root')))) : ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Verwaltung <b class="caret"></b></a>
@@ -125,8 +126,8 @@ $action = $this->params['action'];
                                     'class' => 'form-control',
                                 )
                             )); ?>
-                            <?php echo $this->Form->input('name', array('label' => false, 'placeholder' => __('Suchen'))); ?>
-                            <?php echo $this->Form->end(array('label' => __('Absenden'), 'div' => false, 'class' => 'btn btn-default')); ?>
+                            <?php echo $this->Form->input('name', array('label' => false, 'placeholder' => __('Raumname ...'))); ?>
+                            <?php echo $this->Form->end(array('label' => __('Suchen'), 'div' => false, 'class' => 'btn btn-default')); ?>
 
                             <ul class="nav navbar-nav navbar-right">
 

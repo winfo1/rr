@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CakeDC/search.git",
-                "reference": "de65de015fe09d2c93adf756edf047694c52cf57"
+                "reference": "75e21485c6c0b22ae1515517aa90e80484206f62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CakeDC/search/zipball/de65de015fe09d2c93adf756edf047694c52cf57",
-                "reference": "de65de015fe09d2c93adf756edf047694c52cf57",
+                "url": "https://api.github.com/repos/CakeDC/search/zipball/75e21485c6c0b22ae1515517aa90e80484206f62",
+                "reference": "75e21485c6c0b22ae1515517aa90e80484206f62",
                 "shasum": ""
             },
             "require": {
@@ -38,9 +38,16 @@
                     "homepage": "http://cakedc.com"
                 }
             ],
-            "description": "The Search plugin allows you to make any kind of data searchable, enabling you to implement a robust searching rapidly.",
+            "description": "Search Plugin for CakePHP",
             "homepage": "http://github.com/CakeDC/search",
-            "time": "2014-05-12 11:16:03"
+            "keywords": [
+                "cakephp",
+                "filter",
+                "post-redirect-get",
+                "prg",
+                "search"
+            ],
+            "time": "2014-05-23 13:03:58"
         },
         {
             "name": "composer/installers",
@@ -247,12 +254,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/milesj/uploader.git",
-                "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2"
+                "reference": "53df04eab1fc39c0d1d7b1d30e25df8ab05f3734"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/milesj/uploader/zipball/9b6c0bac6c4c87708f0d1787664de73e89f900d2",
-                "reference": "9b6c0bac6c4c87708f0d1787664de73e89f900d2",
+                "url": "https://api.github.com/repos/milesj/uploader/zipball/53df04eab1fc39c0d1d7b1d30e25df8ab05f3734",
+                "reference": "53df04eab1fc39c0d1d7b1d30e25df8ab05f3734",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +296,7 @@
                 "uploader",
                 "validation"
             ],
-            "time": "2014-03-31 01:28:48"
+            "time": "2014-05-23 17:34:05"
         },
         {
             "name": "mjohnson/utility",

@@ -1,5 +1,10 @@
 <?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
 <div class="container">
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Semester', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Semester bearbeiten'); ?></li>
+    </ol>
     <?php echo $this->Form->create('Semester', array(
         'class' => 'well',
         'inputDefaults' => array(

@@ -1,4 +1,9 @@
 <div class="container">
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Räume', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Raum bearbeiten'); ?></li>
+    </ol>
     <?php echo $this->Form->create('Room', array(
         'type' => 'file',
         'class' => 'well',

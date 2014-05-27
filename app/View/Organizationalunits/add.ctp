@@ -1,4 +1,9 @@
 <div class="container">
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Organisationseinheiten', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Organisationseinheit hinzufügen'); ?></li>
+    </ol>
     <?php echo $this->Form->create('Organizationalunit', array(
         'class' => 'well',
         'inputDefaults' => array(

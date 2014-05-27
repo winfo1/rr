@@ -1,4 +1,9 @@
 <div class="container">
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Benutzer', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Benutzer bearbeiten'); ?></li>
+    </ol>
     <?php echo $this->Form->create('User', array(
         'class' => 'well',
         'inputDefaults' => array(
