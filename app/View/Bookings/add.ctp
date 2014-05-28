@@ -100,7 +100,7 @@
 
         echo $this->Form->input('interval_iteration', array(
             'label' => __('Wiederholung'),
-            'selected' => array_keys($options)[0],
+            'default' => array_keys($options)[0],
             'options' => $options));
         ?>
 
@@ -110,9 +110,16 @@
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <label style="text-align: left; width: 80px">
-                            <input type="radio" name="data[Booking][interval_type]" value="A" checked=""> Nach
-                        </label>
+						<?php
+						echo $this->Form->input('interval_type', array(
+							'type' => 'radio',
+							'class' => false,
+							'div' => false,
+							'label' => array('style' => 'text-align: left; width: 80px'),
+							'hiddenField' => false,
+							'default' => 'A',
+							'options' => array('A' => ' ' . __('Nach'))));
+						?>
                     </span>
                     <?php
                     $options = array('1' => '1 Wiederholung');
@@ -123,7 +130,7 @@
                     echo $this->Form->input('interval_count', array(
                         'div' => false,
                         'label' => false,
-                        'selected' => '3',
+                        'default' => '3',
                         'options' => $options));
                     ?>
                 </div>
@@ -132,9 +139,15 @@
                 <div class="input-group">
 
                     <span class="input-group-addon">
-                        <label style="text-align: left; width: 80px">
-                            <input type="radio" name="data[Booking][interval_type]" value="B"> Datum
-                        </label>
+                        <?php
+						echo $this->Form->input('interval_type', array(
+							'type' => 'radio',
+							'class' => false,
+							'div' => false,
+							'label' => array('style' => 'text-align: left; width: 80px'),
+							'hiddenField' => false,
+							'options' => array('B' => ' ' . __('Datum'))));
+						?>
                     </span>
 
                     <div class="input-group date form_end_date" style="width: 100%" data-date-format="dd MM yyyy" data-link-field="data[Booking][interval_date]">
@@ -145,21 +158,27 @@
                         echo $this->Form->input('interval_date', array(
                             'type' => 'text',
                             'label' => false,
+                            'default' => $val,
                             'disabled' => true,
-                            'readonly' => true,
-                            'value' => $val));
+                            'readonly' => true));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
-                <?php echo $this->Form->hidden('interval_end', array('value' => date('Y-m-d', strtotime("+2 weeks")))); ?>
+                <?php echo $this->Form->hidden('interval_end', array('default' => date('Y-m-d', strtotime("+2 weeks")))); ?>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <label style="text-align: left; width: 80px">
-                            <input type="radio" name="data[Booking][interval_type]" value="C"> Dieses
-                        </label>
+                    	<?php
+						echo $this->Form->input('interval_type', array(
+							'type' => 'radio',
+							'class' => false,
+							'div' => false,
+							'label' => array('style' => 'text-align: left; width: 80px'),
+							'hiddenField' => false,
+							'options' => array('C' => ' ' . __('Dieses'))));
+						?>
                     </span>
                     <?php
                     $options = array('1' => 'Semester', '2' => 'anfang nächstes Semester', '3' => 'nächstes Semester', '4' => 'Jahr');
@@ -290,6 +309,12 @@
             'data-title': 'Foto'
         }));
     }
+    
+    function updateDisabled(v) {
+            $('#BookingIntervalCount').prop('disabled', v != 'A');
+            $('#BookingIntervalDate').prop('disabled', v != 'B');
+            $('#BookingIntervalRange').prop('disabled', v != 'C');
+    }
 
     var typeahead = new Bloodhound({
         datumTokenizer: function(d) { return d.tokens; },
@@ -381,8 +406,6 @@
             BookingViewTabs.val($(e.target).attr('href').charAt(1));
         });
 
-        var BookingRoomId = $('#BookingRoomId');
-
         typeahead.initialize();
 
         $('.typeahead').typeahead(null, {
@@ -391,16 +414,21 @@
             }
         );
 
-        $('#BookingIntervalIteration').change(function () {
-            this.value == 0 ? $('#BookingIntervalGroup').hide() : $('#BookingIntervalGroup').slideDown("fast");
+        var BookingIntervalIteration = $('#BookingIntervalIteration');
+        var BookingIntervalGroup = $('#BookingIntervalGroup');
+        if(BookingIntervalIteration.val() != 0) {
+        	BookingIntervalGroup.slideDown("fast");
+        }
+        BookingIntervalIteration.change(function () {
+            this.value == 0 ? BookingIntervalGroup.hide() : BookingIntervalGroup.slideDown("fast");
         });
 
         $('input[name="data[Booking][interval_type]"]').click(function () {
-            $('#BookingIntervalCount').prop('disabled', this.value != 'A');
-            $('#BookingIntervalDate').prop('disabled', this.value != 'B');
-            $('#BookingIntervalRange').prop('disabled', this.value != 'C');
+            updateDisabled(this.value);
         });
+        updateDisabled($('input[name="data[Booking][interval_type]"]:radio:checked').val());
 
+        var BookingRoomId = $('#BookingRoomId');
         BookingRoomId.change(function () {
             readDetails(this.value);
             var url = document.URL.replace(/add\/(\d+)/gi, "add/" + this.value);
