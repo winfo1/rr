@@ -92,7 +92,6 @@
         <?php echo $this->Form->input('room_id', array(
             'div' => array('div' => 'form-group', 'id' => 'Room'),
             'label' => __('Raum'),
-            'selected' => $room_id,
             'options' => $rooms));
         ?>
 
@@ -404,6 +403,8 @@
 
         BookingRoomId.change(function () {
             readDetails(this.value);
+            var url = document.URL.replace(/add\/(\d+)/gi, "add/" + this.value);
+            window.history.pushState("", "", url);
         });
 
         readDetails(BookingRoomId.val());

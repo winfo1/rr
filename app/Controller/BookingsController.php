@@ -149,12 +149,15 @@ class BookingsController extends AppController {
         // set default room
         $rooms_keys = array_keys($rooms);
         if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
-            if (count($rooms) > 0)
-                $room_id = $rooms_keys[0];
-            else
-                $room_id = 0;
+            $room_id = $this->request->data['Booking']['room_id'];
+            if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
+				if (count($rooms) > 0)
+					$room_id = $rooms_keys[0];
+				else
+					$room_id = 0;
+            }
         }
-        $this->set(compact('room_id'));
+        $this->request->data['Booking']['room_id'] = $room_id;
 
         // easy view
         $view_tabs = 's';
