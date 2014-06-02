@@ -126,7 +126,7 @@ $action = $this->params['action'];
                                     'class' => 'form-control',
                                 )
                             )); ?>
-                            <?php echo $this->Form->input('name', array('label' => false, 'placeholder' => __('Raumname ...'))); ?>
+                            <?php echo $this->Form->input('name', array('label' => false, 'placeholder' => __('Raum'), 'style' => 'width:74px')); ?>
                             <?php echo $this->Form->end(array('label' => __('Suchen'), 'div' => false, 'class' => 'btn btn-default')); ?>
 
                             <ul class="nav navbar-nav navbar-right">
