@@ -32,18 +32,31 @@
                     <div class="form-group">
                         <label><?php echo __('Startzeit'); ?></label>
                         <div class="btn-group" data-toggle="buttons" style="margin: 5px">
-                            <label class="btn btn-default active"><input type="radio" name="data[Booking][start_minutes]" value="0" checked><?php echo __('jetzt'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Booking][start_minutes]" value="15"><?php echo __('in 15 Min.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Booking][start_minutes]" value="30"><?php echo __('in 30 Min.'); ?></label>
+                            <?php
+							echo $this->Form->input('start_minutes', array(
+								'type' => 'radio',
+								'class' => 'btn btn-default',
+								'div' => false,
+								'legend' => false,
+								'hiddenField' => false,
+								'default' => '0',
+								'options' => array('0' => __('jetzt'), '15' => __('in 15 Min.'), '30' => __('in 30 Min.'))));
+							?>
                         </div>
                     </div>
                     <div class="form-group">
                         <label><?php echo __('Dauer'); ?></label>
                         <div class="btn-group" data-toggle="buttons" style="margin: 5px">
-                            <label class="btn btn-default active"><input type="radio" name="data[Booking][duration]" value="30" checked><?php echo __('für 30 Min.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Booking][duration]" value="60"><?php echo __('für 1 Std.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Booking][duration]" value="120"><?php echo __('für 2 Std.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Booking][duration]" value="1440"><?php echo __('ganztägig'); ?></label>
+                            <?php
+							echo $this->Form->input('duration', array(
+								'type' => 'radio',
+								'class' => 'btn btn-default',
+								'div' => false,
+								'legend' => false,
+								'hiddenField' => false,
+								'default' => '30',
+								'options' => array('30' => __('für 30 Min.'), '60' => __('für 1 Std.'), '120' => __('für 2 Std.'), '1440' => __('ganztägig'))));
+							?>
                         </div>
                     </div>
                 </div>
@@ -200,6 +213,8 @@
 <script type="text/javascript">
     var room_details = null;
 
+	var BookingRoomId = $('#BookingRoomId');
+
     function readDetails(id) {
 
         $.get(rr_base_url + 'ajax/room_details/' + id, function(data, status){
@@ -315,6 +330,11 @@
             $('#BookingIntervalDate').prop('disabled', v != 'B');
             $('#BookingIntervalRange').prop('disabled', v != 'C');
     }
+    
+    function updateURL() {
+    	var url = rr_base_url + 'bookings/add/' + BookingRoomId.val() + '/';
+        window.history.pushState("", "", url);
+    }
 
     var typeahead = new Bloodhound({
         datumTokenizer: function(d) { return d.tokens; },
@@ -428,11 +448,9 @@
         });
         updateDisabled($('input[name="data[Booking][interval_type]"]:radio:checked').val());
 
-        var BookingRoomId = $('#BookingRoomId');
         BookingRoomId.change(function () {
             readDetails(this.value);
-            var url = document.URL.replace(/add\/(\d+)/gi, "add/" + this.value);
-            window.history.pushState("", "", url);
+            updateURL();
         });
 
         readDetails(BookingRoomId.val());
