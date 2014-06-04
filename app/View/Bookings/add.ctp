@@ -80,14 +80,14 @@
                         <?php echo $this->Form->hidden('day'); ?>
                         <label for="BookingStartHour"><?php echo __('Startzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
-                            <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit', 'value' => $start_hour)); ?>
+                            <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit')); ?>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
                         </div>
                         <label for="BookingEndHour"><?php echo __('Endzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
-                            <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende', 'value' => $end_hour)); ?>
+                            <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende')); ?>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
@@ -389,6 +389,7 @@
         } if((h1 == h2) && (m1 > m2)) {
             BookingEndHour.val(h2 + ':' + m1);
         }
+        updateURL();
     });
 
     BookingEndHour.change(function() {
@@ -409,6 +410,7 @@
         } if((h1 == h2) && (m1 > m2)) {
             this.value = h2 + ':' + m1;
         }
+        updateURL();
     });
 
     $('.clockpicker').clockpicker();

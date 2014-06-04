@@ -26,7 +26,7 @@ class BoostCakeHtmlHelper extends HtmlHelper {
 			$regex = '/(<label)(.*?>)/';
 			if (preg_match($regex, $html, $match)) {
 				
-				if((strpos($class, 'btn') !== false) && ($args[3]['checked'] == 'checked'))
+				if((strpos($class, 'btn') !== false) && array_key_exists('checked', $args[3]) && ($args[3]['checked'] == 'checked'))
 				{
 					$class .= ' active';
 				}

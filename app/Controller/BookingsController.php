@@ -137,11 +137,11 @@ class BookingsController extends AppController {
     /**
      * @param null $room_id i.e. 1
      * @param null $day i.e. 2014-05-01
-     * @param null $str_start_time i.e. 19-14
-     * @param null $str_end_time i.e. 20-14
+     * @param null $start_hour i.e. 19-14
+     * @param null $end_hour i.e. 20-14
      * @return bool
      */
-    public function add($room_id = null, $day = null, $str_start_time = null, $str_end_time = null) {
+    public function add($room_id = null, $day = null, $start_hour = null, $end_hour = null) {
         // set available rooms
         $rooms = $this->Booking->Room->getRoomsFromList();
         $this->set(compact('rooms'));
@@ -149,7 +149,8 @@ class BookingsController extends AppController {
         // set default room
         $rooms_keys = array_keys($rooms);
         if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
-            $room_id = $this->request->data['Booking']['room_id'];
+            if (array_key_exists('Booking', $this->request->data) && array_key_exists('room_id', $this->request->data['Booking']))
+            	$room_id = $this->request->data['Booking']['room_id'];
             if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
 				if (count($rooms) > 0)
 					$room_id = $rooms_keys[0];
@@ -164,7 +165,8 @@ class BookingsController extends AppController {
 
         // set default day
         if (!isset($day)) {
-            $day = $this->request->data['Booking']['day'];
+            if (array_key_exists('Booking', $this->request->data) && array_key_exists('day', $this->request->data['Booking']))
+            	$day = $this->request->data['Booking']['day'];
             if (!isset($day)) {
             	$day = (new DateTime())->format('Y-m-d');
             } else {
@@ -188,23 +190,35 @@ class BookingsController extends AppController {
         if(WIN)
 			$this->request->data['Booking']['day_view'] = utf8_encode($this->request->data['Booking']['day_view']);
 
-        // set default start time
-        if (isset($str_start_time) && preg_match("/^[0-9]{1,2}-[0-9]{1,2}$/", $str_start_time)) {
-            $start_hour = str_replace('-', ':', $str_start_time);
+        // set default start hour
+        if (isset($start_hour) && preg_match('/^[0-9]{1,2}-[0-9]{1,2}$/', $start_hour)) {
+            $start_hour = str_replace('-', ':', $start_hour);
             $view_tabs = 'a';
         } else {
-            $start_hour = (new DateTime())->format('H:i');
-        }
-        $this->set(compact('start_hour'));
-
-        // set default end time
-        if (isset($str_end_time) && preg_match("/^[0-9]{1,2}-[0-9]{1,2}$/", $str_end_time)) {
-            $end_hour = str_replace('-', ':', $str_end_time);
+			if (array_key_exists('Booking', $this->request->data) && array_key_exists('start_hour', $this->request->data['Booking']))
+				$start_hour = $this->request->data['Booking']['start_hour'];
+			if (isset($start_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $start_hour)) { 
+				$view_tabs = 'a';
+			} else {
+				$start_hour = (new DateTime())->format('H:i');
+			}
+		}
+        $this->request->data['Booking']['start_hour'] = $start_hour;
+        
+        // set default end hour
+        if (isset($end_hour) && preg_match('/^[0-9]{1,2}-[0-9]{1,2}$/', $end_hour)) {
+            $end_hour = str_replace('-', ':', $end_hour);
             $view_tabs = 'a';
         } else {
-            $end_hour = Utils::toEndDateTime(new DateTime(), 60)->format('H:i');
-        }
-        $this->set(compact('end_hour'));
+			if (array_key_exists('Booking', $this->request->data) && array_key_exists('end_hour', $this->request->data['Booking']))
+				$end_hour = $this->request->data['Booking']['end_hour'];
+			if (isset($end_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $end_hour)) { 
+				$view_tabs = 'a';
+			} else {
+				$end_hour = Utils::toEndDateTime(new DateTime(), 60)->format('H:i');
+			}
+		}
+        $this->request->data['Booking']['end_hour'] = $end_hour;
 
         // set view
         $this->set(compact('view_tabs'));
