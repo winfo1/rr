@@ -45,18 +45,31 @@
                     <div class="form-group">
                         <label><?php echo __('Startzeit'); ?></label>
                         <div class="btn-group" data-toggle="buttons" style="margin: 5px">
-                            <label class="btn btn-default active"><input type="radio" name="data[Room][start_minutes]" value="0" checked><?php echo __('jetzt'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Room][start_minutes]" value="15"><?php echo __('in 15 Min.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Room][start_minutes]" value="30"><?php echo __('in 30 Min.'); ?></label>
+                            <?php
+							echo $this->Form->input('start_minutes', array(
+								'type' => 'radio',
+								'class' => 'btn btn-default',
+								'div' => false,
+								'legend' => false,
+								'hiddenField' => false,
+								'default' => '0',
+								'options' => array('0' => __('jetzt'), '15' => __('in 15 Min.'), '30' => __('in 30 Min.'))));
+							?>
                         </div>
                     </div>
                     <div class="form-group">
                         <label><?php echo __('Dauer'); ?></label>
                         <div class="btn-group" data-toggle="buttons" style="margin: 5px">
-                            <label class="btn btn-default active"><input type="radio" name="data[Room][duration]" value="30" checked><?php echo __('für 30 Min.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Room][duration]" value="60"><?php echo __('für 1 Std.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Room][duration]" value="120"><?php echo __('für 2 Std.'); ?></label>
-                            <label class="btn btn-default"><input type="radio" name="data[Room][duration]" value="1440"><?php echo __('ganztägig'); ?></label>
+                            <?php
+							echo $this->Form->input('duration', array(
+								'type' => 'radio',
+								'class' => 'btn btn-default',
+								'div' => false,
+								'legend' => false,
+								'hiddenField' => false,
+								'default' => '30',
+								'options' => array('30' => __('für 30 Min.'), '60' => __('für 1 Std.'), '120' => __('für 2 Std.'), '1440' => __('ganztägig'))));
+							?>
                         </div>
                     </div>
                 </div>
@@ -81,17 +94,17 @@
                             ?>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <?php echo $this->Form->hidden('day', array('value' => $this->request->data['Room']['day'])); ?>
+                        <?php echo $this->Form->hidden('day'); ?>
                         <label for="RoomStartHour"><?php echo __('Startzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
-                            <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit', 'value' => $this->request->data['Room']['start_hour'])); ?>
+                            <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit')); ?>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
                         </div>
                         <label for="RoomEndHour"><?php echo __('Endzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
-                            <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende', 'value' => $this->request->data['Room']['end_hour'])); ?>
+                            <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende')); ?>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
@@ -146,6 +159,9 @@
 </div>
 
     <script type="text/javascript">
+		var RoomStartHour = $('#RoomStartHour');
+		var RoomEndHour = $('#RoomEndHour');
+    
         $('.form_date').datetimepicker({
             language: 'de',
             weekStart: 1,
@@ -160,12 +176,11 @@
             linkFormat: "yyyy-mm-dd"
         });
 
-        $('#RoomStartHour').change(function() {
+        RoomStartHour.change(function() {
             d = this.value.indexOf(':');
             h1 = this.value.substr(0, d);
             m1 = this.value.substr(d + 1);
 
-            var RoomEndHour = $('#RoomEndHour');
             d = RoomEndHour.val().indexOf(':');
             h2 = RoomEndHour.val().substr(0, d);
             m2 = RoomEndHour.val().substr(d + 1);
@@ -181,12 +196,11 @@
             }
         });
 
-        $('#RoomEndHour').change(function() {
+        RoomEndHour.change(function() {
             d = this.value.indexOf(':');
             h2 = this.value.substr(0, d);
             m2 = this.value.substr(d + 1);
 
-            var RoomStartHour = $('#RoomStartHour');
             d = RoomStartHour.val().indexOf(':');
             h1 = RoomStartHour.val().substr(0, d);
             m1 = RoomStartHour.val().substr(d + 1);
