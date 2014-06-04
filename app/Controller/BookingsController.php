@@ -136,12 +136,12 @@ class BookingsController extends AppController {
 
     /**
      * @param null $room_id i.e. 1
-     * @param null $str_day i.e. 2014-05-01
+     * @param null $day i.e. 2014-05-01
      * @param null $str_start_time i.e. 19-14
      * @param null $str_end_time i.e. 20-14
      * @return bool
      */
-    public function add($room_id = null, $str_day = null, $str_start_time = null, $str_end_time = null) {
+    public function add($room_id = null, $day = null, $str_start_time = null, $str_end_time = null) {
         // set available rooms
         $rooms = $this->Booking->Room->getRoomsFromList();
         $this->set(compact('rooms'));
@@ -163,17 +163,30 @@ class BookingsController extends AppController {
         $view_tabs = 's';
 
         // set default day
-        if (isset($str_day) ) {
+        if (!isset($day)) {
+            $day = $this->request->data['Booking']['day'];
+            if (!isset($day)) {
+            	$day = (new DateTime())->format('Y-m-d');
+            } else {
+				try {
+					$day = (new DateTime($day))->format('Y-m-d');
+					$view_tabs = 'a';
+				} catch (\Exception $e) {
+					$day = (new DateTime())->format('Y-m-d');
+				}
+            }
+        } else {
             try {
-                $day = (new DateTime($str_day))->format('Y-m-d');
+                $day = (new DateTime($day))->format('Y-m-d');
                 $view_tabs = 'a';
             } catch (\Exception $e) {
                 $day = (new DateTime())->format('Y-m-d');
             }
-        } else {
-            $day = (new DateTime())->format('Y-m-d');
         }
-        $this->set(compact('day'));
+        $this->request->data['Booking']['day'] = $day;
+        $this->request->data['Booking']['day_view'] = strftime((WIN ? '%#d' : '%e') . ' %b %Y', strtotime($day));
+        if(WIN)
+			$this->request->data['Booking']['day_view'] = utf8_encode($this->request->data['Booking']['day_view']);
 
         // set default start time
         if (isset($str_start_time) && preg_match("/^[0-9]{1,2}-[0-9]{1,2}$/", $str_start_time)) {

@@ -67,21 +67,17 @@
                         <label for="BookingDayView"><?php echo __('Tag'); ?></label>
                         <div class="input-group date form_date col-md-2" data-date-format="d M yyyy" data-link-field="data[Booking][day_view]">
                             <?php
-                            $val = strftime((WIN ? '%#d' : '%e') . ' %b %Y', strtotime($day));
-                            if(WIN)
-                                $val = utf8_encode($val);
                             echo $this->Form->input('day_view', array(
                                 'type' => 'text',
                                 'div' => false,
                                 'style' => 'width: 100%',
                                 'label' => false,
                                 'size' => '16',
-                                'readonly' => true,
-                                'value' => $val));
+                                'readonly' => true));
                             ?>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                        <?php echo $this->Form->hidden('day', array('value' => $day)); ?>
+                        <?php echo $this->Form->hidden('day'); ?>
                         <label for="BookingStartHour"><?php echo __('Startzeit'); ?></label>
                         <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
                             <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit', 'value' => $start_hour)); ?>
@@ -213,6 +209,9 @@
 <script type="text/javascript">
     var room_details = null;
 
+	var BookingViewTabs = $('#BookingViewTabs');
+	var BookingStartHour = $('#BookingStartHour');
+	var BookingEndHour = $('#BookingEndHour');
 	var BookingRoomId = $('#BookingRoomId');
 
     function readDetails(id) {
@@ -332,8 +331,17 @@
     }
     
     function updateURL() {
+    	var view_tabs = BookingViewTabs.val() == 's';
     	var url = rr_base_url + 'bookings/add/' + BookingRoomId.val() + '/';
+    	if (!view_tabs)
+    	{
+    		url += $('#BookingDay').val() + '/';
+    		url += BookingStartHour.val().replace(":", "-") + '/';
+    		url += BookingEndHour.val().replace(":", "-") + '/';
+    	}
         window.history.pushState("", "", url);
+        $('#BookingAddForm').attr("action", url);
+        
     }
 
     var typeahead = new Bloodhound({
@@ -346,7 +354,8 @@
         }
     });
 
-    $('.form_date').datetimepicker({
+    $('.form_date')
+    .datetimepicker({
         language: 'de',
         weekStart: 1,
         todayBtn: 1,
@@ -357,15 +366,16 @@
         forceParse: 0,
         pickerPosition: 'bottom-left',
         linkField: "BookingDay",
-        linkFormat: "yyyy-mm-dd"
+        linkFormat: "yyyy-mm-dd"})
+    .on('changeDate', function(ev){
+        updateURL();
     });
 
-    $('#BookingStartHour').change(function() {
+    BookingStartHour.change(function() {
         d = this.value.indexOf(':');
         h1 = this.value.substr(0, d);
         m1 = this.value.substr(d + 1);
 
-        var BookingEndHour = $('#BookingEndHour');
         d = BookingEndHour.val().indexOf(':');
         h2 = BookingEndHour.val().substr(0, d);
         m2 = BookingEndHour.val().substr(d + 1);
@@ -381,12 +391,11 @@
         }
     });
 
-    $('#BookingEndHour').change(function() {
+    BookingEndHour.change(function() {
         d = this.value.indexOf(':');
         h2 = this.value.substr(0, d);
         m2 = this.value.substr(d + 1);
 
-        var BookingStartHour = $('#BookingStartHour');
         d = BookingStartHour.val().indexOf(':');
         h1 = BookingStartHour.val().substr(0, d);
         m1 = BookingStartHour.val().substr(d + 1);
@@ -420,10 +429,9 @@
 
     $(document).ready(function () {
 
-        var BookingViewTabs = $('#BookingViewTabs');
-
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
             BookingViewTabs.val($(e.target).attr('href').charAt(1));
+            updateURL();
         });
 
         typeahead.initialize();
