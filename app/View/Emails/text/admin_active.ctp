@@ -16,9 +16,9 @@ Dauer: <?php echo $data['Booking']['duration']; ?> Minuten
 Endzeit: <?php echo $data['Booking']['end']; ?>
 
 
-Ansicht: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $id)); ?>
+Ansicht: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $data['Booking']['id']), true); ?>
 
-Bearbeiten: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $id)); ?>
+Bearbeiten: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'edit', $data['Booking']['id']), true); ?>
 
 
 <?php if (count($interval_booking) > 1) : $count = 0; ?>
@@ -28,11 +28,16 @@ Intervall Buchungen (<?php echo count($interval_booking); ?>):
 
 Buchung <?php echo $count ?>:
 
-Startzeit: <?php echo utf8_encode(strftime('%d %B %Y - %H:%M', $value['start_date']->getTimestamp())); ?>
-
-Endzeit: <?php echo utf8_encode(strftime('%d %B %Y - %H:%M', $value['end_date']->getTimestamp())); ?>
-
 Status: <?php echo $value['status']; ?>
+
+Startzeit: <?php echo MyTime::toReadableDateTime($value['start_date']->getTimestamp(), true); ?>
+
+Endzeit: <?php echo MyTime::toReadableDateTime($value['end_date']->getTimestamp(), true); ?>
+
+
+Ansicht: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $value['id']), true); ?>
+
+Bearbeiten: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'edit', $value['id']), true); ?>
 
 <?php endforeach; ?>
 <?php unset($group); ?>

@@ -2,14 +2,18 @@
 
 $this->Ical->create(Configure::read('display.Short'), 'Alle Buchungen', 'Europe/Berlin');
 
-foreach($bookings as $booking)
-{
+foreach ($bookings as $booking) {
+    $url = $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $booking['Booking']['id']), true);
     $this->Ical->addEvent(
         $booking['Booking']['startdatetime'],
         $booking['Booking']['enddatetime'],
         $booking['Booking']['name'],
-        $booking['User']['username']."\n\n".$this->html->url('/bookings/view/'.$booking['Booking']['id'], true),
-        array('UID'=>$booking['Booking']['id'], 'attach'=>$this->html->url('/bookings/view/'.$booking['Booking']['id'], true), 'organizer'=>$booking['User']['emailaddress'], 'location'=>$booking['Room']['name']));
+        $booking['User']['username'] . "\n\n" . $url,
+        array('UID' => $booking['Booking']['id'],
+            'attach' => $url,
+            'organizer' => $booking['User']['emailaddress'],
+            'url' => $url,
+            'location' => $booking['Room']['name']));
 }
 $this->Ical->render();
 

@@ -7,6 +7,7 @@ App::uses('Booking', 'Model');
 App::uses('CakeEmail', 'Network/Email');
 App::uses('Validation', 'Utility');
 
+App::import('Lib', 'MyTime');
 App::import('Lib', 'Utils');
 
 class BookingsController extends AppController {
@@ -23,11 +24,10 @@ class BookingsController extends AppController {
         'limit' => 25,
     );
 
-    public function beforeFilter()
-    {
+    public function beforeFilter() {
         parent::beforeFilter();
 
-        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'view',                       'cleanUp', 'isBefore', 'edit_silent_status');
+        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'view', 'cleanUp', 'isBefore', 'edit_silent_status');
     }
 
     //</editor-fold>
@@ -40,12 +40,12 @@ class BookingsController extends AppController {
 
     public function isAuthorized($user) {
 
-        if(in_array($this->action, array('add'))) {
+        if (in_array($this->action, array('add'))) {
             return true;
         }
 
-        if(in_array($this->action, array('edit', 'delete'))) {
-            if($this->action == 'delete')
+        if (in_array($this->action, array('edit', 'delete'))) {
+            if ($this->action == 'delete')
                 $id = $this->request->params['pass'][1];
             else
                 $id = $this->request->params['pass'][0];
@@ -56,11 +56,10 @@ class BookingsController extends AppController {
 
         if ($user['role'] == 'admin') {
 
-            if($this->action === 'add')
+            if ($this->action === 'add')
                 return true;
 
-            if(in_array($this->action, array('accept', 'edit', 'reject')))
-            {
+            if (in_array($this->action, array('accept', 'edit', 'reject'))) {
                 $id = $this->request->params['pass'][0];
 
                 if ($this->Booking->isOwnedThroughOrganizationalUnitBy($id, $this->Session->read('Auth.User.organizationalunit_id')))
@@ -70,7 +69,7 @@ class BookingsController extends AppController {
 
         return parent::isAuthorized($user);
     }
-    
+
     public function beforeDetailDisplay() {
         $rooms_all = $this->Booking->Room->getAll();
         $this->set(compact('rooms_all'));
@@ -87,7 +86,7 @@ class BookingsController extends AppController {
     //<editor-fold defaultstate="collapsed" desc="view functions">
 
     public function index($view = null) {
-        if(isset($view) && ($view == 'table')) {
+        if (isset($view) && ($view == 'table')) {
             $this->Paginator->settings = $this->paginate;
             $data = $this->Paginator->paginate('Booking');
             $this->set(compact('data'));
@@ -150,12 +149,12 @@ class BookingsController extends AppController {
         $rooms_keys = array_keys($rooms);
         if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
             if (array_key_exists('Booking', $this->request->data) && array_key_exists('room_id', $this->request->data['Booking']))
-            	$room_id = $this->request->data['Booking']['room_id'];
+                $room_id = $this->request->data['Booking']['room_id'];
             if (!isset($room_id) || !in_array($room_id, $rooms_keys)) {
-				if (count($rooms) > 0)
-					$room_id = $rooms_keys[0];
-				else
-					$room_id = 0;
+                if (count($rooms) > 0)
+                    $room_id = $rooms_keys[0];
+                else
+                    $room_id = 0;
             }
         }
         $this->request->data['Booking']['room_id'] = $room_id;
@@ -166,16 +165,16 @@ class BookingsController extends AppController {
         // set default day
         if (!isset($day)) {
             if (array_key_exists('Booking', $this->request->data) && array_key_exists('day', $this->request->data['Booking']))
-            	$day = $this->request->data['Booking']['day'];
+                $day = $this->request->data['Booking']['day'];
             if (!isset($day)) {
-            	$day = (new DateTime())->format('Y-m-d');
+                $day = (new DateTime())->format('Y-m-d');
             } else {
-				try {
-					$day = (new DateTime($day))->format('Y-m-d');
-					$view_tabs = 'a';
-				} catch (\Exception $e) {
-					$day = (new DateTime())->format('Y-m-d');
-				}
+                try {
+                    $day = (new DateTime($day))->format('Y-m-d');
+                    $view_tabs = 'a';
+                } catch (\Exception $e) {
+                    $day = (new DateTime())->format('Y-m-d');
+                }
             }
         } else {
             try {
@@ -186,38 +185,35 @@ class BookingsController extends AppController {
             }
         }
         $this->request->data['Booking']['day'] = $day;
-        $this->request->data['Booking']['day_view'] = strftime((WIN ? '%#d' : '%e') . ' %b %Y', strtotime($day));
-        if(WIN)
-			$this->request->data['Booking']['day_view'] = utf8_encode($this->request->data['Booking']['day_view']);
 
         // set default start hour
         if (isset($start_hour) && preg_match('/^[0-9]{1,2}-[0-9]{1,2}$/', $start_hour)) {
             $start_hour = str_replace('-', ':', $start_hour);
             $view_tabs = 'a';
         } else {
-			if (array_key_exists('Booking', $this->request->data) && array_key_exists('start_hour', $this->request->data['Booking']))
-				$start_hour = $this->request->data['Booking']['start_hour'];
-			if (isset($start_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $start_hour)) { 
-				$view_tabs = 'a';
-			} else {
-				$start_hour = (new DateTime())->format('H:i');
-			}
-		}
+            if (array_key_exists('Booking', $this->request->data) && array_key_exists('start_hour', $this->request->data['Booking']))
+                $start_hour = $this->request->data['Booking']['start_hour'];
+            if (isset($start_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $start_hour)) {
+                $view_tabs = 'a';
+            } else {
+                $start_hour = (new DateTime())->format('H:i');
+            }
+        }
         $this->request->data['Booking']['start_hour'] = $start_hour;
-        
+
         // set default end hour
         if (isset($end_hour) && preg_match('/^[0-9]{1,2}-[0-9]{1,2}$/', $end_hour)) {
             $end_hour = str_replace('-', ':', $end_hour);
             $view_tabs = 'a';
         } else {
-			if (array_key_exists('Booking', $this->request->data) && array_key_exists('end_hour', $this->request->data['Booking']))
-				$end_hour = $this->request->data['Booking']['end_hour'];
-			if (isset($end_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $end_hour)) { 
-				$view_tabs = 'a';
-			} else {
-				$end_hour = Utils::toEndDateTime(new DateTime(), 60)->format('H:i');
-			}
-		}
+            if (array_key_exists('Booking', $this->request->data) && array_key_exists('end_hour', $this->request->data['Booking']))
+                $end_hour = $this->request->data['Booking']['end_hour'];
+            if (isset($end_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $end_hour)) {
+                $view_tabs = 'a';
+            } else {
+                $end_hour = Utils::toEndDateTime(new DateTime(), 60)->format('H:i');
+            }
+        }
         $this->request->data['Booking']['end_hour'] = $end_hour;
 
         // set view
@@ -227,7 +223,7 @@ class BookingsController extends AppController {
 
             $room_id = $this->request->data['Booking']['room_id'];
 
-            if($this->request->data['Booking']['view_tabs'] == 's') {
+            if ($this->request->data['Booking']['view_tabs'] == 's') {
                 // simple booking-time selection
                 $start = (new DateTime())->modify('+' . $this->request->data['Booking']['start_minutes'] . ' minutes');
                 $end = Utils::toEndDateTime($start, $this->request->data['Booking']['duration'], $this->request->data['Booking']['duration']);
@@ -385,25 +381,21 @@ class BookingsController extends AppController {
                 $this->request->data['Booking']['group_id'] = $group_id;
                 $this->request->data['Booking']['status'] = $this->getStatusFromDate($approval_horizon, $end, $approval_horizon_max_date);
                 $this->request->data['Booking']['startdatetime'] = $start->format('Y-m-d H:i:s');
-                $val = strftime('%d %B %Y - %H:%M', $start->getTimestamp());
-                if(WIN)
-                    $val = utf8_encode($val);
-                $this->request->data['Booking']['start'] = $val;
+                $this->request->data['Booking']['start'] = MyTime::toReadableDateTime($start->getTimestamp(), true);
                 $this->request->data['Booking']['enddatetime'] = $end->format('Y-m-d H:i:s');
-                $val = strftime('%d %B %Y - %H:%M', $end->getTimestamp());
-                if(WIN)
-                    $val = utf8_encode($val);
-                $this->request->data['Booking']['end'] = $val;
+                $this->request->data['Booking']['end'] = MyTime::toReadableDateTime($end->getTimestamp(), true);
 
                 $this->Booking->create();
                 if ($this->Booking->save($this->request->data)) {
-                	
+
                     $this->Session->setFlash(__('Die Buchung wurde angenommen'), 'alert', array(
                         'plugin' => 'BoostCake',
                         'class' => 'alert-success'
                     ));
-                    
-                    $this->emailAdmin($this->Booking->id, $this->request->data, $room[0], $interval_booking);
+
+                    $this->request->data['Booking']['id'] = $this->Booking->id;
+
+                    $this->emailAdmin($this->request->data, $room[0], $interval_booking);
 
                     $this->redirect(array('action' => 'view', $this->Booking->id));
                     return true;
@@ -432,17 +424,17 @@ class BookingsController extends AppController {
         if (!$this->Booking->exists()) {
             throw new NotFoundException(__('Buchung nicht gefunden'));
         }
-        
+
         if ($this->request->is('post') || $this->request->is('put')) {
 
             if (array_key_exists('submit_all', $this->request->data)) {
                 $hasErrorInIntervalLoop = false;
 
-				$groups = array();
-        		if ($this->request->data['Booking']['group_id'] != 0) {
-            		$groups = $this->Booking->getBookingsGroupNames($this->request->data['Booking']['group_id']);
-            		$this->set(compact('groups'));
-        		}
+                $groups = array();
+                if ($this->request->data['Booking']['group_id'] != 0) {
+                    $groups = $this->Booking->getBookingsGroupNames($this->request->data['Booking']['group_id']);
+                    $this->set(compact('groups'));
+                }
 
                 $blocked = array();
                 foreach ($groups as $group) {
@@ -455,8 +447,7 @@ class BookingsController extends AppController {
 
                         // $group['Booking']['startdatetime']
 
-                        if ($this->Booking->inUse($group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $group['Booking']['id'], true, $blocked))
-                        {
+                        if ($this->Booking->inUse($group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $group['Booking']['id'], true, $blocked)) {
                             // TODO: group edit
                         }
                     }
@@ -464,8 +455,7 @@ class BookingsController extends AppController {
             }
 
             $blocked = array();
-            if ($this->Booking->inUse($this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $id, true, $blocked))
-            {
+            if ($this->Booking->inUse($this->request->data['Booking']['startdatetime'], $this->request->data['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $id, true, $blocked)) {
                 $this->Session->setFlash(__('Diese Buchung kann nicht in dem neuen Zeitraum stattfinden, da dort bereits andere Buchungen sind.'), 'alert', array(
                     'plugin' => 'BoostCake',
                     'class' => 'alert-danger'
@@ -550,6 +540,30 @@ class BookingsController extends AppController {
         return false;
     }
 
+    public function deny($id = null) {
+        $this->Booking->id = $id;
+        if (!$this->Booking->exists()) {
+            throw new NotFoundException(__('Buchung nicht gefunden'));
+        }
+        $this->Booking->set('status', Booking::active_denied);
+        if ($this->Booking->save()) {
+            $this->Session->setFlash(__('Buchung verweigert'), 'alert', array(
+                'plugin' => 'BoostCake',
+                'class' => 'alert-success'
+            ));
+
+            $this->emailUser_deny($this->Booking->getAll($id)[0]);
+
+            $this->redirect(array('action' => 'index'));
+            return true;
+        }
+        $this->Session->setFlash(__('Buchung konnte nicht verweigert werden'), 'alert', array(
+            'plugin' => 'BoostCake',
+            'class' => 'alert-danger'
+        ));
+        return false;
+    }
+
     public function reject($id = null) {
         $this->Booking->id = $id;
         if (!$this->Booking->exists()) {
@@ -561,6 +575,9 @@ class BookingsController extends AppController {
                 'plugin' => 'BoostCake',
                 'class' => 'alert-success'
             ));
+
+            $this->emailUser_reject($this->Booking->getAll($id)[0]);
+
             $this->redirect(array('action' => 'index'));
             return true;
         }
@@ -574,7 +591,7 @@ class BookingsController extends AppController {
     public function view($id = null) {
         $this->request->data = $this->Booking->getAll($id)[0];
 
-        if(!isset($this->request->data) || count($this->request->data) == 0) {
+        if (!isset($this->request->data) || count($this->request->data) == 0) {
             throw new NotFoundException(__('Buchung nicht gefunden'));
         }
 
@@ -594,8 +611,7 @@ class BookingsController extends AppController {
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    public function getBookings($filterType = 'all', $filterID = '0')
-    {
+    public function getBookings($filterType = 'all', $filterID = '0') {
         $conditions = array();
 
         switch ($filterType) {
@@ -615,8 +631,7 @@ class BookingsController extends AppController {
         ));
     }
 
-    public function cleanUp()
-    {
+    public function cleanUp() {
         $organizationalunits = $this->Booking->Room->Organizationalunit->getAll();
 
         $bookings = $this->Booking->find('all', array(
@@ -627,11 +642,9 @@ class BookingsController extends AppController {
 
         $inConcurredList = function ($booking_id, $concurred_list) {
 
-            foreach($concurred_list as $concurred)
-            {
-                foreach($concurred as $value)
-                {
-                    if($booking_id == $value['Booking']['id'])
+            foreach ($concurred_list as $concurred) {
+                foreach ($concurred as $value) {
+                    if ($booking_id == $value['Booking']['id'])
                         return true;
                 }
             }
@@ -651,10 +664,8 @@ class BookingsController extends AppController {
             $approval_horizon = 0;
             $approval_automatic = 0;
 
-            foreach ($organizationalunits as $organizationalunit)
-            {
-                if($organizationalunit['Organizationalunit']['id'] == $organizational_unit_id)
-                {
+            foreach ($organizationalunits as $organizationalunit) {
+                if ($organizationalunit['Organizationalunit']['id'] == $organizational_unit_id) {
                     $approval_horizon = $organizationalunit['Organizationalunit']['approval_horizon'];
                     $approval_automatic = $organizationalunit['Organizationalunit']['approval_automatic'];
 
@@ -665,15 +676,11 @@ class BookingsController extends AppController {
             $approval_horizon_max_date = new DateTime();
             $approval_horizon_max_date->modify('+' . $approval_horizon . ' week');
 
-            if($end < $now)
-            {
+            if ($end < $now) {
                 $this->edit_silent_status($booking['Booking']['id'], Booking::archived);
-            }
-            else if($approval_automatic && ($status == Booking::planned) && $this->isBefore($start, $approval_horizon_max_date) && !$inConcurredList($booking['Booking']['id'], $concurred))
-            {
+            } else if ($approval_automatic && ($status == Booking::planned) && $this->isBefore($start, $approval_horizon_max_date) && !$inConcurredList($booking['Booking']['id'], $concurred)) {
                 $blocked = array();
-                if ($this->Booking->inUse($booking['Booking']['startdatetime'], $booking['Booking']['enddatetime'], $booking['Booking']['room_id'], $booking['Booking']['id'], false, $blocked))
-                {
+                if ($this->Booking->inUse($booking['Booking']['startdatetime'], $booking['Booking']['enddatetime'], $booking['Booking']['room_id'], $booking['Booking']['id'], false, $blocked)) {
                     $blocked_block = array($booking);
                     foreach ($blocked as $value) {
                         $this->edit_silent_status($value['Booking']['id'], Booking::planning_concurred);
@@ -682,16 +689,13 @@ class BookingsController extends AppController {
                     $this->edit_silent_status($booking['Booking']['id'], Booking::planning_concurred);
 
                     $concurred[] = $blocked_block;
-                }
-                else
-                {
+                } else {
                     $this->edit_silent_status($booking['Booking']['id'], Booking::active);
                 }
             }
         }
 
-        if(count($concurred) > 0)
-        {
+        if (count($concurred) > 0) {
             // TODO: send email to admin
         }
 
@@ -706,8 +710,7 @@ class BookingsController extends AppController {
 
     //<editor-fold defaultstate="collapsed" desc="helper functions">
 
-    private function add_silent($room_id, $user_id, $group_id, $name, $status, $startdatetime, $enddatetime, &$id)
-    {
+    private function add_silent($room_id, $user_id, $group_id, $name, $status, $startdatetime, $enddatetime, &$id) {
         $this->Booking->create();
         $this->Booking->set('room_id', $room_id);
         $this->Booking->set('user_id', $user_id);
@@ -725,8 +728,7 @@ class BookingsController extends AppController {
         return false;
     }
 
-    private function edit_silent($id, $room_id, $name, $startdatetime, $enddatetime)
-    {
+    private function edit_silent($id, $room_id, $name, $startdatetime, $enddatetime) {
         $this->Booking->id = $id;
         $this->Booking->set('room_id', $room_id);
         $this->Booking->set('name', $name);
@@ -740,8 +742,7 @@ class BookingsController extends AppController {
         return false;
     }
 
-    private function edit_silent_status($id, $status)
-    {
+    private function edit_silent_status($id, $status) {
         $this->Booking->id = $id;
         $this->Booking->set('status', $status);
 
@@ -752,8 +753,7 @@ class BookingsController extends AppController {
         return false;
     }
 
-    private function delete_silent($id)
-    {
+    private function delete_silent($id) {
         $this->Booking->id = $id;
 
         if ($this->Booking->delete()) {
@@ -764,49 +764,47 @@ class BookingsController extends AppController {
     }
 
     /*
-    * $this->emailAdmin($this->Booking->id, $this->request->data, $room[0], $interval_booking);
+    * $this->emailAdmin($this->request->data, $room[0], $interval_booking);
     */
 
-    private function emailAdmin($id, $data, $room, $interval_booking) {
+    private function emailAdmin($data, $room, $interval_booking) {
         $admins = $this->Booking->User->getUsersFromOrganizationalUnitId($room['Room']['organizationalunit_id']);
 
         foreach ($admins as $admin) {
 
             if (($admin['User']['role'] == 'admin') && (($admin['User']['admin_email_every_booking']) || ($admin['User']['admin_email_every_booking_plan']))) {
                 if (!Validation::email($admin['User']['emailaddress'])) {
-                    $this->Session->setFlash(__('Es wurde keine E-Mail an den/die Verwalter dieses Raumes geschickt, weil dieser keine E-Mail-Adresse in seinen Profileinstellungen hinterlegt hat. Informieren Sie ihn Bitte darüber'), 'alert', array(
+                    $this->Session->setFlash(__('Es wurde keine E-Mail an einen Verwalter dieses Raumes geschickt, weil dieser keine E-Mail-Adresse in seinen Profileinstellungen hinterlegt hat. Informieren Sie ihn Bitte darüber'), 'alert', array(
                         'plugin' => 'BoostCake',
                         'class' => 'alert-info'
                     ), 'info');
-                    return false;
+                    break;
                 }
 
                 $title = Configure::read('display.Short') . ': ';
 
                 if ($admin['User']['admin_email_every_booking']) {
-                    $title .= 'Reservering von ' . $this->Session->read('Auth.User.username') . ' für ' . $room['Room']['name'] . ' am ' . $data['Booking']['start'] . ($data['Booking']['full_time'] ? ' (ganztägig)' : '');
+                    $title .= 'Reservering von ' . $this->Session->read('Auth.User.username') . ' für ' . $room['Room']['name'] . ' am ' . $data['Booking']['start'];
 
-/*
+                    if (Configure::read('debug') > 2) {
+                        $this->layout = 'emails/text/default';
+                        $this->set('room', $room);
+                        $this->set('admin', $admin);
+                        $this->set('data', $data);
+                        $this->set('email_heading', 'Welcome to My App');
+                        $this->set('interval_booking', $interval_booking);
+                        return $this->render('/emails/text/admin_active');
+                    } else {
+                        $email = new CakeEmail('smtp');
+                        $email->template('admin_active', 'default')
+                            ->replyTo(Configure::read('display.Support'))
+                            ->to($admin['User']['emailaddress'])
+                            ->subject($title)
+                            ->viewVars(array('data' => $data, 'admin' => $admin, 'room' => $room, 'interval_booking' => $interval_booking))
+                            ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                            ->send();
+                    }
 
-                $this->layout = 'emails/text/default';
-                $this->set('id', $id);
-                $this->set('interval_booking', $interval_booking);
-                $this->set('room', $room);
-                $this->set('admin', $admin);
-                $this->set('data', $data);
-                $this->set('email_heading', 'Welcome to My App');
-                return $this->render('/emails/text/admin_active');
-                
-*/
-
-                    $email = new CakeEmail('smtp');
-                    $email->template('admin_active', 'default')
-                        ->replyTo(Configure::read('display.Support'))
-                        ->to($admin['User']['emailaddress'])
-                        ->subject($title)
-                        ->viewVars(array('id' => $id, 'data' => $data, 'admin' => $admin, 'room' => $room, 'interval_booking' => $interval_booking))
-                        ->helpers(array('Html', 'Text', 'Time'))
-                        ->send();
                 } elseif (isset($interval_booking)) {
                     $hasplan = false;
                     $first_plan = null;
@@ -821,16 +819,27 @@ class BookingsController extends AppController {
                     }
 
                     if ($hasplan) {
-                        $title .= 'Planungsreservierung von ' . $this->Session->read('Auth.User.username') . ' für ' . $room['Room']['name'] . ' beginnend mit ' . $first_plan['start_date'] . ($data['Booking']['full_time'] ? ' (ganztägig)' : '');
+                        $title .= 'Planungsreservierung von ' . $this->Session->read('Auth.User.username') . ' für ' . $room['Room']['name'] . ' beginnend mit ' . $first_plan['start_date'];
 
-                        $Email = new CakeEmail('smtp');
-                        $Email->template('admin_planed', 'default')
-                            ->replyTo(Configure::read('display.Support'))
-                            ->to($admin['User']['emailaddress'])
-                            ->subject($title)
-                            ->viewVars(array('id' => $id, 'data' => $data, 'admin' => $admin, 'room' => $room, 'interval_booking' => $interval_booking))
-                            ->helpers(array('Html', 'Text', 'Time'))
-                            ->send();
+                        if (Configure::read('debug') > 2) {
+                            $this->layout = 'emails/text/default';
+                            $this->set('room', $room);
+                            $this->set('admin', $admin);
+                            $this->set('data', $data);
+                            $this->set('email_heading', 'Welcome to My App');
+                            $this->set('interval_booking', $interval_booking);
+                            return $this->render('/emails/text/admin_planed');
+                        } else {
+                            $Email = new CakeEmail('smtp');
+                            $Email->template('admin_planed', 'default')
+                                ->replyTo(Configure::read('display.Support'))
+                                ->to($admin['User']['emailaddress'])
+                                ->subject($title)
+                                ->viewVars(array('data' => $data, 'admin' => $admin, 'room' => $room, 'interval_booking' => $interval_booking))
+                                ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                                ->send();
+                        }
+
                     }
                 }
             }
@@ -840,6 +849,61 @@ class BookingsController extends AppController {
 
         return true;
     }
+
+    private function emailUser_deny($data) {
+
+        $title = Configure::read('display.Short') . ': ';
+
+        if ($data['User']['user_email_if_active_gets_rejected']) {
+
+            $title .= 'Verweigerung der Buchung vom ' . MyTime::toReadableDateTime(strtotime($data['Booking']['startdatetime']), true);
+
+            if (Configure::read('debug') > 2) {
+                $this->layout = 'emails/text/default';
+                $this->set('data', $data);
+                return $this->render('/emails/text/user_deny');
+            } else {
+                $email = new CakeEmail('smtp');
+                $email->template('user_deny', 'default')
+                    ->replyTo(Configure::read('display.Support'))
+                    ->to($data['User']['emailaddress'])
+                    ->subject($title)
+                    ->viewVars(array('data' => $data))
+                    ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                    ->send();
+            }
+
+        }
+        return true;
+    }
+
+    private function emailUser_reject($data) {
+
+        $title = Configure::read('display.Short') . ': ';
+
+        if ($data['User']['user_email_if_plan_gets_rejected']) {
+
+            $title .= 'Ablehnung der Planung vom ' . MyTime::toReadableDateTime(strtotime($data['Booking']['startdatetime']), true);
+
+            if (Configure::read('debug') > 2) {
+                $this->layout = 'emails/text/default';
+                $this->set('data');
+                return $this->render('/emails/text/user_reject');
+            } else {
+                $email = new CakeEmail('smtp');
+                $email->template('user_reject', 'default')
+                    ->replyTo(Configure::read('display.Support'))
+                    ->to($data['User']['emailaddress'])
+                    ->subject($title)
+                    ->viewVars(array('data' => $data))
+                    ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                    ->send();
+            }
+
+        }
+        return true;
+    }
+
 
     private function getIntervalCountFromEndDate(DateTime $end, DateTime $interval_end, $interval_iteration, $interval_precise_end = false) {
         $days_diff = $interval_end->diff($end)->days;

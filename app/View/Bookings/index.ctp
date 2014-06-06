@@ -71,13 +71,17 @@
                                 ($this->Session->read('Auth.User.role') == 'root') ||
                                 (($this->Session->read('Auth.User.role') == 'admin') && ($this->Session->read('Auth.User.organizationalunit_id') == $booking['Room']['organizationalunit_id']))
                             ) {
-                                if ($booking['Booking']['status'] != Booking::planning_rejected) {
+                                if (in_array($booking['Booking']['status'], array(Booking::planned, Booking::planning_concurred)) && ($booking['Booking']['status'] != Booking::planning_rejected)) {
                                     echo ' | ';
 
                                     echo $this->Html->link("Absagen", array('action' => 'reject', $booking['Booking']['id']));
+                                } else if(in_array($booking['Booking']['status'], array(Booking::active)) && ($booking['Booking']['status'] != Booking::active_denied)) {
+                                    echo ' | ';
+
+                                    echo $this->Html->link("Verweigern", array('action' => 'deny', $booking['Booking']['id']));
                                 }
 
-                                if (in_array($booking['Booking']['status'], array(Booking::planned, Booking::planning_rejected))) {
+                                if (in_array($booking['Booking']['status'], array(Booking::active_denied, Booking::planned, Booking::planning_rejected))) {
                                     echo ' | ';
 
                                     echo $this->Html->link("Zusagen", array('action' => 'accept', $booking['Booking']['id']));

@@ -18,11 +18,14 @@ Intervall Buchungen:
 
 Buchung <?php echo $count ?>:
 
-Startzeit: <?php echo utf8_encode(strftime('%d %B %Y - %H:%M', $value['start_date']->getTimestamp())); ?>
+Startzeit: <?php echo MyTime::toReadableDateTime($value['start_date']->getTimestamp(), true); ?>
 
-Endzeit: <?php echo utf8_encode(strftime('%d %B %Y - %H:%M', $value['end_date']->getTimestamp())); ?>
+Endzeit: <?php echo MyTime::toReadableDateTime($value['end_date']->getTimestamp(), true); ?>
 
-Status: <?php echo $value['status']; ?>
+
+Ansicht: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $value['id']), true); ?>
+
+Bearbeiten: <?php echo $this->Html->url(array('controller' => 'bookings', 'action' => 'edit', $value['id']), true); ?>
 
 <?php endif; ?>
 <?php endforeach; ?>

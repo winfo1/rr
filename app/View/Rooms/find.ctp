@@ -80,9 +80,6 @@
                         <label for="RoomDayView"><?php echo __('Tag'); ?></label>
                         <div class="input-group date form_date col-md-2" data-date-format="d M yyyy" data-link-field="data[Room][day_view]">
                             <?php
-                            $val = strftime((WIN ? '%#d' : '%e') . ' %b %Y', strtotime($this->request->data['Room']['day']));
-                            if(WIN)
-                                $val = utf8_encode($val);
                             echo $this->Form->input('day_view', array(
                                 'type' => 'text',
                                 'div' => false,
@@ -90,7 +87,7 @@
                                 'label' => false,
                                 'size' => '16',
                                 'readonly' => true,
-                                'value' => $val));
+                                'value' => $this->mytime->toReadableDate(strtotime($this->request->data['Room']['day']))));
                             ?>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>

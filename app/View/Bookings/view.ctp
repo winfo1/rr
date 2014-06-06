@@ -19,11 +19,7 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
         </h1>
         <h4>
             <?php
-            $val = strftime('%d %B %Y', $start->getTimestamp());
-            if(WIN)
-                $val = utf8_encode($val);
-
-            echo $val . ' ' . $start->format('H:i') . '-' . $end->format('H:i'); ?>
+            echo $this->mytime->toReadableDate($start->getTimestamp(), true) . ' ' . $start->format('H:i') . '-' . $end->format('H:i'); ?>
         </h4>
         <h3>
             <span class="label label-<?php echo $this->status->toBootstrap($this->request->data['Booking']['status']); ?>" style=""><?php echo $this->request->data['Booking']['status']; ?></span>

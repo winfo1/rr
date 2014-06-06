@@ -32,18 +32,15 @@
         <div class="form-group">
             <label for="BookingStart" class="control-label"><?php echo __('Startzeit'); ?></label>
 
-            <div class="input-group date form_datetime" data-date-format="dd MM yyyy - HH:ii" data-link-field="data[Booking][start]">
+            <div class="input-group date form_datetime" data-date-format="d MM yyyy - HH:ii" data-link-field="data[Booking][start]">
                 <?php
-                $val = strftime('%d %B %Y - %H:%M', (new DateTime($this->request->data['Booking']['startdatetime']))->getTimestamp());
-                if(WIN)
-                    $val = utf8_encode($val);
                 echo $this->Form->input('start', array(
                     'type' => 'text',
                     'div' => false,
                     'class' => 'form-control',
                     'label' => false,
                     'readonly' => true,
-                    'value' => $val));
+                    'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Booking']['startdatetime']))->getTimestamp(), true)));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
@@ -53,18 +50,15 @@
         <div class="form-group">
             <label for="BookingEnd" class="control-label"><?php echo __('Endzeit'); ?></label>
 
-            <div class="input-group date form_end_date col-md-12" data-date-format="dd MM yyyy - HH:ii" data-link-field="data[Booking][BookingEnd]">
+            <div class="input-group date form_end_date col-md-12" data-date-format="d MM yyyy - HH:ii" data-link-field="data[Booking][BookingEnd]">
                 <?php
-                $val = strftime('%d %B %Y - %H:%M', (new DateTime($this->request->data['Booking']['enddatetime']))->getTimestamp());
-                if(WIN)
-                    $val = utf8_encode($val);
                 echo $this->Form->input('end', array(
                     'type'  => 'text',
                     'div' => false,
                     'class' => 'form-control',
                     'label' => false,
                     'readonly' => true,
-                    'value' => $val));
+                    'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Booking']['enddatetime']))->getTimestamp(), true)));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
@@ -109,12 +103,13 @@
                 ($this->Session->read('Auth.User.role') == 'root') ||
                 (($this->Session->read('Auth.User.role') == 'admin') && ($this->Session->read('Auth.User.organizationalunit_id') == $this->request->data['Room']['organizationalunit_id'])))
             {
-                if($this->request->data['Booking']['status'] != Booking::planning_rejected)
-                {
+                if (in_array($this->request->data['Booking']['status'], array(Booking::planned, Booking::planning_concurred)) && ($this->request->data['Booking']['status'] != Booking::planning_rejected)) {
                     echo $this->Html->link('<i class="glyphicon glyphicon-remove-sign"></i> ' . __('Absagen'), array('action' => 'reject', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
+                } else if(in_array($this->request->data['Booking']['status'], array(Booking::active)) && ($this->request->data['Booking']['status'] != Booking::active_denied)) {
+                    echo $this->Html->link('<i class="glyphicon glyphicon-remove-sign"></i> ' . __('Verweigern'), array('action' => 'deny', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
                 }
 
-                if(in_array($this->request->data['Booking']['status'], array(Booking::planned, Booking::planning_rejected)))
+                if(in_array($this->request->data['Booking']['status'], array(Booking::active_denied, Booking::planned, Booking::planning_rejected)))
                 {
                     echo $this->Html->link('<i class="glyphicon glyphicon-ok-sign"></i> ' . __('Zusagen'), array('action' => 'accept', $this->params['pass'][0]), array('class' => 'btn btn-success btn-sm', 'escape' => false, 'div' => false));
                 }

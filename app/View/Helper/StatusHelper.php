@@ -9,6 +9,7 @@ class StatusHelper extends AppHelper{
                 return 'event-success';
             case Booking::planned:
                 return 'event-info';
+            case Booking::active_denied:
             case Booking::planning_concurred:
             case Booking::planning_rejected:
                 return 'event-important';
@@ -25,6 +26,7 @@ class StatusHelper extends AppHelper{
                 return 'success';
             case Booking::planned:
                 return 'primary';
+            case Booking::active_denied:
             case Booking::planning_concurred:
             case Booking::planning_rejected:
                 return 'danger';

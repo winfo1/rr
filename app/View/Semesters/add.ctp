@@ -24,15 +24,13 @@
 
             <div class="input-group date form_start_date" data-date-format="dd MM yyyy" data-link-field="data[Semester][startdate]">
                 <?php
-                $val = strftime('%d %B %Y');
-                if (WIN)
-                    $val = utf8_encode($val);
+                $default_start_date = strtotime("now");
                 echo $this->Form->input('startdate', array(
                     'type' => 'text',
                     'div' => false,
                     'label' => false,
                     'readonly' => true,
-                    'value' => $val));
+                    'value' => $this->mytime->toReadableDate($default_start_date, true)));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -41,7 +39,7 @@
             if ($this->Form->isFieldError('start')) {
                 echo $this->Form->error('start');
             }
-            echo $this->Form->hidden('start', array('value' => date('Y-m-d')));
+            echo $this->Form->hidden('start', array('value' => date('Y-m-d', $default_start_date)));
             ?>
         </div>
         <div class="form-group">
@@ -49,15 +47,13 @@
 
             <div class="input-group date form_end_date" data-date-format="dd MM yyyy" data-link-field="data[Semester][enddate]">
                 <?php
-                $val = strftime('%d %B %Y', strtotime("+3 months"));
-                if (WIN)
-                    $val = utf8_encode($val);
+                $default_end_date = strtotime("+3 months");
                 echo $this->Form->input('enddate', array(
                     'type' => 'text',
                     'div' => false,
                     'label' => false,
                     'readonly' => true,
-                    'value' => $val));
+                    'value' => $this->mytime->toReadableDate($default_end_date, true)));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -66,7 +62,7 @@
             if ($this->Form->isFieldError('end')) {
                 echo $this->Form->error('end');
             }
-            echo $this->Form->hidden('end', array('value' => date('Y-m-d', strtotime('+3 months'))));
+            echo $this->Form->hidden('end', array('value' => date('Y-m-d', $default_end_date)));
             ?>
         </div>
     </fieldset>

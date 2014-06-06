@@ -12,6 +12,7 @@ class Booking extends AppModel {
     public $belongsTo = array('Room', 'User');
 
     const active = 'active';
+    const active_denied = 'active_denied';
     const planned = 'planned';
     const planning_concurred = 'planning_concurred';
     const planning_rejected = 'planning_rejected';
@@ -32,7 +33,7 @@ class Booking extends AppModel {
         ),
         'status' => array(
             'valid' => array(
-                'rule' => array('inList', array(self::active, self::planned, self::planning_concurred, self::planning_rejected, self::archived)),
+                'rule' => array('inList', array(self::active, self::active_denied, self::planned, self::planning_concurred, self::planning_rejected, self::archived)),
                 'message' => 'Bitte einen gültigen Status eintragen',
                 'allowEmpty' => false
             )

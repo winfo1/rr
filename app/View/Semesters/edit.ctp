@@ -24,15 +24,12 @@
 
             <div class="input-group date form_start_date" data-date-format="dd MM yyyy" data-link-field="data[Semester][startdate]">
                 <?php
-                $val = strftime('%d %B %Y', (new DateTime($this->request->data['Semester']['start']))->getTimestamp());
-                if (WIN)
-                    $val = utf8_encode($val);
                 echo $this->Form->input('startdate', array(
                     'type' => 'text',
                     'div' => false,
                     'label' => false,
                     'readonly' => true,
-                    'value' => $val));
+                    'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Semester']['start']))->getTimestamp(), true)));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -49,15 +46,12 @@
 
             <div class="input-group date form_end_date" data-date-format="dd MM yyyy" data-link-field="data[Semester][enddate]">
                 <?php
-                $val = strftime('%d %B %Y', (new DateTime($this->request->data['Semester']['end']))->getTimestamp());
-                if (WIN)
-                    $val = utf8_encode($val);
                 echo $this->Form->input('enddate', array(
                     'type' => 'text',
                     'div' => false,
                     'label' => false,
                     'readonly' => true,
-                    'value' => $val));
+                    'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Semester']['end']))->getTimestamp(), true)));
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>

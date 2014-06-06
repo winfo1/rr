@@ -73,7 +73,8 @@
                                 'style' => 'width: 100%',
                                 'label' => false,
                                 'size' => '16',
-                                'readonly' => true));
+                                'readonly' => true,
+                                'value' => $this->mytime->toReadableDate(strtotime($this->request->data['Booking']['day']))));
                             ?>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
@@ -159,22 +160,20 @@
 						?>
                     </span>
 
-                    <div class="input-group date form_end_date" style="width: 100%" data-date-format="dd MM yyyy" data-link-field="data[Booking][interval_date]">
+                    <div class="input-group date form_end_date" style="width: 100%" data-date-format="d MM yyyy" data-link-field="data[Booking][interval_date]">
                         <?php
-                        $val = strftime('%d %B %Y', strtotime("+2 weeks"));
-                        if(WIN)
-                            $val = utf8_encode($val);
+                        $default_end_date = strtotime("+2 weeks");
                         echo $this->Form->input('interval_date', array(
                             'type' => 'text',
                             'label' => false,
-                            'default' => $val,
+                            'default' => $this->mytime->toReadableDate($default_end_date, true),
                             'disabled' => true,
                             'readonly' => true));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
-                <?php echo $this->Form->hidden('interval_end', array('default' => date('Y-m-d', strtotime("+2 weeks")))); ?>
+                <?php echo $this->Form->hidden('interval_end', array('default' => date('Y-m-d', $default_end_date))); ?>
             </div>
             <div class="form-group">
                 <div class="input-group">
