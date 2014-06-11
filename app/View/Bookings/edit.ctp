@@ -1,13 +1,18 @@
 <?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
 <div class="container">
-<?php echo $this->Form->create('Booking', array(
-    'class' => 'well',
-    'inputDefaults' => array(
-        'div' => 'form-group',
-        'wrapInput' => false,
-        'class' => 'form-control',
-    )
-)); ?>
+    <ol class="breadcrumb well well-sm">
+        <li><?php echo __('Verwaltung'); ?></li>
+        <li><?php echo $this->Html->link('Buchungen', array('action' => 'index')); ?></li>
+        <li class="active"><?php echo __('Buchung bearbeiten'); ?></li>
+    </ol>
+    <?php echo $this->Form->create('Booking', array(
+        'class' => 'well',
+        'inputDefaults' => array(
+            'div' => 'form-group',
+            'wrapInput' => false,
+            'class' => 'form-control',
+        )
+    )); ?>
     <h1><?php echo __('Buchung ändern'); ?></h1>
     <fieldset>
         <legend><?php echo __('Hier können Sie die Daten des Buchung bearbeiten'); ?></legend>
