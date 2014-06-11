@@ -4,7 +4,7 @@ $out = array();
 foreach($bookings as $booking) {
     $out[] = array(
         'id' => $booking['Booking']['id'],
-        'title' => $booking['Room']['name'] . ' ' . $booking['Booking']['name'] . ' (' . $booking['User']['username'] . ')',
+        'title' => $this->Time->format('d.m', $booking['Booking']['startdatetime']) . ' ' . $booking['Room']['name'] . ' ' . $booking['Booking']['name'] . ' (' . $booking['User']['username'] . ')',
         'url' =>  $this->Html->url(array('controller' => 'bookings', 'action' => 'view', $booking['Booking']['id'])),
         'class' => $this->status->toCalendar($booking['Booking']['status']),
         'start' => strtotime($booking['Booking']['startdatetime']) . '000',
