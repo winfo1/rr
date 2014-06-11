@@ -35,8 +35,8 @@ class AjaxController extends AppController {
     }
 
     public function calendar_events($filterType = 'all', $filterID = '0') {
-
-        $bookings = $this->requestAction('/bookings/getBookings', array('pass' => array($filterType, $filterID)));
+        $this->loadModel('Booking');
+        $bookings = $this->Booking->getBookings($filterType, $filterID);
         $this->set(compact('bookings'));
     }
 

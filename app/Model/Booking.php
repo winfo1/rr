@@ -83,6 +83,35 @@ class Booking extends AppModel {
     }
 
     /**
+     * @param string $filterType
+     * @param string $filterID
+     * @return mixed
+     */
+    public function getBookings($filterType = 'all', $filterID = '0') {
+        $conditions = array();
+
+        switch ($filterType) {
+            case 'room':
+                if ($filterID != 0) {
+                    $conditions['Booking.room_id'] = $filterID;
+                }
+                break;
+            case 'ou':
+            case 'organizationalunit':
+                if ($filterID != 0) {
+                    $conditions['Room.organizationalunit_id'] = $filterID;
+                }
+                break;
+            default:
+                ;
+        }
+
+        return $this->find('all', array(
+            'conditions' => $conditions
+        ));
+    }
+
+    /**
      * @param $group_id
      * @return array
      */

@@ -619,26 +619,6 @@ class BookingsController extends AppController {
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
 
-    public function getBookings($filterType = 'all', $filterID = '0') {
-        $conditions = array();
-
-        switch ($filterType) {
-            case 'room':
-                $conditions['Booking.room_id'] = $filterID;
-                break;
-            case 'ou':
-            case 'organizationalunit':
-                $conditions['Room.organizationalunit_id'] = $filterID;
-                break;
-            default:
-                ;
-        }
-
-        return $this->Booking->find('all', array(
-            'conditions' => $conditions
-        ));
-    }
-
     public function cleanUp() {
         $organizationalunits = $this->Booking->Room->Organizationalunit->getAll();
 
