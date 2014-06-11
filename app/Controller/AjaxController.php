@@ -40,6 +40,10 @@ class AjaxController extends AppController {
         $this->set(compact('bookings'));
     }
 
+    public function check_booked() {
+        // TODO: implement bookings controller buildInterval for ajax check in add function
+    }
+
     public function room_details($id) {
         $this->loadModel('Room');
         $details = $this->Room->getAll($id);

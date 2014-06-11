@@ -246,82 +246,36 @@ class BookingsController extends AppController {
             $group_id = 0;
             if ($interval_iteration) {
                 $group_id = $this->Booking->getNextAutoIncrement();
-
                 $interval_type = $this->request->data['Booking']['interval_type'];
-                $interval_count = 0;
 
+                $interval_value = array();
                 switch ($interval_type) {
 
                     case 'A': // after
-                        $interval_count = $this->request->data['Booking']['interval_count'];
-
-                        $interval_end = (new DateTime($end->format('Y-m-d H:i:s')))->modify('+' . $interval_iteration * $interval_count . ' day');
+                        $interval_value['interval_count'] = $this->request->data['Booking']['interval_count'];
                         break;
                     case 'B': // date
-                        $interval_end = new DateTime($this->request->data['Booking']['interval_end']);
-                        $interval_count = $this->getIntervalCountFromEndDate($end, $interval_end, $interval_iteration);
+                        $interval_value['interval_end'] = new DateTime($this->request->data['Booking']['interval_end']);
                         break;
                     case 'C': // semester/year
-                        $interval_range = $this->request->data['Booking']['interval_range'];
-                        $interval_end = null;
-                        $this->loadModel('Semester');
-
-                        switch ($interval_range) {
-
-                            case '1': // semester end
-                                $semester = $this->Semester->getActiveSemester();
-
-                                if (!$semester) {
-                                    $semester = $this->Semester->getNextSemester();
-                                    $interval_end = new DateTime($semester['Semester']['start'] . ' 23:59:59');
-                                } else {
-                                    $interval_end = new DateTime($semester['Semester']['end'] . ' 23:59:59');
-                                }
-
-                                break;
-                            case '2': // next semester start
-                                $semester = $this->Semester->getNextSemester();
-
-                                $interval_end = new DateTime($semester['Semester']['start'] . ' 23:59:59');
-                                $interval_end->modify('-1 day');
-                                break;
-                            case '3': // next semester end
-                                $semester = $this->Semester->getNextSemester();
-
-                                $interval_end = new DateTime($semester['Semester']['end'] . ' 23:59:59');
-                                break;
-                            case '4': // year
-                                $interval_end = new DateTime(date('Y') . '-12-31 23:59:59');
-                                break;
-                        }
-                        $interval_count = $this->getIntervalCountFromEndDate($end, $interval_end, $interval_iteration, true);
-                        break;
+                        $interval_value['interval_range'] = $this->request->data['Booking']['interval_range'];
                 }
 
-                $interval_booking = array();
+                $interval_booking = $this->buildInterval($start, $end, $room_id, $interval_type, $interval_iteration, $interval_value, $approval_horizon, $approval_horizon_max_date);
                 $hasErrorInIntervalLoop = false;
                 $blocked = array();
 
-                for ($i = 1; $i <= $interval_count; $i++) {
+                for ($i = 1; $i <= count($interval_booking); $i++) {
 
-                    $interval_start_date = clone $start;
-                    $interval_start_date->modify('+' . $interval_iteration * $i . ' day');
-                    $interval_booking[$i]['start_date'] = $interval_start_date;
-
-                    $interval_end_date = clone $end;
-                    $interval_end_date->modify('+' . $interval_iteration * $i . ' day');
-                    $interval_booking[$i]['end_date'] = $interval_end_date;
-
-                    $interval_booking[$i]['status'] = $this->getStatusFromDate($approval_horizon, $interval_end_date, $approval_horizon_max_date);
-
-                    if ($this->Booking->inUse($interval_start_date->format('Y-m-d H:i:s'), $interval_end_date->format('Y-m-d H:i:s'), $room_id, 0, true, $blocked)) {
+                    if ($interval_booking[$i]['in_use']) {
                         $hasErrorInIntervalLoop = true;
+                        $blocked = $interval_booking[$i]['in_use'];
                         break;
                     }
                 }
 
                 if (!$hasErrorInIntervalLoop) {
-                    for ($i = 1; $i <= $interval_count; $i++) {
+                    for ($i = 1; $i <= count($interval_booking); $i++) {
 
                         $interval_booking_id = 0;
 
@@ -618,6 +572,75 @@ class BookingsController extends AppController {
      */
 
     //<editor-fold defaultstate="collapsed" desc="backend functions">
+
+    public function buildInterval(DateTime $start, DateTime $end, $room_id, $interval_type, $interval_iteration, $interval_value, $approval_horizon, $approval_horizon_max_date) {
+        $interval_count = 0;
+        switch ($interval_type) {
+            case 'A': // after
+                $interval_count = $interval_value['interval_count'];
+                // $interval_end = (new DateTime($end->format('Y-m-d H:i:s')))->modify('+' . $interval_iteration * $interval_count . ' day');
+                break;
+            case 'B': // date
+                $interval_end = new DateTime($interval_value['interval_end']);
+                $interval_count = $this->getIntervalCountFromEndDate($end, $interval_end, $interval_iteration);
+                break;
+            case 'C': // semester/year
+                $interval_range = $interval_value['interval_range'];
+                $interval_end = null;
+                $this->loadModel('Semester');
+
+                switch ($interval_range) {
+
+                    case '1': // semester end
+                        $semester = $this->Semester->getActiveSemester();
+
+                        if (!$semester) {
+                            $semester = $this->Semester->getNextSemester();
+                            $interval_end = new DateTime($semester['Semester']['start'] . ' 23:59:59');
+                        } else {
+                            $interval_end = new DateTime($semester['Semester']['end'] . ' 23:59:59');
+                        }
+
+                        break;
+                    case '2': // next semester start
+                        $semester = $this->Semester->getNextSemester();
+
+                        $interval_end = new DateTime($semester['Semester']['start'] . ' 23:59:59');
+                        $interval_end->modify('-1 day');
+                        break;
+                    case '3': // next semester end
+                        $semester = $this->Semester->getNextSemester();
+
+                        $interval_end = new DateTime($semester['Semester']['end'] . ' 23:59:59');
+                        break;
+                    case '4': // year
+                        $interval_end = new DateTime(date('Y') . '-12-31 23:59:59');
+                        break;
+                }
+                $interval_count = $this->getIntervalCountFromEndDate($end, $interval_end, $interval_iteration, true);
+                break;
+        }
+
+        $interval_booking = array();
+        $blocked = array();
+        for ($i = 1; $i <= $interval_count; $i++) {
+
+            $interval_start_date = clone $start;
+            $interval_start_date->modify('+' . $interval_iteration * $i . ' day');
+            $interval_booking[$i]['start_date'] = $interval_start_date;
+
+            $interval_end_date = clone $end;
+            $interval_end_date->modify('+' . $interval_iteration * $i . ' day');
+            $interval_booking[$i]['end_date'] = $interval_end_date;
+
+            $interval_booking[$i]['status'] = $this->getStatusFromDate($approval_horizon, $interval_end_date, $approval_horizon_max_date);
+
+            $interval_booking[$i]['in_use'] = $this->Booking->inUse($interval_start_date->format('Y-m-d H:i:s'), $interval_end_date->format('Y-m-d H:i:s'), $room_id, 0, true, $blocked);
+            $interval_booking[$i]['blocked'] = $blocked;
+        }
+
+        return $interval_booking;
+    }
 
     public function cleanUp() {
         $organizationalunits = $this->Booking->Room->Organizationalunit->getAll();
