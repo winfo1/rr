@@ -16,16 +16,34 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 ?>
-<h2><?php echo $name; ?></h2>
-<p class="error">
-	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
-	<?php printf(
-		__d('cake', 'The requested address %s was not found on this server.'),
-		"<strong>'{$url}'</strong>"
-	); ?>
-</p>
-<?php
-if (Configure::read('debug') > 0):
-	echo $this->element('exception_stack_trace');
-endif;
-?>
+
+<div class="container-sm">
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong><?php echo __d('cake', 'Fehler'); ?>: </strong>
+        <?php printf(
+            __d('cake', 'Die angeforderte Adresse %s wurde auf diesem Server nicht gefunden'),
+            "<strong>'{$url}'</strong>"
+        ); ?>
+    </div>
+</div>
+
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>
+            <?php echo $name; ?>
+        </h1>
+        <h4>
+            Diese Seite existiert nicht oder wurde entfernt.
+        </h4>
+    </div>
+    <a href="<?php echo $this->Html->url(array('action' => 'index')); ?>" class="btn btn-primary btn-lg" role="button">Zurück</a>
+
+    <?php
+    if (Configure::read('debug') > 0):
+        echo $this->element('exception_stack_trace');
+    endif;
+    ?>
+</div>
