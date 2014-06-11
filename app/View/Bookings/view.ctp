@@ -1,18 +1,18 @@
 <?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
 
 <div class="container">
-<?php
-echo $this->Form->create('Booking', array());
+    <?php
+    echo $this->Form->create('Booking', array());
 
-$start = new DateTime($this->request->data['Booking']['startdatetime']);
-$end = new DateTime($this->request->data['Booking']['enddatetime']);
-?>
+    $start = new DateTime($this->request->data['Booking']['startdatetime']);
+    $end = new DateTime($this->request->data['Booking']['enddatetime']);
+    ?>
     <div class="page-header">
         <h1>
             <?php echo $this->request->data['Booking']['name']; ?>
             <?php if(
                 ($this->Session->read('Auth.User.role') == 'root') ||
-                (($this->Session->read('Auth.User.role') == 'admin') && ($this->request->data['User']['organizationalunit_id'] == $this->request->data['Room']['organizationalunit_id'])) ||
+                (($this->Session->read('Auth.User.role') == 'admin') && ($this->Session->read('Auth.User.organizationalunit_id') == $this->request->data['Room']['organizationalunit_id'])) ||
                 ((in_array($this->Session->read('Auth.User.role'), array('user', 'admin'))) && ($this->Session->read('Auth.User.id') == $this->request->data['Booking']['user_id']))) : ?>
                 <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> ' . __('Bearbeiten'), array('action'=> 'edit', $this->params['pass'][0]), array('class' => 'btn btn-default ', 'escape' => false)); ?>
             <?php endif; ?>
