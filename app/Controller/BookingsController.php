@@ -111,6 +111,7 @@ class BookingsController extends AppController {
                     'plugin' => 'BoostCake',
                     'class' => 'alert-success'
                 ));
+                $this->emailUser_plan_to_active($this->request->data);
                 $this->redirect(array('action' => 'index'));
                 return true;
             }
@@ -377,9 +378,10 @@ class BookingsController extends AppController {
             $blocked = array();
 
             if (!$this->Booking->inUse($start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'), $room_id, 0, true, $blocked)) {
+                $status = $this->getStatusFromDate($approval_horizon, $end, $approval_horizon_max_date);
                 $this->request->data['Booking']['user_id'] = $this->Auth->user('id');
                 $this->request->data['Booking']['group_id'] = $group_id;
-                $this->request->data['Booking']['status'] = $this->getStatusFromDate($approval_horizon, $end, $approval_horizon_max_date);
+                $this->request->data['Booking']['status'] = $status;
                 $this->request->data['Booking']['startdatetime'] = $start->format('Y-m-d H:i:s');
                 $this->request->data['Booking']['start'] = MyTime::toReadableDateTime($start->getTimestamp(), true);
                 $this->request->data['Booking']['enddatetime'] = $end->format('Y-m-d H:i:s');
@@ -396,6 +398,12 @@ class BookingsController extends AppController {
                     $this->request->data['Booking']['id'] = $this->Booking->id;
 
                     $this->emailAdmin($this->request->data, $room[0], $interval_booking);
+
+                    if ($status == Booking::active) {
+                        $this->emailUser_active($this->request->data);
+                    } elseif ($status == Booking::planned) {
+                        $this->emailUser_planned($this->request->data);
+                    }
 
                     $this->redirect(array('action' => 'view', $this->Booking->id));
                     return true;
@@ -691,6 +699,7 @@ class BookingsController extends AppController {
                     $concurred[] = $blocked_block;
                 } else {
                     $this->edit_silent_status($booking['Booking']['id'], Booking::active);
+                    $this->emailUser_plan_to_active($booking);
                 }
             }
         }
@@ -847,6 +856,87 @@ class BookingsController extends AppController {
 
         }
 
+        return true;
+    }
+
+    private function emailUser_active($data) {
+
+        $title = Configure::read('display.Short') . ': ';
+
+        if ($data['User']['user_email_if_active']) {
+
+            $title .= 'Erstellung und Freigabe der Buchung für den ' . MyTime::toReadableDateTime(strtotime($data['Booking']['startdatetime']), true);
+
+            if (Configure::read('debug') > 2) {
+                $this->layout = 'emails/text/default';
+                $this->set('data', $data);
+                return $this->render('/emails/text/user_active');
+            } else {
+                $email = new CakeEmail('smtp');
+                $email->template('user_active', 'default')
+                    ->replyTo(Configure::read('display.Support'))
+                    ->to($data['User']['emailaddress'])
+                    ->subject($title)
+                    ->viewVars(array('data' => $data))
+                    ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                    ->send();
+            }
+
+        }
+        return true;
+    }
+
+    private function emailUser_planned($data) {
+
+        $title = Configure::read('display.Short') . ': ';
+
+        if ($data['User']['user_email_if_planned']) {
+
+            $title .= 'Erstellung und Planung der Buchung für den ' . MyTime::toReadableDateTime(strtotime($data['Booking']['startdatetime']), true);
+
+            if (Configure::read('debug') > 2) {
+                $this->layout = 'emails/text/default';
+                $this->set('data', $data);
+                return $this->render('/emails/text/user_planned');
+            } else {
+                $email = new CakeEmail('smtp');
+                $email->template('user_planned', 'default')
+                    ->replyTo(Configure::read('display.Support'))
+                    ->to($data['User']['emailaddress'])
+                    ->subject($title)
+                    ->viewVars(array('data' => $data))
+                    ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                    ->send();
+            }
+
+        }
+        return true;
+    }
+
+    private function emailUser_plan_to_active($data) {
+
+        $title = Configure::read('display.Short') . ': ';
+
+        if ($data['User']['user_email_if_plan_gets_active']) {
+
+            $title .= 'Freigabe der Buchung vom ' . MyTime::toReadableDateTime(strtotime($data['Booking']['startdatetime']), true);
+
+            if (Configure::read('debug') > 2) {
+                $this->layout = 'emails/text/default';
+                $this->set('data', $data);
+                return $this->render('/emails/text/user_approval');
+            } else {
+                $email = new CakeEmail('smtp');
+                $email->template('user_approval', 'default')
+                    ->replyTo(Configure::read('display.Support'))
+                    ->to($data['User']['emailaddress'])
+                    ->subject($title)
+                    ->viewVars(array('data' => $data))
+                    ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                    ->send();
+            }
+
+        }
         return true;
     }
 
