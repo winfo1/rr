@@ -94,10 +94,10 @@ $rrDescription = __('die schnelle und einfache RaumReservierung');
             event.preventDefault();
             $(this).ekkoLightbox();
         });
+        $('[data-toggle=tooltip]').tooltip();
     </script>
 
     <?php
-
     echo $this->Js->writeBuffer();
     ?>
 </body>

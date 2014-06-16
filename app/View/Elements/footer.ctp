@@ -3,7 +3,7 @@
         <?php echo $this->Html->link(
             $this->Html->image('cake.power.gif', array('alt' => 'the rapid development php framework', 'border' => '0')),
             'http://www.cakephp.org/',
-            array('target' => '_blank', 'escape' => false)
+            array('target' => '_blank', 'escape' => false, 'data-toggle' => 'tooltip', 'title' => 'CakePHP v' . Configure::version())
         );
         ?>
         <div class="pull-right"><?php $v = 'v' . Configure::read('display.Version'); echo $this->Text->autoLinkEmails('Feedback und Fehler können Sie gerne an ' . Configure::read('display.Support') . ' melden.') . ' ' .  $this->Html->link($v, 'https://github.com/winfo1/rr/releases/tag/' . $v, array('target' => '_blank')); ?></div>
