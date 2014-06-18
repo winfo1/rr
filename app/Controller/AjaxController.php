@@ -44,7 +44,7 @@ class AjaxController extends AppController {
 
     public function check_booked() {
 
-        $data = true;
+        $hasErrorInIntervalLoop = false;
 
         $room_id = $this->request->data['Booking']['room_id'];
 
@@ -85,22 +85,25 @@ class AjaxController extends AppController {
             }
 
             $interval_booking = $this->requestAction('/bookings/buildInterval', array('pass' => array($start, $end, $room_id, $interval_type, $interval_iteration, $interval_value, $approval_horizon, $approval_horizon_max_date)));
-            $hasErrorInIntervalLoop = false;
+
             $blocked = array();
+            $blocked_text = '';
 
             for ($i = 1; $i <= count($interval_booking); $i++) {
 
                 if ($interval_booking[$i]['in_use']) {
                     $hasErrorInIntervalLoop = true;
-                    $blocked = $interval_booking[$i]['blocked'];
-                    break;
+
+                    $blocked_text .=
+                        $interval_booking[$i]['blocked'][0]['Booking']['name'] . ' ' .
+                        $interval_booking[$i]['blocked'][0]['Booking']['startdatetime'] . ' - ' .
+                        $interval_booking[$i]['blocked'][0]['Booking']['enddatetime'] . ' von ' .
+                        $interval_booking[$i]['blocked'][0]['User']['username'] . '</br>';
                 }
             }
-
-            $data = !$hasErrorInIntervalLoop;
         }
 
-        $this->set(compact('data'));
+        $this->set(compact('hasErrorInIntervalLoop', 'blocked_text'));
     }
 
     public function room_details($id) {

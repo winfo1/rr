@@ -204,7 +204,7 @@
                     ?>
                 </div>
             </div>
-
+            <?php echo $this->Form->hidden('ignore_booked'); ?>
         </div>
     </fieldset>
     <?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-primary btn-lg', 'onclick' => 'validateInterval();return false;')); ?>
@@ -355,15 +355,19 @@
     function validateInterval() {
         if(BookingIntervalIteration.val() != 0) {
             $.post(rr_base_url + 'ajax/check_booked/', BookingAddForm.serialize(), function(data, status) {
-                if(!data) {
-                    bootbox.confirm('Einige Buchungen in der Zunkunft sind bereits belegt, trotzdem mit allen freien fortfahren und buchen?', function(result) {
-                        if(result) {
-                            BookingAddForm.submit();
-                        }
-                    });
-                } else {
-                    BookingAddForm.submit();
-                    return true;
+                if(status == "success") {
+                    var interval_booking = $.parseJSON(data);
+                    if(interval_booking.hasErrorInIntervalLoop) {
+                        bootbox.confirm('Einige Buchungen in der Zunkunft sind bereits belegt:</br>' + interval_booking.blocked_text + 'Trotzdem mit restlichen freien fortfahren und buchen?', function(result) {
+                            if(result) {
+                                $('#BookingIgnoreBooked').val(true);
+                                BookingAddForm.submit();
+                            }
+                        });
+                    } else {
+                        BookingAddForm.submit();
+                        return true;
+                    }
                 }
                 return false;
             });

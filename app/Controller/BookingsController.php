@@ -243,6 +243,8 @@ class BookingsController extends AppController {
             $interval_booking = null;
             $interval_iteration = $this->request->data['Booking']['interval_iteration'];
 
+            $ignore_booked = $this->request->data['Booking']['ignore_booked'];
+
             $group_id = 0;
             if ($interval_iteration) {
                 $group_id = $this->Booking->getNextAutoIncrement();
@@ -274,23 +276,25 @@ class BookingsController extends AppController {
                     }
                 }
 
-                if (!$hasErrorInIntervalLoop) {
+                if (!$hasErrorInIntervalLoop || $ignore_booked) {
                     for ($i = 1; $i <= count($interval_booking); $i++) {
+                        if(!$interval_booking[$i]['in_use']) {
 
-                        $interval_booking_id = 0;
+                            $interval_booking_id = 0;
 
-                        $this->add_silent(
-                            $room_id,
-                            $this->Auth->user('id'),
-                            $group_id,
-                            $this->request->data['Booking']['name'],
-                            $interval_booking[$i]['status'],
-                            $interval_booking[$i]['start_date']->format('Y-m-d H:i:s'),
-                            $interval_booking[$i]['end_date']->format('Y-m-d H:i:s'),
-                            $interval_booking_id
-                        );
+                            $this->add_silent(
+                                $room_id,
+                                $this->Auth->user('id'),
+                                $group_id,
+                                $this->request->data['Booking']['name'],
+                                $interval_booking[$i]['status'],
+                                $interval_booking[$i]['start_date']->format('Y-m-d H:i:s'),
+                                $interval_booking[$i]['end_date']->format('Y-m-d H:i:s'),
+                                $interval_booking_id
+                            );
 
-                        $interval_booking[$i]['id'] = $interval_booking_id;
+                            $interval_booking[$i]['id'] = $interval_booking_id;
+                        }
                     }
                 } else {
                     if (count($blocked) == 1) {
