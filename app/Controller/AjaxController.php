@@ -2,6 +2,8 @@
 
 App::uses('AppController', 'Controller');
 
+App::import('Lib', 'Utils');
+
 class AjaxController extends AppController {
 
     /*
@@ -41,7 +43,64 @@ class AjaxController extends AppController {
     }
 
     public function check_booked() {
-        // TODO: implement bookings controller buildInterval for ajax check in add function
+
+        $data = true;
+
+        $room_id = $this->request->data['Booking']['room_id'];
+
+        if ($this->request->data['Booking']['view_tabs'] == 's') {
+            // simple booking-time selection
+            $start = (new DateTime())->modify('+' . $this->request->data['Booking']['start_minutes'] . ' minutes');
+            $end = Utils::toEndDateTime($start, $this->request->data['Booking']['duration'], $this->request->data['Booking']['duration']);
+        } else {
+            // advanced booking-time selection
+            $day = $this->request->data['Booking']['day'];
+            $start = Utils::toDateTime($day, $this->request->data['Booking']['start_hour']);
+            $end = Utils::toDateTime($day, $this->request->data['Booking']['end_hour']);
+            $this->request->data['Booking']['duration'] = strval(Utils::getDiffInMin($start, $end));
+        }
+
+        $this->loadModel('Room');
+        $room = $this->Room->getAll($room_id);
+        $approval_horizon = $room[0]['Organizationalunit']['approval_horizon'];
+        $approval_horizon_max_date = (new DateTime())->modify('+' . $approval_horizon . ' week');
+
+        $interval_booking = null;
+        $interval_iteration = $this->request->data['Booking']['interval_iteration'];
+
+        if ($interval_iteration) {
+            $interval_type = $this->request->data['Booking']['interval_type'];
+
+            $interval_value = array();
+            switch ($interval_type) {
+
+                case 'A': // after
+                    $interval_value['interval_count'] = $this->request->data['Booking']['interval_count'];
+                    break;
+                case 'B': // date
+                    $interval_value['interval_end'] = $this->request->data['Booking']['interval_end'];
+                    break;
+                case 'C': // semester/year
+                    $interval_value['interval_range'] = $this->request->data['Booking']['interval_range'];
+            }
+
+            $interval_booking = $this->requestAction('/bookings/buildInterval', array('pass' => array($start, $end, $room_id, $interval_type, $interval_iteration, $interval_value, $approval_horizon, $approval_horizon_max_date)));
+            $hasErrorInIntervalLoop = false;
+            $blocked = array();
+
+            for ($i = 1; $i <= count($interval_booking); $i++) {
+
+                if ($interval_booking[$i]['in_use']) {
+                    $hasErrorInIntervalLoop = true;
+                    $blocked = $interval_booking[$i]['blocked'];
+                    break;
+                }
+            }
+
+            $data = !$hasErrorInIntervalLoop;
+        }
+
+        $this->set(compact('data'));
     }
 
     public function room_details($id) {

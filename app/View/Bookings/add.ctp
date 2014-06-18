@@ -207,16 +207,20 @@
 
         </div>
     </fieldset>
-    <?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-primary btn-lg')); ?>
+    <?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-primary btn-lg', 'onclick' => 'validateInterval();return false;')); ?>
 </div>
 
 <script type="text/javascript">
     var room_details = null;
 
+    var BookingAddForm = $('#BookingAddForm');
 	var BookingViewTabs = $('#BookingViewTabs');
 	var BookingStartHour = $('#BookingStartHour');
 	var BookingEndHour = $('#BookingEndHour');
 	var BookingRoomId = $('#BookingRoomId');
+    var BookingIntervalIteration = $('#BookingIntervalIteration');
+
+    bootbox.setDefaults({locale: 'de'});
 
     function readDetails(id) {
 
@@ -344,8 +348,30 @@
     		url += BookingEndHour.val().replace(":", "-") + '/';
     	}
         window.history.pushState("", "", url);
-        $('#BookingAddForm').attr("action", url);
+        BookingAddForm.attr("action", url);
         
+    }
+
+    function validateInterval() {
+        if(BookingIntervalIteration.val() != 0) {
+            $.post(rr_base_url + 'ajax/check_booked/', BookingAddForm.serialize(), function(data, status) {
+                if(!data) {
+                    bootbox.confirm('Einige Buchungen in der Zunkunft sind bereits belegt, trotzdem mit allen freien fortfahren und buchen?', function(result) {
+                        if(result) {
+                            BookingAddForm.submit();
+                        }
+                    });
+                } else {
+                    BookingAddForm.submit();
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            BookingAddForm.submit();
+            return true;
+        }
+        return false;
     }
 
     var typeahead = new Bloodhound({
@@ -448,7 +474,6 @@
             }
         );
 
-        var BookingIntervalIteration = $('#BookingIntervalIteration');
         var BookingIntervalGroup = $('#BookingIntervalGroup');
         if(BookingIntervalIteration.val() != 0) {
         	BookingIntervalGroup.slideDown("fast");

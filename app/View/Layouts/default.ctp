@@ -46,6 +46,7 @@ $rrDescription = __('die schnelle und einfache RaumReservierung');
     $this->AssetCompress->addScript('bootstrap.js');
     $this->AssetCompress->addScript('bootstrap-clockpicker.js');
     $this->AssetCompress->addScript('bootstrap-lightbox.js');
+    $this->AssetCompress->addScript('bootbox.js');
     $this->AssetCompress->addScript('underscore.js');
     $this->AssetCompress->addScript('serhioromano/calendar.js');
     $this->AssetCompress->addScript('serhioromano/language/de-DE.js');

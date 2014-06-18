@@ -27,7 +27,7 @@ class BookingsController extends AppController {
     public function beforeFilter() {
         parent::beforeFilter();
 
-        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'view', 'cleanUp', 'isBefore', 'edit_silent_status');
+        $this->Auth->allow('beforeDetailDisplay', 'getBookings', 'view', 'buildInterval', 'cleanUp', 'isBefore', 'edit_silent_status');
     }
 
     //</editor-fold>
@@ -255,7 +255,7 @@ class BookingsController extends AppController {
                         $interval_value['interval_count'] = $this->request->data['Booking']['interval_count'];
                         break;
                     case 'B': // date
-                        $interval_value['interval_end'] = new DateTime($this->request->data['Booking']['interval_end']);
+                        $interval_value['interval_end'] = $this->request->data['Booking']['interval_end'];
                         break;
                     case 'C': // semester/year
                         $interval_value['interval_range'] = $this->request->data['Booking']['interval_range'];
@@ -269,7 +269,7 @@ class BookingsController extends AppController {
 
                     if ($interval_booking[$i]['in_use']) {
                         $hasErrorInIntervalLoop = true;
-                        $blocked = $interval_booking[$i]['in_use'];
+                        $blocked = $interval_booking[$i]['blocked'];
                         break;
                     }
                 }
