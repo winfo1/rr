@@ -43,7 +43,8 @@ class Booking extends AppModel {
     public $default_names = array(
         'Besprechung',
         'Diss fixe',
-        'Jour fixe'
+        'Jour fixe',
+        'Masterthesis'
     );
 
     public function beforeFind($query) {

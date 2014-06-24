@@ -39,6 +39,7 @@ $rrDescription = __('die schnelle und einfache RaumReservierung');
     $this->AssetCompress->addCss('bootstrap-clockpicker.css');
     $this->AssetCompress->addCss('bootstrap-datetimepicker.css');
     $this->AssetCompress->addCss('bootstrap-lightbox.css');
+    $this->AssetCompress->addCss('bootstrap-timeline.css');
 
     $this->AssetCompress->addScript('jquery.js');
     $this->AssetCompress->addScript('jquery.user.js');

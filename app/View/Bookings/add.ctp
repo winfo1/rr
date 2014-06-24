@@ -358,7 +358,7 @@
                 if(status == "success") {
                     var interval_booking = $.parseJSON(data);
                     if(interval_booking.hasErrorInIntervalLoop) {
-                        bootbox.confirm('Einige Buchungen in der Zunkunft sind bereits belegt:</br>' + interval_booking.blocked_text + 'Trotzdem mit restlichen freien fortfahren und buchen?', function(result) {
+                        bootbox.confirm(interval_booking.timeLine, function(result) {
                             if(result) {
                                 $('#BookingIgnoreBooked').val(true);
                                 BookingAddForm.submit();
