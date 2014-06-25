@@ -410,30 +410,56 @@ class BookingsController extends AppController {
 
         if ($this->request->is('post') || $this->request->is('put')) {
 
+            $groups = array();
             if (array_key_exists('submit_all', $this->request->data)) {
                 $hasErrorInIntervalLoop = false;
 
-                $groups = array();
                 if ($this->request->data['Booking']['group_id'] != 0) {
                     $groups = $this->Booking->getBookingsGroupNames($this->request->data['Booking']['group_id']);
                     $this->set(compact('groups'));
                 }
 
-                $blocked = array();
+                $diff = 0;
                 foreach ($groups as $group) {
-                    if ($group['Booking']['id'] != $id) {
-                        // what to do when not first !!
+                    if ($group['Booking']['id'] == $id) {
 
                         $group_start = new DateTime($group['Booking']['startdatetime']);
-
                         $group_end = new DateTime($group['Booking']['enddatetime']);
 
-                        // $group['Booking']['startdatetime']
-
-                        if ($this->Booking->inUse($group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $group['Booking']['id'], true, $blocked)) {
-                            // TODO: group edit
-                        }
+                        $diff = Utils::getDiffInMin($group_start, $group_end);
                     }
+                }
+
+                foreach ($groups as $group) {
+                    if ($group['Booking']['id'] != $id) {
+
+                        $group_start = new DateTime($group['Booking']['startdatetime']);
+                        $group_start_new = clone $group_start;
+                        $group_start_new->modify($diff . ' minutes');
+                        $group['Booking']['startdatetime_old'] = $group['Booking']['startdatetime'];
+                        $group['Booking']['startdatetime'] = $group_start_new->format('Y-m-d H:i:s');
+
+                        $group_end = new DateTime($group['Booking']['enddatetime']);
+                        $group_end_new = clone $group_end;
+                        $group_end_new->modify($diff . ' minutes');
+                        $group['Booking']['enddatetime_old'] = $group['Booking']['enddatetime'];
+                        $group['Booking']['enddatetime'] = $group_end_new->format('Y-m-d H:i:s');
+
+                        $blocked = array();
+                        $group['Booking']['in_use'] = $this->Booking->inUse($group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $group['Booking']['id'], true, $blocked);
+                        if($group['Booking']['in_use']) {
+                            $hasErrorInIntervalLoop = true;
+                        }
+                        $group['Booking']['blocked'] = $blocked;
+                    }
+                }
+
+                if($hasErrorInIntervalLoop) {
+                    $this->Session->setFlash(__('Diese Buchung kann nicht in dem neuen Zeitraum stattfinden, da dort bereits andere Buchungen sind.'), 'alert', array(
+                        'plugin' => 'BoostCake',
+                        'class' => 'alert-danger'
+                    ));
+                    return false;
                 }
             }
 
@@ -449,6 +475,11 @@ class BookingsController extends AppController {
             if ($this->Booking->save($this->request->data)) {
                 if (array_key_exists('submit_all', $this->request->data)) {
 
+                    foreach ($groups as $group) {
+                        if ($group['Booking']['id'] != $id) {
+                            $this->edit_silent($group['Booking']['id'], $this->request->data['Booking']['room_id'], $this->request->data['Booking']['name'], $group['Booking']['startdatetime'], $group['Booking']['enddatetime']);
+                        }
+                    }
 
                     $this->Session->setFlash(__('Die Buchungen wurden geändert'), 'alert', array(
                         'plugin' => 'BoostCake',
