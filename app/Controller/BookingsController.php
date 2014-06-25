@@ -161,7 +161,7 @@ class BookingsController extends AppController {
         $this->request->data['Booking']['room_id'] = $room_id;
 
         // easy view
-        $view_tabs = 's';
+        $view_tabs = $this->request->data['Booking']['view_tabs'];
 
         // set default day
         if (!isset($day)) {
@@ -172,7 +172,9 @@ class BookingsController extends AppController {
             } else {
                 try {
                     $day = (new DateTime($day))->format('Y-m-d');
-                    $view_tabs = 'a';
+                    if(!isset($view_tabs)) {
+                        $view_tabs = 'a';
+                    }
                 } catch (\Exception $e) {
                     $day = (new DateTime())->format('Y-m-d');
                 }
@@ -180,7 +182,9 @@ class BookingsController extends AppController {
         } else {
             try {
                 $day = (new DateTime($day))->format('Y-m-d');
-                $view_tabs = 'a';
+                if(!isset($view_tabs)) {
+                    $view_tabs = 'a';
+                }
             } catch (\Exception $e) {
                 $day = (new DateTime())->format('Y-m-d');
             }
@@ -190,12 +194,16 @@ class BookingsController extends AppController {
         // set default start hour
         if (isset($start_hour) && preg_match('/^[0-9]{1,2}-[0-9]{1,2}$/', $start_hour)) {
             $start_hour = str_replace('-', ':', $start_hour);
-            $view_tabs = 'a';
+            if(!isset($view_tabs)) {
+                $view_tabs = 'a';
+            }
         } else {
             if (array_key_exists('Booking', $this->request->data) && array_key_exists('start_hour', $this->request->data['Booking']))
                 $start_hour = $this->request->data['Booking']['start_hour'];
             if (isset($start_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $start_hour)) {
-                $view_tabs = 'a';
+                if(!isset($view_tabs)) {
+                    $view_tabs = 'a';
+                }
             } else {
                 $start_hour = (new DateTime())->format('H:i');
             }
@@ -205,12 +213,16 @@ class BookingsController extends AppController {
         // set default end hour
         if (isset($end_hour) && preg_match('/^[0-9]{1,2}-[0-9]{1,2}$/', $end_hour)) {
             $end_hour = str_replace('-', ':', $end_hour);
-            $view_tabs = 'a';
+            if(!isset($view_tabs)) {
+                $view_tabs = 'a';
+            }
         } else {
             if (array_key_exists('Booking', $this->request->data) && array_key_exists('end_hour', $this->request->data['Booking']))
                 $end_hour = $this->request->data['Booking']['end_hour'];
             if (isset($end_hour) && preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $end_hour)) {
-                $view_tabs = 'a';
+                if(!isset($view_tabs)) {
+                    $view_tabs = 'a';
+                }
             } else {
                 $end_hour = Utils::toEndDateTime(new DateTime(), 60)->format('H:i');
             }
@@ -218,7 +230,11 @@ class BookingsController extends AppController {
         $this->request->data['Booking']['end_hour'] = $end_hour;
 
         // set view
-        $this->set(compact('view_tabs'));
+        if(!isset($view_tabs)) {
+            $view_tabs = 's';
+        }
+        $this->request->data['Booking']['view_tabs'] = $view_tabs;
+        // $this->set(compact('view_tabs'));
 
         if ($this->request->is('post')) {
 
@@ -227,13 +243,14 @@ class BookingsController extends AppController {
             if ($this->request->data['Booking']['view_tabs'] == 's') {
                 // simple booking-time selection
                 $start = (new DateTime())->modify('+' . $this->request->data['Booking']['start_minutes'] . ' minutes');
-                $end = Utils::toEndDateTime($start, $this->request->data['Booking']['duration'], $this->request->data['Booking']['duration']);
+                $end = Utils::toEndDateTime($start, $this->request->data['Booking']['duration']);
+                // $end = Utils::toEndDateTime($start, $this->request->data['Booking']['duration'], $this->request->data['Booking']['duration']);
             } else {
                 // advanced booking-time selection
                 $day = $this->request->data['Booking']['day'];
                 $start = Utils::toDateTime($day, $this->request->data['Booking']['start_hour']);
                 $end = Utils::toDateTime($day, $this->request->data['Booking']['end_hour']);
-                $this->request->data['Booking']['duration'] = strval(Utils::getDiffInMin($start, $end));
+                // $this->request->data['Booking']['duration'] = strval(Utils::getDiffInMin($start, $end));
             }
 
             $room = $this->Booking->Room->getAll($room_id);

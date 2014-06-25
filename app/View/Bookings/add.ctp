@@ -23,16 +23,16 @@
             'placeholder' => 'Bezeichnung'));
         ?>
 
-        <?php echo $this->Form->hidden('view_tabs', array('value' => $view_tabs)); ?>
+        <?php echo $this->Form->hidden('view_tabs'); ?>
 
         <ul class="nav nav-tabs">
             <li style="padding: 10px 15px 10px 0px;"><strong><?php echo __('Zeitpunkt'); ?></strong></li>
-            <li class="<?php echo (($view_tabs == 's') ? 'active' : '')?>"><a href="#simple_time_settings" data-toggle="tab"><?php echo __('Einfach'); ?></a></li>
-            <li class="<?php echo (($view_tabs == 'a') ? 'active' : '')?>"><a href="#advanced_time_settings" data-toggle="tab"><?php echo __('Erweitert'); ?></a></li>
+            <li class="<?php echo (($this->request->data['Booking']['view_tabs'] == 's') ? 'active' : '')?>"><a href="#simple_time_settings" data-toggle="tab"><?php echo __('Einfach'); ?></a></li>
+            <li class="<?php echo (($this->request->data['Booking']['view_tabs'] == 'a') ? 'active' : '')?>"><a href="#advanced_time_settings" data-toggle="tab"><?php echo __('Erweitert'); ?></a></li>
         </ul>
 
         <div class="tab-content well well-sm">
-            <div class="tab-pane fade<?php echo (($view_tabs == 's') ? ' in active' : '')?>" id="simple_time_settings">
+            <div class="tab-pane fade<?php echo (($this->request->data['Booking']['view_tabs'] == 's') ? ' in active' : '')?>" id="simple_time_settings">
                 <div class="form-inline">
                     <div class="form-group">
                         <label><?php echo __('Startzeit'); ?></label>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade<?php echo (($view_tabs == 'a') ? ' in active' : '')?>" id="advanced_time_settings">
+            <div class="tab-pane fade<?php echo (($this->request->data['Booking']['view_tabs'] == 'a') ? ' in active' : '')?>" id="advanced_time_settings">
                 <div class="form-inline">
                     <div class="form-group">
                         <label for="BookingDayView"><?php echo __('Tag'); ?></label>
