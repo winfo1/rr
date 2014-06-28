@@ -19,7 +19,7 @@ class Utils {
      */
     public static function getDiffInMin(DateTime $start, DateTime $end) {
         $diff = $start->diff($end);
-        return ($diff->h * 60) + ($diff->i);
+        return ($diff->h * 60) + ($diff->i) * (($diff->invert == 1) ? 1 : -1);
     }
 
     /**

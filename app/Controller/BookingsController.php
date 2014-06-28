@@ -419,38 +419,43 @@ class BookingsController extends AppController {
                     $this->set(compact('groups'));
                 }
 
-                $diff = 0;
+                $diff_start = 0;
+                $diff_end = 0;
                 foreach ($groups as $group) {
                     if ($group['Booking']['id'] == $id) {
 
+                        $start = new DateTime($this->request->data['Booking']['startdatetime']);
+                        $end = new DateTime($this->request->data['Booking']['enddatetime']);
+
                         $group_start = new DateTime($group['Booking']['startdatetime']);
                         $group_end = new DateTime($group['Booking']['enddatetime']);
 
-                        $diff = Utils::getDiffInMin($group_start, $group_end);
+                        $diff_start = Utils::getDiffInMin($start, $group_start);
+                        $diff_end = Utils::getDiffInMin($end, $group_end);
                     }
                 }
 
-                foreach ($groups as $group) {
-                    if ($group['Booking']['id'] != $id) {
+                for ($i = 0; $i < count($groups); $i++) {
+                    if ($groups[$i]['Booking']['id'] != $id) {
 
-                        $group_start = new DateTime($group['Booking']['startdatetime']);
+                        $group_start = new DateTime($groups[$i]['Booking']['startdatetime']);
                         $group_start_new = clone $group_start;
-                        $group_start_new->modify($diff . ' minutes');
-                        $group['Booking']['startdatetime_old'] = $group['Booking']['startdatetime'];
-                        $group['Booking']['startdatetime'] = $group_start_new->format('Y-m-d H:i:s');
+                        $group_start_new->modify($diff_start . ' minutes');
+                        $groups[$i]['Booking']['startdatetime_old'] = $groups[$i]['Booking']['startdatetime'];
+                        $groups[$i]['Booking']['startdatetime'] = $group_start_new->format('Y-m-d H:i:s');
 
-                        $group_end = new DateTime($group['Booking']['enddatetime']);
+                        $group_end = new DateTime($groups[$i]['Booking']['enddatetime']);
                         $group_end_new = clone $group_end;
-                        $group_end_new->modify($diff . ' minutes');
-                        $group['Booking']['enddatetime_old'] = $group['Booking']['enddatetime'];
-                        $group['Booking']['enddatetime'] = $group_end_new->format('Y-m-d H:i:s');
+                        $group_end_new->modify($diff_end . ' minutes');
+                        $groups[$i]['Booking']['enddatetime_old'] = $groups[$i]['Booking']['enddatetime'];
+                        $groups[$i]['Booking']['enddatetime'] = $group_end_new->format('Y-m-d H:i:s');
 
                         $blocked = array();
-                        $group['Booking']['in_use'] = $this->Booking->inUse($group['Booking']['startdatetime'], $group['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $group['Booking']['id'], true, $blocked);
-                        if($group['Booking']['in_use']) {
+                        $groups[$i]['Booking']['in_use'] = $this->Booking->inUse($groups[$i]['Booking']['startdatetime'], $groups[$i]['Booking']['enddatetime'], $this->request->data['Booking']['room_id'], $groups[$i]['Booking']['id'], true, $blocked);
+                        if($groups[$i]['Booking']['in_use']) {
                             $hasErrorInIntervalLoop = true;
                         }
-                        $group['Booking']['blocked'] = $blocked;
+                        $groups[$i]['Booking']['blocked'] = $blocked;
                     }
                 }
 

@@ -49,7 +49,7 @@
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <?php echo $this->Form->hidden('startdatetime', array('value' => $this->request->data['Booking']['startdatetime'])); ?>
+            <?php echo $this->Form->hidden('startdatetime'); ?>
         </div>
 
         <div class="form-group">
@@ -67,10 +67,11 @@
                 ?>
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
-            <?php echo $this->Form->hidden('enddatetime', array('value' => $this->request->data['Booking']['enddatetime'])); ?>
+            <?php echo $this->Form->hidden('enddatetime'); ?>
         </div>
         <?php if(isset($groups) && (count($groups) > 1)) : ?>
             </div>
+            <?php echo $this->Form->hidden('group_id'); ?>
             <div class="col-md-3">
                 <h4><?php echo __('Verwandte Buchungen'); ?></h4>
                 <ul class="nav nav-pills nav-stacked">
@@ -91,13 +92,10 @@
 
             echo $this->Form->button('<i class="glyphicon glyphicon-pencil"></i> ' .__('Ändern'), array('type' => 'submit', 'name' => 'submit', 'class' => 'btn btn-primary btn-lg', 'escape' => false, 'div' => false));
 
-            // TODO: uncomment if implemented
-            /*
             if(isset($groups) && (count($groups) > 1))
             {
                 echo $this->Form->button('<i class="glyphicon glyphicon-pencil"></i> ' .__('Alle ändern'), array('type' => 'submit', 'name' => 'submit_all', 'class' => 'btn btn-default btn-lg', 'escape' => false, 'div' => false));
             }
-            */
 
             ?>
         </div>
