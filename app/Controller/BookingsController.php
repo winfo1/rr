@@ -765,7 +765,7 @@ class BookingsController extends AppController {
         }
 
         if (count($concurred) > 0) {
-            // TODO: send email to admin
+            $this->emailAdmin_concurred($concurred);
         }
 
         return $bookings;
@@ -944,6 +944,39 @@ class BookingsController extends AppController {
 
         }
         return true;
+    }
+
+    private function emailAdmin_concurred($concurred) {
+
+        $title = Configure::read('display.Short') . ': ';
+
+        foreach ($concurred as $value) {
+
+
+
+        }
+
+        /*
+            $title .= 'Fehler beim freigeben von überlappenden Buchungen';
+
+            if (Configure::read('debug') > 2) {
+                $this->layout = 'emails/text/default';
+                $this->set('data', $data);
+                return $this->render('/emails/text/admin_concurred');
+            } else {
+                $email = new CakeEmail('smtp');
+                $email->template('admin_concurred', 'default')
+                    ->replyTo(Configure::read('display.Support'))
+                    ->to($data['User']['emailaddress'])
+                    ->subject($title)
+                    ->viewVars(array('data' => $data))
+                    ->helpers(array('Html', 'Text', 'Time', 'MyTime'))
+                    ->send();
+            }
+         */
+
+        // TODO: email to admin
+
     }
 
     private function emailUser_planned($data) {
