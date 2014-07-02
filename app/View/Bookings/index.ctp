@@ -171,9 +171,11 @@
                         list.html('');
 
                         $.each(events, function(key, val) {
-                            $(document.createElement('li'))
-                                .html('<a href="' + val.url + '">' + val.title + '</a>')
-                                .appendTo(list);
+                            if(!(val.class == 'event-warning')) {
+                                $(document.createElement('li'))
+                                    .html('<a href="' + val.url + '">' + val.title + '</a>')
+                                    .appendTo(list);
+                            }
                         });
                     },
                     onAfterViewLoad: function(view) {
