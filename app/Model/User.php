@@ -41,6 +41,12 @@ class User extends AppModel {
                 'message' => 'Ein Passwort muss aus mindestens sechs Zeichen bestehen'
             )
         ),
+        'password_re' => array(
+            'required' => array(
+                'rule' => array('equalToField', 'password'),
+                'message' => 'Beide Passwortfelder müssen ausgefüllt werden und übereinstimmen'
+            )
+        ),
         'role' => array(
             'valid' => array(
                 'rule' => array('inList', array(self::root, self::admin, self::user)),
@@ -111,6 +117,10 @@ class User extends AppModel {
         }else{
             return true;
         }
+    }
+
+    function equalToField($array, $field) {
+        return strcmp($this->data[$this->alias][key($array)], $this->data[$this->alias][$field]) == 0;
     }
 
     //</editor-fold>
