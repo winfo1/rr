@@ -57,7 +57,7 @@ class User extends AppModel {
         'emailaddress' => array(
             'email' => array(
                 'rule' => 'email',
-                'message' => 'Dies ist keine strukturell gültige E-Mail-Addresse'
+                'message' => 'Dies ist keine gültige E-Mail-Addresse'
             )
         )
     );

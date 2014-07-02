@@ -10,7 +10,7 @@
     <h1><?php echo __('Registrierung'); ?></h1>
     <fieldset>
         <legend>
-            <?php echo __('Geben Sie Ihren Benutzername und Ihr Kennwort ein'); ?>
+            <?php echo __('Legen Sie einen Benutzernamen und Kennwort fest'); ?>
         </legend>
 
         <?php echo $this->Form->input('username', array('label' => __('Benutzername'), 'placeholder' => __('Benutzername'))); ?>
