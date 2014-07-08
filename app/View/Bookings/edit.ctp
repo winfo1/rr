@@ -82,6 +82,9 @@
                     <?php endforeach; ?>
                     <?php unset($group); ?>
                 </ul>
+                <div style="padding: 10px 15px;">
+                    <?php echo $this->Html->link(__('Hinzufügen'), array('controller' => 'bookings', 'action' => 'add'), array('class' => 'btn btn-primary')); ?>
+                </div>
             </div>
         </div>
         <?php endif; ?>

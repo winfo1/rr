@@ -135,13 +135,20 @@ class BookingsController extends AppController {
     }
 
     /**
+     * @param null $group_id i.e. 1
      * @param null $room_id i.e. 1
      * @param null $day i.e. 2014-05-01
      * @param null $start_hour i.e. 19-14
      * @param null $end_hour i.e. 20-14
      * @return bool
      */
-    public function add($room_id = null, $day = null, $start_hour = null, $end_hour = null) {
+    public function add(/* $group_id = null, */ $room_id = null, $day = null, $start_hour = null, $end_hour = null) {
+        // set group
+        if(!isset($group_id)) {
+            $group_id = 0;
+        }
+        $this->request->data['Booking']['group_id'] = $group_id;
+
         // set available rooms
         $rooms = $this->Booking->Room->getRoomsFromList();
         $this->set(compact('rooms'));
@@ -234,7 +241,6 @@ class BookingsController extends AppController {
             $view_tabs = 's';
         }
         $this->request->data['Booking']['view_tabs'] = $view_tabs;
-        // $this->set(compact('view_tabs'));
 
         if ($this->request->is('post')) {
 

@@ -110,6 +110,8 @@
             'options' => $rooms));
         ?>
 
+        <?php echo $this->Form->hidden('group_id'); ?>
+
         <?php
         $options = array('0' => 'ohne', '1' => 'täglich', '7' => 'wöchenlich', '14' => 'alle 2 Wochen', '28' => 'jeden Monat', '56' => 'jeden 2ten Monat');
 
@@ -218,6 +220,7 @@
 	var BookingStartHour = $('#BookingStartHour');
 	var BookingEndHour = $('#BookingEndHour');
 	var BookingRoomId = $('#BookingRoomId');
+    var BookingGroupId = $('#BookingGroupId');
     var BookingIntervalIteration = $('#BookingIntervalIteration');
 
     bootbox.setDefaults({locale: 'de'});
@@ -340,7 +343,7 @@
     
     function updateURL() {
     	var view_tabs = BookingViewTabs.val() == 's';
-    	var url = rr_base_url + 'bookings/add/' + BookingRoomId.val() + '/';
+    	var url = rr_base_url + 'bookings/add/' /* + BookingGroupId.val() + '/' */ + BookingRoomId.val() + '/';
     	if (!view_tabs)
     	{
     		url += $('#BookingDay').val() + '/';
