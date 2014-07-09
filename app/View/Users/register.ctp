@@ -1,13 +1,13 @@
 <style type="text/css">
     body {
-        background: url(/img/q-building-2.jpg) no-repeat center center fixed;
+        background: url(<?php echo $this->Html->url('/img/q-building-2.jpg'); ?>) no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
         background-size: cover;
     }
 </style>
-<div class="container container-small transparent">
+<div class="container container-small">
     <?php echo $this->Form->create('User', array(
         'class' => 'well',
         'inputDefaults' => array(

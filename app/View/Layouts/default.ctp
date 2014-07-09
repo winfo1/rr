@@ -76,17 +76,13 @@ $rrDescription = __('die schnelle und einfache RaumReservierung');
         var rr_base_url = '<?php echo Router::url('/', true); ?>';
     </script>
     <div class="wrapper">
-        <div id="container">
+        <div class="container transparent">
             <?php echo $this->element('header'); ?>
-            <div class="container-sm">
-                <?php echo $this->Session->flash(); ?>
-                <?php echo $this->Session->flash('info'); ?>
-            </div>
-            <div id="content">
-                <?php echo $this->fetch('content'); ?>
-            </div>
+            <?php echo $this->Session->flash(); ?>
+            <?php echo $this->Session->flash('info'); ?>
+            <?php echo $this->fetch('content'); ?>
+            <div class="push"></div>
         </div>
-        <div class="push"></div>
     </div>
     <?php echo $this->element('sql_dump'); ?>
     <?php echo $this->element('footer', array(), array('cache' => true)); ?>

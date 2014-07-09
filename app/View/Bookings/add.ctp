@@ -1,220 +1,218 @@
 <?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
-<div class="container">
-    <ol class="breadcrumb well well-sm">
-        <li><?php echo __('Verwaltung'); ?></li>
-        <li><?php echo $this->Html->link('Buchungen', array('action' => 'index')); ?></li>
-        <li class="active"><?php echo __('Buchung hinzufügen'); ?></li>
-    </ol>
-    <?php echo $this->Form->create('Booking', array(
-        'class' => 'well',
-        'inputDefaults' => array(
-            'div' => 'form-group',
-            'wrapInput' => false,
-            'class' => 'form-control',
-        )
-    )); ?>
-    <h1><?php echo __('Buchung hinzufügen'); ?></h1>
-    <fieldset>
-        <legend><?php echo __('Geben Sie hier die Daten der neuen Buchung an'); ?></legend>
+<ol class="breadcrumb well well-sm">
+    <li><?php echo __('Verwaltung'); ?></li>
+    <li><?php echo $this->Html->link('Buchungen', array('action' => 'index')); ?></li>
+    <li class="active"><?php echo __('Buchung hinzufügen'); ?></li>
+</ol>
+<?php echo $this->Form->create('Booking', array(
+    'class' => 'well',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'wrapInput' => false,
+        'class' => 'form-control',
+    )
+)); ?>
+<h1><?php echo __('Buchung hinzufügen'); ?></h1>
+<fieldset>
+    <legend><?php echo __('Geben Sie hier die Daten der neuen Buchung an'); ?></legend>
 
-        <?php if($this->request->data['Booking']['group_id'] != 0) : ?>
-            <div class="alert alert-info">Diese Buchung wird einer verwandten Buchung hinzugefügt (<?php echo $this->Html->link(__('Abbrechen'), array('action' => 'add', 0, $this->request->data['Booking']['room_id']), array('class' => 'alert-link')); ?>).</div>
-        <?php endif; ?>
+    <?php if($this->request->data['Booking']['group_id'] != 0) : ?>
+        <div class="alert alert-info">Diese Buchung wird einer verwandten Buchung hinzugefügt (<?php echo $this->Html->link(__('Abbrechen'), array('action' => 'add', 0, $this->request->data['Booking']['room_id']), array('class' => 'alert-link')); ?>).</div>
+    <?php endif; ?>
 
-        <?php echo $this->Form->input('name', array(
-            'class' => 'form-control typeahead input-block-level',
-            'label' => __('Bezeichnung'),
-            'placeholder' => 'Bezeichnung'));
-        ?>
+    <?php echo $this->Form->input('name', array(
+        'class' => 'form-control typeahead input-block-level',
+        'label' => __('Bezeichnung'),
+        'placeholder' => 'Bezeichnung'));
+    ?>
 
-        <?php echo $this->Form->hidden('view_tabs'); ?>
+    <?php echo $this->Form->hidden('view_tabs'); ?>
 
-        <ul class="nav nav-tabs">
-            <li style="padding: 10px 15px 10px 0px;"><strong><?php echo __('Zeitpunkt'); ?></strong></li>
-            <li class="<?php echo (($this->request->data['Booking']['view_tabs'] == 's') ? 'active' : '')?>"><a href="#simple_time_settings" data-toggle="tab"><?php echo __('Einfach'); ?></a></li>
-            <li class="<?php echo (($this->request->data['Booking']['view_tabs'] == 'a') ? 'active' : '')?>"><a href="#advanced_time_settings" data-toggle="tab"><?php echo __('Erweitert'); ?></a></li>
-        </ul>
+    <ul class="nav nav-tabs">
+        <li style="padding: 10px 15px 10px 0px;"><strong><?php echo __('Zeitpunkt'); ?></strong></li>
+        <li class="<?php echo (($this->request->data['Booking']['view_tabs'] == 's') ? 'active' : '')?>"><a href="#simple_time_settings" data-toggle="tab"><?php echo __('Einfach'); ?></a></li>
+        <li class="<?php echo (($this->request->data['Booking']['view_tabs'] == 'a') ? 'active' : '')?>"><a href="#advanced_time_settings" data-toggle="tab"><?php echo __('Erweitert'); ?></a></li>
+    </ul>
 
-        <div class="tab-content well well-sm">
-            <div class="tab-pane fade<?php echo (($this->request->data['Booking']['view_tabs'] == 's') ? ' in active' : '')?>" id="simple_time_settings">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <label><?php echo __('Startzeit'); ?></label>
-                        <div class="btn-group" data-toggle="buttons" style="margin: 5px">
-                            <?php
-							echo $this->Form->input('start_minutes', array(
-								'type' => 'radio',
-								'class' => 'btn btn-default',
-								'div' => false,
-								'legend' => false,
-								'hiddenField' => false,
-								'default' => '0',
-								'options' => array('0' => __('jetzt'), '15' => __('in 15 Min.'), '30' => __('in 30 Min.'))));
-							?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label><?php echo __('Dauer'); ?></label>
-                        <div class="btn-group" data-toggle="buttons" style="margin: 5px">
-                            <?php
-							echo $this->Form->input('duration', array(
-								'type' => 'radio',
-								'class' => 'btn btn-default',
-								'div' => false,
-								'legend' => false,
-								'hiddenField' => false,
-								'default' => '30',
-								'options' => array('30' => __('für 30 Min.'), '60' => __('für 1 Std.'), '120' => __('für 2 Std.'), '1440' => __('ganztägig'))));
-							?>
-                        </div>
+    <div class="tab-content well well-sm">
+        <div class="tab-pane fade<?php echo (($this->request->data['Booking']['view_tabs'] == 's') ? ' in active' : '')?>" id="simple_time_settings">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label><?php echo __('Startzeit'); ?></label>
+                    <div class="btn-group" data-toggle="buttons" style="margin: 5px">
+                        <?php
+                        echo $this->Form->input('start_minutes', array(
+                            'type' => 'radio',
+                            'class' => 'btn btn-default',
+                            'div' => false,
+                            'legend' => false,
+                            'hiddenField' => false,
+                            'default' => '0',
+                            'options' => array('0' => __('jetzt'), '15' => __('in 15 Min.'), '30' => __('in 30 Min.'))));
+                        ?>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade<?php echo (($this->request->data['Booking']['view_tabs'] == 'a') ? ' in active' : '')?>" id="advanced_time_settings">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <label for="BookingDayView"><?php echo __('Tag'); ?></label>
-                        <div class="input-group date form_date col-md-2" data-date-format="d M yyyy" data-link-field="data[Booking][day_view]">
-                            <?php
-                            echo $this->Form->input('day_view', array(
-                                'type' => 'text',
-                                'div' => false,
-                                'style' => 'width: 100%',
-                                'label' => false,
-                                'size' => '16',
-                                'readonly' => true,
-                                'value' => $this->mytime->toReadableDate(strtotime($this->request->data['Booking']['day']))));
-                            ?>
-                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                        </div>
-                        <?php echo $this->Form->hidden('day'); ?>
-                        <label for="BookingStartHour"><?php echo __('Startzeit'); ?></label>
-                        <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
-                            <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit')); ?>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-time"></span>
-                            </span>
-                        </div>
-                        <label for="BookingEndHour"><?php echo __('Endzeit'); ?></label>
-                        <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
-                            <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende')); ?>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-time"></span>
-                            </span>
-                        </div>
-
+                <div class="form-group">
+                    <label><?php echo __('Dauer'); ?></label>
+                    <div class="btn-group" data-toggle="buttons" style="margin: 5px">
+                        <?php
+                        echo $this->Form->input('duration', array(
+                            'type' => 'radio',
+                            'class' => 'btn btn-default',
+                            'div' => false,
+                            'legend' => false,
+                            'hiddenField' => false,
+                            'default' => '30',
+                            'options' => array('30' => __('für 30 Min.'), '60' => __('für 1 Std.'), '120' => __('für 2 Std.'), '1440' => __('ganztägig'))));
+                        ?>
                     </div>
                 </div>
             </div>
         </div>
-
-        <?php echo $this->Form->input('room_id', array(
-            'div' => array('div' => 'form-group', 'id' => 'Room'),
-            'label' => __('Raum'),
-            'options' => $rooms));
-        ?>
-
-        <?php echo $this->Form->hidden('group_id'); ?>
-
-        <?php
-        $options = array('0' => 'ohne', '1' => 'täglich', '7' => 'wöchenlich', '14' => 'alle 2 Wochen', '28' => 'jeden Monat', '56' => 'jeden 2ten Monat');
-
-        echo $this->Form->input('interval_iteration', array(
-            'label' => __('Wiederholung'),
-            'default' => array_keys($options)[0],
-            'options' => $options));
-        ?>
-
-        <div class="form-group" id="BookingIntervalGroup" style="display: none">
-            <label class="control-label"><?php echo __('Ende'); ?></label>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon">
-						<?php
-						echo $this->Form->input('interval_type', array(
-							'type' => 'radio',
-							'class' => false,
-							'div' => false,
-							'label' => array('style' => 'text-align: left; width: 80px'),
-							'hiddenField' => false,
-							'default' => 'A',
-							'options' => array('A' => ' ' . __('Nach'))));
-						?>
-                    </span>
-                    <?php
-                    $options = array('1' => '1 Wiederholung');
-                    for ($i = 2; $i < 10; $i++) {
-                        $options[$i] = $i . ' Wiederholungen';
-                    }
-
-                    echo $this->Form->input('interval_count', array(
-                        'div' => false,
-                        'label' => false,
-                        'default' => '3',
-                        'options' => $options));
-                    ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="input-group">
-
-                    <span class="input-group-addon">
+        <div class="tab-pane fade<?php echo (($this->request->data['Booking']['view_tabs'] == 'a') ? ' in active' : '')?>" id="advanced_time_settings">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="BookingDayView"><?php echo __('Tag'); ?></label>
+                    <div class="input-group date form_date col-md-2" data-date-format="d M yyyy" data-link-field="data[Booking][day_view]">
                         <?php
-						echo $this->Form->input('interval_type', array(
-							'type' => 'radio',
-							'class' => false,
-							'div' => false,
-							'label' => array('style' => 'text-align: left; width: 80px'),
-							'hiddenField' => false,
-							'options' => array('B' => ' ' . __('Datum'))));
-						?>
-                    </span>
-
-                    <div class="input-group date form_end_date" style="width: 100%" data-date-format="d MM yyyy" data-link-field="data[Booking][interval_date]">
-                        <?php
-                        $default_end_date = strtotime("+2 weeks");
-                        echo $this->Form->input('interval_date', array(
+                        echo $this->Form->input('day_view', array(
                             'type' => 'text',
+                            'div' => false,
+                            'style' => 'width: 100%',
                             'label' => false,
-                            'default' => $this->mytime->toReadableDate($default_end_date, true),
-                            'disabled' => true,
-                            'readonly' => true));
+                            'size' => '16',
+                            'readonly' => true,
+                            'value' => $this->mytime->toReadableDate(strtotime($this->request->data['Booking']['day']))));
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
-                </div>
-                <?php echo $this->Form->hidden('interval_end', array('default' => date('Y-m-d', $default_end_date))); ?>
-            </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    	<?php
-						echo $this->Form->input('interval_type', array(
-							'type' => 'radio',
-							'class' => false,
-							'div' => false,
-							'label' => array('style' => 'text-align: left; width: 80px'),
-							'hiddenField' => false,
-							'options' => array('C' => ' ' . __('Dieses'))));
-						?>
-                    </span>
-                    <?php
-                    $options = array('1' => 'Semester', '2' => 'anfang nächstes Semester', '3' => 'nächstes Semester', '4' => 'Jahr');
+                    <?php echo $this->Form->hidden('day'); ?>
+                    <label for="BookingStartHour"><?php echo __('Startzeit'); ?></label>
+                    <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
+                        <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit')); ?>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
+                    <label for="BookingEndHour"><?php echo __('Endzeit'); ?></label>
+                    <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
+                        <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende')); ?>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
 
-                    echo $this->Form->input('interval_range', array(
-                        'div' => false,
-                        'label' => false,
-                        'disabled' => true,
-                        'options' => $options));
-                    ?>
                 </div>
             </div>
-            <?php echo $this->Form->hidden('ignore_booked'); ?>
         </div>
-    </fieldset>
-    <?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-primary btn-lg', 'onclick' => 'validateInterval();return false;')); ?>
-</div>
+    </div>
+
+    <?php echo $this->Form->input('room_id', array(
+        'div' => array('div' => 'form-group', 'id' => 'Room'),
+        'label' => __('Raum'),
+        'options' => $rooms));
+    ?>
+
+    <?php echo $this->Form->hidden('group_id'); ?>
+
+    <?php
+    $options = array('0' => 'ohne', '1' => 'täglich', '7' => 'wöchenlich', '14' => 'alle 2 Wochen', '28' => 'jeden Monat', '56' => 'jeden 2ten Monat');
+
+    echo $this->Form->input('interval_iteration', array(
+        'label' => __('Wiederholung'),
+        'default' => array_keys($options)[0],
+        'options' => $options));
+    ?>
+
+    <div class="form-group" id="BookingIntervalGroup" style="display: none">
+        <label class="control-label"><?php echo __('Ende'); ?></label>
+
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <?php
+                    echo $this->Form->input('interval_type', array(
+                        'type' => 'radio',
+                        'class' => false,
+                        'div' => false,
+                        'label' => array('style' => 'text-align: left; width: 80px'),
+                        'hiddenField' => false,
+                        'default' => 'A',
+                        'options' => array('A' => ' ' . __('Nach'))));
+                    ?>
+                </span>
+                <?php
+                $options = array('1' => '1 Wiederholung');
+                for ($i = 2; $i < 10; $i++) {
+                    $options[$i] = $i . ' Wiederholungen';
+                }
+
+                echo $this->Form->input('interval_count', array(
+                    'div' => false,
+                    'label' => false,
+                    'default' => '3',
+                    'options' => $options));
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+
+                <span class="input-group-addon">
+                    <?php
+                    echo $this->Form->input('interval_type', array(
+                        'type' => 'radio',
+                        'class' => false,
+                        'div' => false,
+                        'label' => array('style' => 'text-align: left; width: 80px'),
+                        'hiddenField' => false,
+                        'options' => array('B' => ' ' . __('Datum'))));
+                    ?>
+                </span>
+
+                <div class="input-group date form_end_date" style="width: 100%" data-date-format="d MM yyyy" data-link-field="data[Booking][interval_date]">
+                    <?php
+                    $default_end_date = strtotime("+2 weeks");
+                    echo $this->Form->input('interval_date', array(
+                        'type' => 'text',
+                        'label' => false,
+                        'default' => $this->mytime->toReadableDate($default_end_date, true),
+                        'disabled' => true,
+                        'readonly' => true));
+                    ?>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+            <?php echo $this->Form->hidden('interval_end', array('default' => date('Y-m-d', $default_end_date))); ?>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <?php
+                    echo $this->Form->input('interval_type', array(
+                        'type' => 'radio',
+                        'class' => false,
+                        'div' => false,
+                        'label' => array('style' => 'text-align: left; width: 80px'),
+                        'hiddenField' => false,
+                        'options' => array('C' => ' ' . __('Dieses'))));
+                    ?>
+                </span>
+                <?php
+                $options = array('1' => 'Semester', '2' => 'anfang nächstes Semester', '3' => 'nächstes Semester', '4' => 'Jahr');
+
+                echo $this->Form->input('interval_range', array(
+                    'div' => false,
+                    'label' => false,
+                    'disabled' => true,
+                    'options' => $options));
+                ?>
+            </div>
+        </div>
+        <?php echo $this->Form->hidden('ignore_booked'); ?>
+    </div>
+</fieldset>
+<?php echo $this->Form->end(array('label' => __('Buchen'), 'class' => 'btn btn-primary btn-lg', 'onclick' => 'validateInterval();return false;')); ?>
 
 <script type="text/javascript">
     var room_details = null;

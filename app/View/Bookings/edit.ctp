@@ -1,143 +1,141 @@
 <?php setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu'); ?>
-<div class="container">
-    <ol class="breadcrumb well well-sm">
-        <li><?php echo __('Verwaltung'); ?></li>
-        <li><?php echo $this->Html->link('Buchungen', array('action' => 'index')); ?></li>
-        <li class="active"><?php echo __('Buchung bearbeiten'); ?></li>
-    </ol>
-    <?php echo $this->Form->create('Booking', array(
-        'class' => 'well',
-        'inputDefaults' => array(
-            'div' => 'form-group',
-            'wrapInput' => false,
-            'class' => 'form-control',
-        )
-    )); ?>
-    <h1><?php echo __('Buchung ändern'); ?></h1>
-    <fieldset>
-        <legend><?php echo __('Hier können Sie die Daten des Buchung bearbeiten'); ?></legend>
+<ol class="breadcrumb well well-sm">
+    <li><?php echo __('Verwaltung'); ?></li>
+    <li><?php echo $this->Html->link('Buchungen', array('action' => 'index')); ?></li>
+    <li class="active"><?php echo __('Buchung bearbeiten'); ?></li>
+</ol>
+<?php echo $this->Form->create('Booking', array(
+    'class' => 'well',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'wrapInput' => false,
+        'class' => 'form-control',
+    )
+)); ?>
+<h1><?php echo __('Buchung ändern'); ?></h1>
+<fieldset>
+    <legend><?php echo __('Hier können Sie die Daten des Buchung bearbeiten'); ?></legend>
 
-        <?php if(isset($groups) && (count($groups) > 1)) : ?>
-        <div class="row">
-            <div class="col-md-9">
-        <?php endif; ?>
+    <?php if(isset($groups) && (count($groups) > 1)) : ?>
+    <div class="row">
+        <div class="col-md-9">
+    <?php endif; ?>
 
-        <?php echo $this->Form->input('name', array(
-            'class' => 'form-control typeahead input-block-level',
-            'label' => __('Bezeichnung'),
-            'placeholder' => 'Bezeichnung'));
-        ?>
+    <?php echo $this->Form->input('name', array(
+        'class' => 'form-control typeahead input-block-level',
+        'label' => __('Bezeichnung'),
+        'placeholder' => 'Bezeichnung'));
+    ?>
 
-        <?php echo $this->Form->input('room_id', array(
-            'div' => array('div' => 'form-group', 'id' => 'Room'),
-            'label' => __('Raum'),
-            'options' => $rooms));
-        ?>
+    <?php echo $this->Form->input('room_id', array(
+        'div' => array('div' => 'form-group', 'id' => 'Room'),
+        'label' => __('Raum'),
+        'options' => $rooms));
+    ?>
 
-        <div class="form-group">
-            <label for="BookingStart" class="control-label"><?php echo __('Startzeit'); ?></label>
+    <div class="form-group">
+        <label for="BookingStart" class="control-label"><?php echo __('Startzeit'); ?></label>
 
-            <div class="input-group date form_datetime" data-date-format="d MM yyyy - HH:ii" data-link-field="data[Booking][start]">
-                <?php
-                echo $this->Form->input('start', array(
-                    'type' => 'text',
-                    'div' => false,
-                    'class' => 'form-control',
-                    'label' => false,
-                    'readonly' => true,
-                    'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Booking']['startdatetime']))->getTimestamp(), true)));
-                ?>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-            <?php echo $this->Form->hidden('startdatetime'); ?>
-        </div>
-
-        <div class="form-group">
-            <label for="BookingEnd" class="control-label"><?php echo __('Endzeit'); ?></label>
-
-            <div class="input-group date form_end_date col-md-12" data-date-format="d MM yyyy - HH:ii" data-link-field="data[Booking][BookingEnd]">
-                <?php
-                echo $this->Form->input('end', array(
-                    'type'  => 'text',
-                    'div' => false,
-                    'class' => 'form-control',
-                    'label' => false,
-                    'readonly' => true,
-                    'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Booking']['enddatetime']))->getTimestamp(), true)));
-                ?>
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-            <?php echo $this->Form->hidden('enddatetime'); ?>
-        </div>
-        <?php if(isset($groups) && (count($groups) > 1)) : ?>
-            </div>
-            <?php echo $this->Form->hidden('group_id'); ?>
-            <div class="col-md-3">
-                <h4><?php echo __('Verwandte Buchungen'); ?></h4>
-                <ul class="nav nav-pills nav-stacked">
-                    <?php $count=0; ?>
-                    <?php foreach($groups as $group): ?>
-                        <?php $count ++; ?>
-                        <li class="<?php echo (($this->request->data['Booking']['id'] == $group['Booking']['id']) ? 'active' : '')?>"><?php echo $this->Html->link($this->Time->format('d.m', $group['Booking']['startdatetime']) . ' ' . $group['Booking']['name'] . ' (' . $count . ')', array('action' => 'edit', $group['Booking']['id'])); ?></li>
-                    <?php endforeach; ?>
-                    <?php unset($group); ?>
-                </ul>
-                <div style="padding: 10px 15px;">
-                    <?php echo $this->Html->link(__('Hinzufügen'), array('controller' => 'bookings', 'action' => 'add', $this->request->data['Booking']['group_id'], $this->request->data['Booking']['room_id']), array('class' => 'btn btn-primary')); ?>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
-    </fieldset>
-    <div class="submit">
-        <div class="btn-group">
+        <div class="input-group date form_datetime" data-date-format="d MM yyyy - HH:ii" data-link-field="data[Booking][start]">
             <?php
+            echo $this->Form->input('start', array(
+                'type' => 'text',
+                'div' => false,
+                'class' => 'form-control',
+                'label' => false,
+                'readonly' => true,
+                'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Booking']['startdatetime']))->getTimestamp(), true)));
+            ?>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+        <?php echo $this->Form->hidden('startdatetime'); ?>
+    </div>
 
-            echo $this->Form->button('<i class="glyphicon glyphicon-pencil"></i> ' .__('Ändern'), array('type' => 'submit', 'name' => 'submit', 'class' => 'btn btn-primary btn-lg', 'escape' => false, 'div' => false));
+    <div class="form-group">
+        <label for="BookingEnd" class="control-label"><?php echo __('Endzeit'); ?></label>
+
+        <div class="input-group date form_end_date col-md-12" data-date-format="d MM yyyy - HH:ii" data-link-field="data[Booking][BookingEnd]">
+            <?php
+            echo $this->Form->input('end', array(
+                'type'  => 'text',
+                'div' => false,
+                'class' => 'form-control',
+                'label' => false,
+                'readonly' => true,
+                'value' => $this->mytime->toReadableDateTime((new DateTime($this->request->data['Booking']['enddatetime']))->getTimestamp(), true)));
+            ?>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+        <?php echo $this->Form->hidden('enddatetime'); ?>
+    </div>
+    <?php if(isset($groups) && (count($groups) > 1)) : ?>
+        </div>
+        <?php echo $this->Form->hidden('group_id'); ?>
+        <div class="col-md-3">
+            <h4><?php echo __('Verwandte Buchungen'); ?></h4>
+            <ul class="nav nav-pills nav-stacked">
+                <?php $count=0; ?>
+                <?php foreach($groups as $group): ?>
+                    <?php $count ++; ?>
+                    <li class="<?php echo (($this->request->data['Booking']['id'] == $group['Booking']['id']) ? 'active' : '')?>"><?php echo $this->Html->link($this->Time->format('d.m', $group['Booking']['startdatetime']) . ' ' . $group['Booking']['name'] . ' (' . $count . ')', array('action' => 'edit', $group['Booking']['id'])); ?></li>
+                <?php endforeach; ?>
+                <?php unset($group); ?>
+            </ul>
+            <div style="padding: 10px 15px;">
+                <?php echo $this->Html->link(__('Hinzufügen'), array('controller' => 'bookings', 'action' => 'add', $this->request->data['Booking']['group_id'], $this->request->data['Booking']['room_id']), array('class' => 'btn btn-primary')); ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+</fieldset>
+<div class="submit">
+    <div class="btn-group">
+        <?php
+
+        echo $this->Form->button('<i class="glyphicon glyphicon-pencil"></i> ' .__('Ändern'), array('type' => 'submit', 'name' => 'submit', 'class' => 'btn btn-primary btn-lg', 'escape' => false, 'div' => false));
+
+        if(isset($groups) && (count($groups) > 1))
+        {
+            echo $this->Form->button('<i class="glyphicon glyphicon-pencil"></i> ' .__('Alle ändern'), array('type' => 'submit', 'name' => 'submit_all', 'class' => 'btn btn-default btn-lg', 'escape' => false, 'div' => false));
+        }
+
+        ?>
+    </div>
+
+    <div class="btn-group">
+        <?php
+        if(
+            ($this->Session->read('Auth.User.role') == 'root') ||
+            (($this->Session->read('Auth.User.role') == 'admin') && ($this->Session->read('Auth.User.organizationalunit_id') == $this->request->data['Room']['organizationalunit_id'])))
+        {
+            if (in_array($this->request->data['Booking']['status'], array(Booking::planned, Booking::planning_concurred)) && ($this->request->data['Booking']['status'] != Booking::planning_rejected)) {
+                echo $this->Html->link('<i class="glyphicon glyphicon-remove-sign"></i> ' . __('Absagen'), array('action' => 'reject', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
+            } else if(in_array($this->request->data['Booking']['status'], array(Booking::active)) && ($this->request->data['Booking']['status'] != Booking::active_denied)) {
+                echo $this->Html->link('<i class="glyphicon glyphicon-remove-sign"></i> ' . __('Verweigern'), array('action' => 'deny', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
+            }
+
+            if(in_array($this->request->data['Booking']['status'], array(Booking::active_denied, Booking::planned, Booking::planning_rejected)))
+            {
+                echo $this->Html->link('<i class="glyphicon glyphicon-ok-sign"></i> ' . __('Zusagen'), array('action' => 'accept', $this->params['pass'][0]), array('class' => 'btn btn-success btn-sm', 'escape' => false, 'div' => false));
+            }
+        }
+
+        if(
+            ($this->Session->read('Auth.User.role') == 'root') ||
+            ((in_array($this->Session->read('Auth.User.role'), array('user', 'admin'))) && ($this->Session->read('Auth.User.id') == $this->request->data['Booking']['user_id'])))
+        {
+            echo $this->Html->link('<i class="glyphicon glyphicon-remove"></i> ' . __('Löschen'), array('action' => 'delete', 'id', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
+
 
             if(isset($groups) && (count($groups) > 1))
             {
-                echo $this->Form->button('<i class="glyphicon glyphicon-pencil"></i> ' .__('Alle ändern'), array('type' => 'submit', 'name' => 'submit_all', 'class' => 'btn btn-default btn-lg', 'escape' => false, 'div' => false));
+                echo $this->Html->link('<i class="glyphicon glyphicon-remove"></i> ' . __('Alle löschen'), array('action' => 'delete', 'group', $this->request->data['Booking']['group_id']), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
             }
-
-            ?>
-        </div>
-
-        <div class="btn-group">
-            <?php
-            if(
-                ($this->Session->read('Auth.User.role') == 'root') ||
-                (($this->Session->read('Auth.User.role') == 'admin') && ($this->Session->read('Auth.User.organizationalunit_id') == $this->request->data['Room']['organizationalunit_id'])))
-            {
-                if (in_array($this->request->data['Booking']['status'], array(Booking::planned, Booking::planning_concurred)) && ($this->request->data['Booking']['status'] != Booking::planning_rejected)) {
-                    echo $this->Html->link('<i class="glyphicon glyphicon-remove-sign"></i> ' . __('Absagen'), array('action' => 'reject', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
-                } else if(in_array($this->request->data['Booking']['status'], array(Booking::active)) && ($this->request->data['Booking']['status'] != Booking::active_denied)) {
-                    echo $this->Html->link('<i class="glyphicon glyphicon-remove-sign"></i> ' . __('Verweigern'), array('action' => 'deny', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
-                }
-
-                if(in_array($this->request->data['Booking']['status'], array(Booking::active_denied, Booking::planned, Booking::planning_rejected)))
-                {
-                    echo $this->Html->link('<i class="glyphicon glyphicon-ok-sign"></i> ' . __('Zusagen'), array('action' => 'accept', $this->params['pass'][0]), array('class' => 'btn btn-success btn-sm', 'escape' => false, 'div' => false));
-                }
-            }
-
-            if(
-                ($this->Session->read('Auth.User.role') == 'root') ||
-                ((in_array($this->Session->read('Auth.User.role'), array('user', 'admin'))) && ($this->Session->read('Auth.User.id') == $this->request->data['Booking']['user_id'])))
-            {
-                echo $this->Html->link('<i class="glyphicon glyphicon-remove"></i> ' . __('Löschen'), array('action' => 'delete', 'id', $this->params['pass'][0]), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
-
-
-                if(isset($groups) && (count($groups) > 1))
-                {
-                    echo $this->Html->link('<i class="glyphicon glyphicon-remove"></i> ' . __('Alle löschen'), array('action' => 'delete', 'group', $this->request->data['Booking']['group_id']), array('class' => 'btn btn-danger btn-sm', 'escape' => false, 'div' => false));
-                }
-            }
-            ?>
-        </div>
+        }
+        ?>
     </div>
-    <?php echo $this->Form->end(); ?>
 </div>
+<?php echo $this->Form->end(); ?>
 
 <script type="text/javascript">
     var room_details = null;

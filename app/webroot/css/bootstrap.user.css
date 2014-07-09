@@ -1,8 +1,5 @@
 /*! bootstrap.user customisation file v1.0.8 | MIT License */
 
-.container-sm {
-    margin: 15px;
-}
 .divider-vertical {
     height: 50px;
     margin: 0 9px;
@@ -13,6 +10,7 @@
 html,
 body {
     height: 100%;
+    padding-top: 10px;
 }
 
 fieldset {
@@ -51,8 +49,12 @@ footer a:hover {
     max-width: 485px;
 }
 
+.container-margin {
+    margin: 15px;
+}
+
 .transparent {
-    opacity: 0.9;
+    opacity: 0.97;
 }
 
 .twitter-typeahead {

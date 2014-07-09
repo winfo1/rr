@@ -37,7 +37,7 @@ if ($noLogs || isset($_forced_from_dbo_)):
 
     foreach ($sqlLogs as $source => $logInfo):
 		$text = $logInfo['count'] > 1 ? 'queries' : 'query';
-        print('<div class="container-sm panel panel-default" ><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse">Cake SQL Log</a>');
+        print('<div class="container-margin panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse">Cake SQL Log</a>');
         printf('<div class="small center-block text-center">(%s) %s %s took %s ms</div>', $source, $logInfo['count'], $text, $logInfo['time']);
         print('</h4></div><div id="collapse" class="panel-collapse collapse"><div class="panel-body">');
         printf(
