@@ -20,13 +20,6 @@ fieldset {
     border-bottom: 1px solid #e5e5e5;
 }
 
-/* start-bugfix: http://stackoverflow.com/questions/21029129/create-an-inline-form-with-input-groups-bootstrap */
-.input-group {
-    display: inline-table;
-    vertical-align: middle;
-}
-/* end-bugfix: remove with bootstrap 3.2 */
-
 .well>table {
     /* remove the space when inside a well */
      margin-bottom: 0;
