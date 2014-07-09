@@ -5,7 +5,7 @@
  */
 
 ;(function(){
-	var $ = window.$,
+	var $ = window.jQuery,
 		$win = $(window),
 		$doc = $(document),
 		$body;
@@ -33,9 +33,9 @@
 
 	// Listen touch events in touch screen device, instead of mouse events in desktop.
 	var touchSupported = 'ontouchstart' in window,
-		mousedownEvent = touchSupported ? 'touchstart' : 'mousedown',
-		mousemoveEvent = touchSupported ? 'touchmove' : 'mousemove',
-		mouseupEvent = touchSupported ? 'touchend' : 'mouseup';
+		mousedownEvent = 'mousedown' + ( touchSupported ? ' touchstart' : ''),
+		mousemoveEvent = 'mousemove.clockpicker' + ( touchSupported ? ' touchmove.clockpicker' : ''),
+		mouseupEvent = 'mouseup.clockpicker' + ( touchSupported ? ' touchend.clockpicker' : '');
 
 	// Vibrate the device if supported
 	var vibrate = navigator.vibrate ? 'vibrate' : navigator.webkitVibrate ? 'webkitVibrate' : null;
@@ -117,7 +117,10 @@
 				.appendTo(popover);
 		}
 
-		// Placement and arrow align
+		// Placement and arrow align - make sure they make sense.
+		if ((options.placement === 'top' || options.placement === 'bottom') && (options.align === 'top' || options.align === 'bottom')) options.align = 'left';
+		if ((options.placement === 'left' || options.placement === 'right') && (options.align === 'left' || options.align === 'right')) options.align = 'top';
+
 		popover.addClass(options.placement);
 		popover.addClass('clockpicker-align-' + options.align);
 
@@ -125,7 +128,7 @@
 		this.spanMinutes.click($.proxy(this.toggleView, this, 'minutes'));
 
 		// Show or toggle
-		input.on('focus.clockpicker', $.proxy(this.show, this));
+		input.on('focus.clockpicker click.clockpicker', $.proxy(this.show, this));
 		addon.on('click.clockpicker', $.proxy(this.toggle, this));
 
 		// Build ticks
@@ -202,9 +205,10 @@
 			self.setHand(dx, dy, ! space, true);
 
 			// Mousemove on document
-			$doc.off(mousemoveEvent + '.clockpicker').on(mousemoveEvent + '.clockpicker', function(e){
+			$doc.off(mousemoveEvent).on(mousemoveEvent, function(e){
 				e.preventDefault();
-				var x = (isTouch ? e.originalEvent.touches[0] : e).pageX - x0,
+				var isTouch = /^touch/.test(e.type),
+					x = (isTouch ? e.originalEvent.touches[0] : e).pageX - x0,
 					y = (isTouch ? e.originalEvent.touches[0] : e).pageY - y0;
 				if (! moved && x === dx && y === dy) {
 					// Clicking in chrome on windows will trigger a mousemove event
@@ -215,9 +219,10 @@
 			});
 
 			// Mouseup on document
-			$doc.off(mouseupEvent + '.clockpicker').one(mouseupEvent + '.clockpicker', function(e){
+			$doc.off(mouseupEvent).one(mouseupEvent, function(e){
 				e.preventDefault();
-				var x = (isTouch ? e.originalEvent.changedTouches[0] : e).pageX - x0,
+				var isTouch = /^touch/.test(e.type),
+					x = (isTouch ? e.originalEvent.changedTouches[0] : e).pageX - x0,
 					y = (isTouch ? e.originalEvent.changedTouches[0] : e).pageY - y0;
 				if ((space || moved) && x === dx && y === dy) {
 					self.setHand(x, y);
@@ -239,7 +244,7 @@
 				$body.removeClass('clockpicker-moving');
 
 				// Unbind mousemove event
-				$doc.off(mousemoveEvent + '.clockpicker');
+				$doc.off(mousemoveEvent);
 			});
 		}
 
@@ -393,8 +398,8 @@
 
 		this.isShown = true;
 
-		// Hide when clicking on any element except the clock, input and addon
-		$doc.on('click.clockpicker.' + this.id, function(e){
+		// Hide when clicking or tabbing on any element except the clock, input and addon
+		$doc.on('click.clockpicker.' + this.id + ' focusin.clockpicker.' + this.id, function(e){
 			var target = $(e.target);
 			if (target.closest(self.popover).length === 0 &&
 					target.closest(self.addon).length === 0 &&
@@ -416,7 +421,7 @@
 		this.isShown = false;
 
 		// Unbinding events on document
-		$doc.off('click.clockpicker.' + this.id);
+		$doc.off('click.clockpicker.' + this.id + ' focusin.clockpicker.' + this.id);
 		$doc.off('keyup.clockpicker.' + this.id);
 
 		this.popover.hide();
@@ -571,7 +576,7 @@
 	// Remove clockpicker from input
 	ClockPicker.prototype.remove = function() {
 		this.element.removeData('clockpicker');
-		this.input.off('focus.clockpicker');
+		this.input.off('focus.clockpicker click.clockpicker');
 		this.addon.off('click.clockpicker');
 		if (this.isShown) {
 			this.hide();
