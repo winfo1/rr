@@ -47,6 +47,14 @@ footer a:hover {
     color: #efefef;
 }
 
+.container-small {
+    max-width: 485px;
+}
+
+.transparent {
+    opacity: 0.9;
+}
+
 .twitter-typeahead {
     width: 100%;
 }

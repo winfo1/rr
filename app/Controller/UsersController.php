@@ -61,7 +61,7 @@ class UsersController extends ApplicationController {
         if ($this->Session->check('Auth.User.id')) {
             $this->Session->setFlash(__('Sie sind bereits angemeldet'), 'alert', array(
                 'plugin' => 'BoostCake',
-                'class' => 'alert-warning'
+                'class' => 'alert-warning transparent'
             ));
             $this->redirect($this->referer());
             return true;
@@ -72,7 +72,7 @@ class UsersController extends ApplicationController {
             }
             $this->Session->setFlash(__('Der Benutzername oder das Passwort ist falsch. Versuchen Sie es erneut'), 'alert', array(
                 'plugin' => 'BoostCake',
-                'class' => 'alert-danger'
+                'class' => 'alert-danger transparent'
             ));
             return false;
         }
@@ -134,7 +134,7 @@ class UsersController extends ApplicationController {
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('Sie haben sich erfolgreich registriert'), 'alert', array(
                     'plugin' => 'BoostCake',
-                    'class' => 'alert-success'
+                    'class' => 'alert-success transparent'
                 ));
                 $this->Auth->login();
                 $this->redirect(array('controller' => 'pages', 'action' => 'display', 'home'));
@@ -142,7 +142,7 @@ class UsersController extends ApplicationController {
             }
             $this->Session->setFlash(__('Die Registrierung konnte nicht abgeschlossen werden. Versuchen Sie es erneut'), 'alert', array(
                 'plugin' => 'BoostCake',
-                'class' => 'alert-danger'
+                'class' => 'alert-danger transparent'
             ));
             return false;
         }
