@@ -142,8 +142,9 @@
 
     $links = array(
         'Booking.add' => array(
-            'url' => array('controller' => 'bookings', 'action' => 'add', 'add_booking_button()'),
-            'options' => array()),
+            'url' => array('controller' => 'bookings', 'action' => 'add', 0, 'add_booking_button()'),
+            'options' => array(),
+        ),
     );
 
     $options = array(

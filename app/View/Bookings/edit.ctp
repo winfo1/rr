@@ -83,7 +83,7 @@
                     <?php unset($group); ?>
                 </ul>
                 <div style="padding: 10px 15px;">
-                    <?php echo $this->Html->link(__('Hinzufügen'), array('controller' => 'bookings', 'action' => 'add'), array('class' => 'btn btn-primary')); ?>
+                    <?php echo $this->Html->link(__('Hinzufügen'), array('controller' => 'bookings', 'action' => 'add', $this->request->data['Booking']['group_id'], $this->request->data['Booking']['room_id']), array('class' => 'btn btn-primary')); ?>
                 </div>
             </div>
         </div>

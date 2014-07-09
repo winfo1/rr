@@ -142,7 +142,7 @@ class BookingsController extends AppController {
      * @param null $end_hour i.e. 20-14
      * @return bool
      */
-    public function add(/* $group_id = null, */ $room_id = null, $day = null, $start_hour = null, $end_hour = null) {
+    public function add($group_id = null, $room_id = null, $day = null, $start_hour = null, $end_hour = null) {
         // set group
         if(!isset($group_id)) {
             $group_id = 0;
@@ -268,9 +268,11 @@ class BookingsController extends AppController {
 
             $ignore_booked = $this->request->data['Booking']['ignore_booked'];
 
-            $group_id = 0;
+            $group_id = $this->request->data['Booking']['group_id'];
             if ($interval_iteration) {
-                $group_id = $this->Booking->getNextAutoIncrement();
+                if ($group_id == 0) {
+                    $group_id = $this->Booking->getNextAutoIncrement();
+                }
                 $interval_type = $this->request->data['Booking']['interval_type'];
 
                 $interval_value = array();

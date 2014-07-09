@@ -17,6 +17,10 @@
     <fieldset>
         <legend><?php echo __('Geben Sie hier die Daten der neuen Buchung an'); ?></legend>
 
+        <?php if($this->request->data['Booking']['group_id'] != 0) : ?>
+            <div class="alert alert-info">Diese Buchung wird einer verwandten Buchung hinzugefügt (<?php echo $this->Html->link(__('Abbrechen'), array('action' => 'add', 0, $this->request->data['Booking']['room_id']), array('class' => 'alert-link')); ?>).</div>
+        <?php endif; ?>
+
         <?php echo $this->Form->input('name', array(
             'class' => 'form-control typeahead input-block-level',
             'label' => __('Bezeichnung'),
@@ -343,7 +347,7 @@
     
     function updateURL() {
     	var view_tabs = BookingViewTabs.val() == 's';
-    	var url = rr_base_url + 'bookings/add/' /* + BookingGroupId.val() + '/' */ + BookingRoomId.val() + '/';
+    	var url = rr_base_url + 'bookings/add/' + BookingGroupId.val() + '/' + BookingRoomId.val() + '/';
     	if (!view_tabs)
     	{
     		url += $('#BookingDay').val() + '/';
