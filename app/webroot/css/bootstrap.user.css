@@ -1,5 +1,18 @@
 /*! bootstrap.user customisation file v1.0.8 | MIT License */
 
+@media (min-width: 992px) {
+    .glyphicon-responsive
+    {
+        display: none;
+    }
+}
+@media (min-width: 750px) and (max-width: 992px) {
+    .text-responsive
+    {
+        display: none;
+    }
+}
+
 .divider-vertical {
     height: 50px;
     margin: 0 9px;

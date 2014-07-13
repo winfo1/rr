@@ -77,7 +77,7 @@ $rrDescription = __('die schnelle und einfache RaumReservierung');
     </script>
     <div class="wrapper">
         <div class="container transparent">
-            <?php echo $this->element('header'); ?>
+            <?php echo $this->element('header', array('username' => $this->Session->read('Auth.User.username'), 'role' => $this->Session->read('Auth.User.role')), array('cache' => array('key' => $this->Session->read('Auth.User.role')))); ?>
             <?php echo $this->Session->flash(); ?>
             <?php echo $this->Session->flash('info'); ?>
             <?php echo $this->fetch('content'); ?>
