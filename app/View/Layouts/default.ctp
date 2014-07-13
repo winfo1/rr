@@ -81,8 +81,8 @@ $rrDescription = __('die schnelle und einfache RaumReservierung');
             <?php echo $this->Session->flash(); ?>
             <?php echo $this->Session->flash('info'); ?>
             <?php echo $this->fetch('content'); ?>
-            <div class="push"></div>
         </div>
+        <div class="push"></div>
     </div>
     <?php echo $this->fetch('modal'); ?>
     <?php echo $this->element('sql_dump'); ?>
