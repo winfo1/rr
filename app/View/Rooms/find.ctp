@@ -75,9 +75,10 @@
         </div>
         <div class="tab-pane fade<?php echo (($this->request->data['Room']['view_tabs'] == 'a') ? ' in active' : '')?>" id="advanced_time_settings">
             <div class="form-inline">
-                <div class="form-group">
-                    <label for="RoomDayView"><?php echo __('Tag'); ?></label>
-                    <div class="input-group date form_date col-md-2" data-date-format="d M yyyy" data-link-field="data[Room][day_view]">
+                <div class="form-group" style="margin: 5px;">
+                    <label for="RoomDayView" style="margin-right: 5px"><?php echo __('Tag'); ?></label>
+                    <?php echo $this->Form->hidden('day'); ?>
+                    <div class="input-group date form_date col-md-9" data-date-format="d M yyyy" data-link-field="data[Room][day_view]">
                         <?php
                         echo $this->Form->input('day_view', array(
                             'type' => 'text',
@@ -90,22 +91,24 @@
                         ?>
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
-                    <?php echo $this->Form->hidden('day'); ?>
-                    <label for="RoomStartHour"><?php echo __('Startzeit'); ?></label>
-                    <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
+                </div>
+                <div class="form-group" style="margin: 5px;">
+                    <label for="RoomStartHour" style="margin-right: 5px"><?php echo __('Startzeit'); ?></label>
+                    <div class="input-group clockpicker col-md-8" data-placement="bottom" data-align="left" data-autoclose="true">
                         <?php echo $this->Form->input('start_hour', array('div' => false, 'label' => false, 'placeholder' => 'Startzeit')); ?>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                         </span>
                     </div>
-                    <label for="RoomEndHour"><?php echo __('Endzeit'); ?></label>
-                    <div class="input-group clockpicker col-md-2" data-placement="bottom" data-align="left" data-autoclose="true">
+                </div>
+                <div class="form-group" style="margin: 5px;">
+                    <label for="RoomEndHour" style="margin-right: 5px"><?php echo __('Endzeit'); ?></label>
+                    <div class="input-group clockpicker col-md-8" data-placement="bottom" data-align="left" data-autoclose="true">
                         <?php echo $this->Form->input('end_hour', array('div' => false, 'label' => false, 'placeholder' => 'Ende')); ?>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                         </span>
                     </div>
-
                 </div>
             </div>
         </div>
