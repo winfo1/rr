@@ -62,6 +62,7 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
 <div class="clearfix"></div>
 <div class="push"></div>
 
+<?php $this->start('modal'); ?>
 <div class="modal fade" id="ModalRoom" tabindex="-1" role="dialog" aria-labelledby="ModalRoomLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,19 +141,20 @@ $end = new DateTime($this->request->data['Booking']['enddatetime']);
         </div>
     </div>
 </div>
+<?php $this->end(); ?>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            "use strict";
-            var options = {
-                language: 'de-DE',
-                events_source: rr_base_url + 'ajax/calendar_events/room/' + <?php echo $this->request->data['Booking']['room_id']; ?>,
-                view: 'day',
-                day: '<?php echo (new DateTime($this->request->data['Booking']['startdatetime']))->format('Y-m-d'); ?>',
-                tmpl_path: rr_base_url + 'tmpls/',
-                tmpl_cache: true
-            };
+<script type="text/javascript">
+    $(document).ready(function () {
+        "use strict";
+        var options = {
+            language: 'de-DE',
+            events_source: rr_base_url + 'ajax/calendar_events/room/' + <?php echo $this->request->data['Booking']['room_id']; ?>,
+            view: 'day',
+            day: '<?php echo (new DateTime($this->request->data['Booking']['startdatetime']))->format('Y-m-d'); ?>',
+            tmpl_path: rr_base_url + 'tmpls/',
+            tmpl_cache: true
+        };
 
-            var calendar = $('#calendar').calendar(options);
-        });
-    </script>
+        var calendar = $('#calendar').calendar(options);
+    });
+</script>

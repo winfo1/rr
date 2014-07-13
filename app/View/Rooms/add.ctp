@@ -83,6 +83,7 @@
 </fieldset>
 <?php echo $this->Form->end(array('label' => __('Hinzufügen'), 'class' => 'btn btn-primary btn-lg')); ?>
 
+<?php $this->start('modal'); ?>
 <div class="modal fade" id="addResource" tabindex="-1" role="dialog" aria-labelledby="addResourceLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -129,6 +130,7 @@
         </div>
     </div>
 </div>
+<?php $this->end(); ?>
 
 <script type="text/javascript">
     var r = {
