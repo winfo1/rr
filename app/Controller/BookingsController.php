@@ -170,8 +170,6 @@ class BookingsController extends AppController {
         // easy view
         if (array_key_exists('Booking', $this->request->data) && array_key_exists('view_tabs', $this->request->data['Booking'])) {
             $view_tabs = $this->request->data['Booking']['view_tabs'];
-        } else {
-            $view_tabs = 'a';
         }
 
         // set default day
