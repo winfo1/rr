@@ -58,7 +58,7 @@
                     </li>
                 <?php else : ?>
                     <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-log-in glyphicon-responsive" title="Anmelden"></span> <span class="text-responsive">Anmelden</span>', array('controller' => 'users', 'action' => 'login'), array('escape' => false)); ?></li>
-                    <li class="divider-vertical"></li>
+                    <li class="divider-vertical divider-responsive"></li>
                     <li><?php echo $this->Html->link('<span class="glyphicon glyphicon-new-window glyphicon-responsive" title="Registrieren"></span> <span class="text-responsive">Registrieren</span>', array('controller' => 'users', 'action' => 'register'), array('escape' => false)); ?></li>
                 <?php endif; ?>
             </ul>

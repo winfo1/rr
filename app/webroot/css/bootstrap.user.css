@@ -1,5 +1,11 @@
-/*! bootstrap.user customisation file v1.0.8 | MIT License */
+/*! bootstrap.user customisation file v1.0.12 | MIT License */
 
+@media (max-width: 750px) {
+    .divider-responsive
+    {
+        display: none !important;
+    }
+}
 @media (min-width: 992px) {
     .glyphicon-responsive
     {
